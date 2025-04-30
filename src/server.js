@@ -78,11 +78,23 @@ async function start() {
   try {
     // Connect to databases first
     logger.info('Connecting to databases...');
-    await Promise.all([
-      connectDB(),
-      connectRedis()
-    ]);
-    logger.info('Database connections established.');
+    
+    // Попытка подключиться к MongoDB и Redis
+    try {
+      await connectDB();
+    } catch (mongoError) {
+      logger.error('Failed to connect to MongoDB:', mongoError);
+      logger.warn('Server will continue with limited MongoDB functionality');
+    }
+    
+    try {
+      await connectRedis();
+    } catch (redisError) {
+      logger.error('Failed to connect to Redis:', redisError);
+      logger.warn('Server will continue without Redis cache');
+    }
+    
+    logger.info('Database connections attempted, continuing with server setup');
 
     // Setup Middleware, Routes, Error Handling
     // Настройка безопасности

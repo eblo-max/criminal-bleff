@@ -4,6 +4,7 @@ import { createLogger } from '../utils/logger.js';
 const logger = createLogger('Redis');
 
 let redisClient;
+let redisEnabled = true;
 
 const connectRedis = async () => {
   try {
@@ -11,6 +12,12 @@ const connectRedis = async () => {
     redisClient = new Redis(process.env.REDIS_URL, {
       retryStrategy: (times) => {
         const delay = Math.min(times * 50, 2000);
+        // После 10 попыток прекращаем пытаться переподключиться
+        if (times > 10) {
+          redisEnabled = false;
+          logger.warn('Redis connection failed after multiple retries. Running in fallback mode without Redis.');
+          return null; // Прекращаем попытки переподключения
+        }
         return delay;
       },
       maxRetriesPerRequest: 3,
@@ -24,6 +31,7 @@ const connectRedis = async () => {
     });
 
     redisClient.on('connect', () => {
+      redisEnabled = true;
       logger.info('Redis connected successfully');
     });
 
@@ -53,7 +61,10 @@ const connectRedis = async () => {
     return redisClient;
   } catch (error) {
     logger.error(`Error connecting to Redis: ${error.message}`);
-    process.exit(1);
+    // Вместо завершения процесса, отключаем Redis-функциональность
+    redisEnabled = false;
+    logger.warn('Running in fallback mode without Redis');
+    return null;
   }
 };
 
@@ -70,14 +81,34 @@ const closeRedis = async () => {
 };
 
 const getRedisClient = () => {
-  if (!redisClient) {
+  if (!redisClient && redisEnabled) {
+    logger.warn('Redis client not initialized, but trying to reconnect');
+    connectRedis().catch(err => {
+      logger.error(`Failed to reconnect to Redis: ${err.message}`);
+    });
     throw new Error('Redis client not initialized');
   }
+  
+  if (!redisEnabled) {
+    // Возвращаем заглушку Redis для режима без Redis
+    return {
+      get: async () => null,
+      set: async () => true,
+      del: async () => true,
+      // Другие часто используемые методы
+      exists: async () => 0,
+      incr: async () => 1,
+      expire: async () => true
+    };
+  }
+  
   return redisClient;
 };
 
+// Экспортируем дополнительно флаг состояния Redis
 export {
   connectRedis,
   closeRedis,
-  getRedisClient
+  getRedisClient,
+  redisEnabled
 }; 
