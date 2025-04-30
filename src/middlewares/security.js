@@ -107,7 +107,7 @@ const securityHeaders = (req, res, next) => {
     'Content-Security-Policy',
     'default-src \'self\'; script-src \'self\' \'unsafe-inline\' \'unsafe-eval\' https://telegram.org; ' +
     'style-src \'self\' \'unsafe-inline\'; img-src \'self\' data: https: blob:; ' +
-    'connect-src \'self\' https://first-bot-production.up.railway.app https://t.me https://web.telegram.org; ' +
+    'connect-src \'self\' https://web-production-43380.up.railway.app https://t.me https://web.telegram.org; ' +
     'font-src \'self\' https: data:; object-src \'none\'; media-src \'self\'; ' +
     'frame-src https://telegram.org https://t.me https://web.telegram.org'
   );
