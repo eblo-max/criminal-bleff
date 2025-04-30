@@ -8,12 +8,10 @@ import { connectDB, closeDB } from './database.js';
 import { connectRedis, closeRedis } from './redis.js';
 import { errorHandler } from '../utils/errorHandler.js';
 import { rateLimiter, securityHeaders, validateInput, idempotencyProtection } from '../middlewares/security.js';
-import userRoutes from '../routes/userRoutes.js';
-import leaderboardRoutes from '../routes/leaderboardRoutes.js';
-import gameRoutes from '../routes/gameRoutes.js';
-import healthRoutes from '../routes/healthRoutes.js';
-import telegramRoutes from '../routes/telegramRoutes.js';
-import setupAdminPanel from './adminConfig.js';
+
+// Изменяем импорты маршрутов - будем импортировать при установке маршрутов
+let userRoutes, leaderboardRoutes, gameRoutes, healthRoutes, telegramRoutes;
+let setupAdminPanel;
 
 const logger = createLogger('App');
 
@@ -62,6 +60,8 @@ const setupMiddleware = async (app) => {
   // AdminJS setup - должен быть перед другими маршрутами
   if (process.env.ENABLE_ADMIN === 'true') {
     try {
+      // Динамический импорт AdminJS
+      setupAdminPanel = (await import('./adminConfig.js')).default;
       await setupAdminPanel(app);
       logger.info('AdminJS panel enabled');
     } catch (error) {
@@ -75,7 +75,19 @@ const setupMiddleware = async (app) => {
   });
 };
 
-const setupRoutes = (app) => {
+const setupRoutes = async (app) => {
+  // Динамический импорт маршрутов
+  try {
+    userRoutes = (await import('../routes/userRoutes.js')).default;
+    gameRoutes = (await import('../routes/gameRoutes.js')).default;
+    leaderboardRoutes = (await import('../routes/leaderboardRoutes.js')).default;
+    healthRoutes = (await import('../routes/healthRoutes.js')).default;
+    telegramRoutes = (await import('../routes/telegramRoutes.js')).default;
+  } catch (error) {
+    logger.error('Error importing routes:', error);
+    throw error;
+  }
+
   // Базовый маршрут для проверки работоспособности
   app.get('/', (req, res) => {
     res.status(200).json({ status: 'ok', message: 'Criminal Bluff API Service' });

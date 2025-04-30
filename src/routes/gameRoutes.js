@@ -1,8 +1,9 @@
-const express = require('express');
+import express from 'express';
+import * as gameController from '../controllers/gameController.js';
+import { requireAuth, strictTelegramAuth } from '../middlewares/auth.js';
+import { validateBody, schemas } from '../middlewares/validation.js';
+
 const router = express.Router();
-const gameController = require('../controllers/gameController');
-const { requireAuth, strictTelegramAuth } = require('../middlewares/auth');
-const { validateBody, schemas } = require('../middlewares/validation');
 
 // Маршруты для игры
 router.get('/start', strictTelegramAuth, gameController.getRandomStories);
@@ -22,4 +23,4 @@ router.post('/track',
   gameController.trackAction
 );
 
-module.exports = router; 
+export { router as default }; 
