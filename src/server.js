@@ -6,6 +6,9 @@ import { createLogger, format, transports } from 'winston';
 import helmet from 'helmet';
 import cors from 'cors';
 import formidable from 'express-formidable';
+import { setupMiddleware, setupRoutes, setupErrorHandling } from './config/app.js';
+import { connectDB, closeDB } from './config/database.js';
+import { connectRedis, closeRedis } from './config/redis.js';
 
 // Настройка путей для ES модулей
 const __filename = fileURLToPath(import.meta.url);
