@@ -83,7 +83,7 @@ function calculateScore(isCorrect, timeMs, streak = 0) {
 }
 
 // Экспорт функций для использования в других модулях
-module.exports = {
+export {
   calculateBaseScore,
   calculateStreakBonus,
   calculateScore,

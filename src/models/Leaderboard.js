@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const { createLogger } = require('../utils/logger');
+import mongoose from 'mongoose';
+import { createLogger } from '../utils/logger.js';
 
 const logger = createLogger('LeaderboardModel');
 
@@ -140,4 +140,4 @@ leaderboardSchema.index({ createdAt: 1 });
 
 const Leaderboard = mongoose.model('Leaderboard', leaderboardSchema);
 
-module.exports = Leaderboard; 
+export default Leaderboard; 

@@ -1,12 +1,12 @@
-const { createLogger } = require('../config/logger');
-const { GameError } = require('../utils/errorHandler');
-const User = require('../models/User');
-const Leaderboard = require('../models/Leaderboard');
-const Achievement = require('../models/Achievement');
-const cacheService = require('./cacheService');
-const leaderboardService = require('./leaderboardService');
-const mongoose = require('mongoose');
-const scoreCalculator = require('../utils/scoreCalculator');
+import { createLogger } from '../config/logger.js';
+import { GameError } from '../utils/errorHandler.js';
+import User from '../models/User.js';
+import Leaderboard from '../models/Leaderboard.js';
+import Achievement from '../models/Achievement.js';
+import cacheService from './cacheService.js';
+import leaderboardService from './leaderboardService.js';
+import mongoose from 'mongoose';
+import scoreCalculator from '../utils/scoreCalculator.js';
 
 const logger = createLogger('GameLogicService');
 
@@ -716,4 +716,4 @@ class GameLogicService {
   }
 }
 
-module.exports = new GameLogicService(); 
+export default new GameLogicService(); 

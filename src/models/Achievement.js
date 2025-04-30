@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const { createLogger } = require('../utils/logger');
+import mongoose from 'mongoose';
+import { createLogger } from '../utils/logger.js';
 
 const logger = createLogger('AchievementModel');
 
@@ -45,4 +45,4 @@ achievementSchema.index({ code: 1 });
 
 const Achievement = mongoose.model('Achievement', achievementSchema);
 
-module.exports = Achievement; 
+export default Achievement; 

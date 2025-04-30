@@ -1,8 +1,9 @@
-const { createLogger } = require('../config/logger');
-const { UserError, ValidationError } = require('../utils/errorHandler');
-const User = require('../models/User');
-const cacheService = require('./cacheService');
-const { validateUserData } = require('../utils/validator');
+import { createLogger } from '../config/logger.js';
+import { UserError, ValidationError } from '../utils/errorHandler.js';
+import User from '../models/User.js';
+import cacheService from './cacheService.js';
+import { validateUserData } from '../utils/validator.js';
+import leaderboardService from './leaderboardService.js';
 
 const logger = createLogger('UserService');
 
@@ -155,8 +156,6 @@ class UserService {
         wins: stats.correctAnswers || 0
       };
       
-      const leaderboardService = require('./leaderboardService');
-      
       await leaderboardService.updateUserScore(
         userId,
         username,
@@ -218,4 +217,4 @@ class UserService {
   }
 }
 
-module.exports = new UserService(); 
+export default new UserService(); 

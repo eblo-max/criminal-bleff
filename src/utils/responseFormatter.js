@@ -1,4 +1,4 @@
-const { createLogger } = require('../config/logger');
+import { createLogger } from '../config/logger.js';
 
 const logger = createLogger('ResponseFormatter');
 
@@ -132,7 +132,7 @@ const deleted = (res, message = 'Resource deleted successfully') => {
   return success(res, null, message, 204);
 };
 
-module.exports = {
+export {
   success,
   error,
   paginated,

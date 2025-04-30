@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const { createLogger } = require('../utils/logger');
+import mongoose from 'mongoose';
+import { createLogger } from '../utils/logger.js';
 
 const logger = createLogger('UserModel');
 
@@ -109,4 +109,4 @@ userSchema.index({ 'stats.totalScore': -1 });
 
 const User = mongoose.model('User', userSchema);
 
-module.exports = User; 
+export default User; 

@@ -1,6 +1,6 @@
-const { ValidationError, UnauthorizedError } = require('../utils/errorHandler');
-const { createLogger } = require('../config/logger');
-const authService = require('../services/authService');
+import { ValidationError, UnauthorizedError } from '../utils/errorHandler.js';
+import { createLogger } from '../config/logger.js';
+import authService from '../services/authService.js';
 
 const logger = createLogger('AuthMiddleware');
 
@@ -195,9 +195,9 @@ const requireAuth = async (req, res, next) => {
   }
 };
 
-module.exports = {
+export {
   validateTelegramWebAppData,
   validateTelegramUser,
-  requireAuth,
-  strictTelegramAuth
+  strictTelegramAuth,
+  requireAuth
 }; 

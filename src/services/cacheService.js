@@ -1,9 +1,9 @@
-const redis = require('redis');
-const { createLogger } = require('../config/logger');
-const { CacheError } = require('../utils/errorHandler');
-const Story = require('../models/Story');
-const User = require('../models/User');
-const Leaderboard = require('../models/Leaderboard');
+import { createClient } from 'redis';
+import { createLogger } from '../config/logger.js';
+import { CacheError } from '../utils/errorHandler.js';
+import Story from '../models/Story.js';
+import User from '../models/User.js';
+import Leaderboard from '../models/Leaderboard.js';
 
 const logger = createLogger('CacheService');
 const RECONNECT_INTERVAL = 5000; // 5 секунд между попытками переподключения
@@ -44,7 +44,7 @@ class CacheService {
       }
 
       // Создание нового клиента Redis с оптимизированными настройками
-      this.client = redis.createClient({
+      this.client = createClient({
         url: process.env.REDIS_URL,
         socket: {
           reconnectStrategy: false // Отключаем встроенную стратегию переподключения и реализуем свою
@@ -421,4 +421,4 @@ class CacheService {
   }
 }
 
-module.exports = new CacheService(); 
+export default new CacheService(); 

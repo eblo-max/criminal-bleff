@@ -1,7 +1,7 @@
-const crypto = require('crypto');
-const jwt = require('jsonwebtoken');
-const { createLogger } = require('../config/logger');
-const User = require('../models/User');
+import crypto from 'crypto';
+import jwt from 'jsonwebtoken';
+import { createLogger } from '../config/logger.js';
+import User from '../models/User.js';
 
 const logger = createLogger('AuthService');
 
@@ -118,4 +118,4 @@ class AuthService {
   }
 }
 
-module.exports = new AuthService(); 
+export default new AuthService(); 

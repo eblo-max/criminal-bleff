@@ -1,6 +1,6 @@
-const { body, validationResult } = require('express-validator');
-const { createLogger } = require('../config/logger');
-const { ValidationError } = require('./errorHandler');
+import { body, validationResult } from 'express-validator';
+import { createLogger } from '../config/logger.js';
+import { ValidationError } from './errorHandler.js';
 
 const logger = createLogger('Validator');
 
@@ -223,16 +223,14 @@ const validateLeaderboardPeriod = (period) => {
   return true;
 };
 
-module.exports = {
-  commonRules,
-  validate,
+export {
   validateUserCreation,
   validateUserUpdate,
   validateStoryCreation,
   validateLeaderboardUpdate,
   validateLeaderboardQuery,
   validateUserData,
-  validateUserId,
-  validateLeaderboardPeriod,
-  validateLeaderboardQueryParams
+  validateLeaderboardQueryParams,
+  validate,
+  commonRules
 }; 

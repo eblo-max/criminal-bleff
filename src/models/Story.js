@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const { createLogger } = require('../utils/logger');
+import mongoose from 'mongoose';
+import { createLogger } from '../utils/logger.js';
 
 const logger = createLogger('StoryModel');
 
@@ -101,4 +101,4 @@ storySchema.index({ text: 'text' });
 
 const Story = mongoose.model('Story', storySchema);
 
-module.exports = Story; 
+export default Story; 

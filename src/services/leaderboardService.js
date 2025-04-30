@@ -1,8 +1,8 @@
-const mongoose = require('mongoose');
-const Leaderboard = require('../models/Leaderboard');
-const cacheService = require('./cacheService');
-const { createLogger } = require('../config/logger');
-const { LeaderboardError, GameError } = require('../utils/errorHandler');
+import mongoose from 'mongoose';
+import Leaderboard from '../models/Leaderboard.js';
+import cacheService from './cacheService.js';
+import { createLogger } from '../config/logger.js';
+import { LeaderboardError, GameError } from '../utils/errorHandler.js';
 
 const logger = createLogger('LeaderboardService');
 
@@ -386,4 +386,4 @@ class LeaderboardService {
   }
 }
 
-module.exports = new LeaderboardService();
+export default new LeaderboardService();
