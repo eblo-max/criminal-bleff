@@ -1,6 +1,6 @@
-const { createLogger } = require('../config/logger');
-const ValidationError = require('../errors/ValidationError');
-const NotFoundError = require('../errors/NotFoundError');
+import { createLogger } from '../utils/logger.js';
+import ValidationError from '../errors/ValidationError.js';
+import NotFoundError from '../errors/NotFoundError.js';
 
 const logger = createLogger('ErrorHandler');
 
@@ -140,18 +140,18 @@ const getSafeErrorMessage = (err) => {
   }
 };
 
-module.exports = {
+export {
   AppError,
   ValidationError,
-  AuthenticationError: UnauthorizedError,
-  AuthorizationError: ForbiddenError,
+  UnauthorizedError as AuthenticationError,
+  ForbiddenError as AuthorizationError,
   UnauthorizedError,
   NotFoundError,
-  RateLimitError: ForbiddenError,
+  ForbiddenError as RateLimitError,
   DatabaseError,
   UserError,
-  CacheError: ForbiddenError,
-  NetworkError: ForbiddenError,
+  ForbiddenError as CacheError,
+  ForbiddenError as NetworkError,
   LeaderboardError,
   GameError,
   errorHandler

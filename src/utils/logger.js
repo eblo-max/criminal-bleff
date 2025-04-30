@@ -1,9 +1,15 @@
-const winston = require('winston');
-const fs = require('fs');
-const path = require('path');
+import winston from 'winston';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+// Настройка путей для ES модулей
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 // Создаем директорию для логов если её нет
-const logDir = 'logs';
+const logDir = path.join(dirname(dirname(__dirname)), 'logs');
 if (!fs.existsSync(logDir)) {
   fs.mkdirSync(logDir);
 }
@@ -82,7 +88,7 @@ const stopCleanup = () => {
   }
 };
 
-module.exports = {
+export {
   createLogger,
   stopCleanup
 }; 

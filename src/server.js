@@ -1,7 +1,19 @@
-require('dotenv').config();
+import dotenv from 'dotenv';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+import express from 'express';
+import { createLogger, format, transports } from 'winston';
+import helmet from 'helmet';
+import cors from 'cors';
+import formidable from 'express-formidable';
 
-// Дополнительно загружаем переменные для AdminJS из отдельного файла
-require('dotenv').config({ path: 'src/config/admin.env' });
+// Настройка путей для ES модулей
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+// Загрузка переменных окружения
+dotenv.config();
+dotenv.config({ path: join(dirname(__dirname), 'src/config/admin.env') });
 
 // Проверяем основные переменные окружения и логируем только режим работы
 console.log('Environment loaded:', {
@@ -13,15 +25,6 @@ const enableAdmin = process.env.ENABLE_ADMIN === 'true';
 if (enableAdmin && process.env.NODE_ENV === 'production') {
   console.warn('WARNING: AdminJS is enabled in production mode. This is not recommended for security reasons.');
 }
-
-const express = require('express');
-const { createLogger, format, transports } = require('winston');
-const helmet = require('helmet');
-const cors = require('cors');
-const formidable = require('express-formidable');
-const { setupMiddleware, setupRoutes, setupErrorHandling } = require('./config/app');
-const { connectDB, closeDB } = require('./config/database');
-const { connectRedis, closeRedis } = require('./config/redis');
 
 // Initialize Express app
 const app = express();
@@ -200,4 +203,4 @@ process.on('unhandledRejection', (reason, promise) => {
 // Start the application
 start();
 
-module.exports = app; // Export app for testing or other purposes 
+export default app; // Export app for testing or other purposes 

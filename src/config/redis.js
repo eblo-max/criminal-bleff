@@ -1,5 +1,5 @@
-const Redis = require('ioredis');
-const { createLogger } = require('../utils/logger');
+import Redis from 'ioredis';
+import { createLogger } from '../utils/logger.js';
 
 const logger = createLogger('Redis');
 
@@ -76,7 +76,7 @@ const getRedisClient = () => {
   return redisClient;
 };
 
-module.exports = {
+export {
   connectRedis,
   closeRedis,
   getRedisClient

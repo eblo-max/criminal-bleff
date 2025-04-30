@@ -1,19 +1,19 @@
-const express = require('express');
-const cors = require('cors');
-const helmet = require('helmet');
-const morgan = require('morgan');
-const compression = require('compression');
-const { createLogger } = require('../utils/logger');
-const { connectDB, closeDB } = require('./database');
-const { connectRedis, closeRedis } = require('./redis');
-const { errorHandler } = require('../utils/errorHandler');
-const { rateLimiter, securityHeaders, validateInput, idempotencyProtection } = require('../middlewares/security');
-const userRoutes = require('../routes/userRoutes');
-const leaderboardRoutes = require('../routes/leaderboardRoutes');
-const gameRoutes = require('../routes/gameRoutes');
-const healthRoutes = require('../routes/healthRoutes');
-const telegramRoutes = require('../routes/telegramRoutes');
-const setupAdminPanel = require('./adminConfig');
+import express from 'express';
+import cors from 'cors';
+import helmet from 'helmet';
+import morgan from 'morgan';
+import compression from 'compression';
+import { createLogger } from '../utils/logger.js';
+import { connectDB, closeDB } from './database.js';
+import { connectRedis, closeRedis } from './redis.js';
+import { errorHandler } from '../utils/errorHandler.js';
+import { rateLimiter, securityHeaders, validateInput, idempotencyProtection } from '../middlewares/security.js';
+import userRoutes from '../routes/userRoutes.js';
+import leaderboardRoutes from '../routes/leaderboardRoutes.js';
+import gameRoutes from '../routes/gameRoutes.js';
+import healthRoutes from '../routes/healthRoutes.js';
+import telegramRoutes from '../routes/telegramRoutes.js';
+import setupAdminPanel from './adminConfig.js';
 
 const logger = createLogger('App');
 
@@ -161,7 +161,7 @@ const startServer = async (app, port) => {
   }
 };
 
-module.exports = {
+export {
   setupMiddleware,
   setupRoutes,
   setupErrorHandling,
