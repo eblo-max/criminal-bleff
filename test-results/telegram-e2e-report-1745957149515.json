@@ -1,0 +1,79 @@
+{
+  "startTime": "2025-04-29T20:02:37.236Z",
+  "testName": "Telegram WebApp E2E Test",
+  "steps": [
+    {
+      "step": 1,
+      "description": "Открытие страницы и инициализация мока Telegram WebApp API",
+      "timestamp": "2025-04-29T20:02:37.482Z"
+    },
+    {
+      "type": "log",
+      "message": "[INFO] Включен автономный режим "
+    },
+    {
+      "type": "log",
+      "message": "[INFO] Инициализация Telegram WebApp: автономный режим "
+    },
+    {
+      "type": "log",
+      "message": "[INFO] Включен автономный режим "
+    },
+    {
+      "type": "log",
+      "message": "[INFO] Инициализация Telegram WebApp: автономный режим "
+    },
+    {
+      "step": 2,
+      "description": "Ожидание загрузки стартового экрана",
+      "timestamp": "2025-04-29T20:02:39.491Z"
+    }
+  ],
+  "errors": [
+    {
+      "type": "console",
+      "message": "Failed to load resource: net::ERR_FILE_NOT_FOUND"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: net::ERR_FILE_NOT_FOUND"
+    },
+    {
+      "type": "console",
+      "message": "Refused to load the font 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/webfonts/fa-solid-900.woff2' because it violates the following Content Security Policy directive: \"default-src 'self'\". Note that 'font-src' was not explicitly set, so 'default-src' is used as a fallback.\n"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: net::ERR_FILE_NOT_FOUND"
+    },
+    {
+      "type": "pageError",
+      "message": "The requested module './ui.js' does not provide an export named 'state'"
+    },
+    {
+      "type": "pageError",
+      "message": "addDossierEffects is not defined\ninitProfileScreen (file:///C:/Users/user/fast_bot/public/js/ui.js:69:3)"
+    },
+    {
+      "type": "console",
+      "message": "[ERROR] Критическая ошибка инициализации приложения: JSHandle@error"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: net::ERR_FILE_NOT_FOUND"
+    },
+    {
+      "type": "testError",
+      "message": "Waiting for selector `#start-screen:not(.hidden)` failed: Waiting failed: 10000ms exceeded",
+      "stack": "TimeoutError: Waiting for selector `#start-screen:not(.hidden)` failed: Waiting failed: 10000ms exceeded\n    at new WaitTask (file:///C:/Users/user/fast_bot/node_modules/puppeteer-core/lib/esm/puppeteer/common/WaitTask.js:45:34)\n    at IsolatedWorld.waitForFunction (file:///C:/Users/user/fast_bot/node_modules/puppeteer-core/lib/esm/puppeteer/api/Realm.js:22:26)\n    at CSSQueryHandler.waitFor (file:///C:/Users/user/fast_bot/node_modules/puppeteer-core/lib/esm/puppeteer/common/QueryHandler.js:175:95)\n    at async CdpFrame.waitForSelector (file:///C:/Users/user/fast_bot/node_modules/puppeteer-core/lib/esm/puppeteer/api/Frame.js:545:21)\n    at async CdpPage.waitForSelector (file:///C:/Users/user/fast_bot/node_modules/puppeteer-core/lib/esm/puppeteer/api/Page.js:1374:20)\n    at async runTelegramE2ETest (file:///C:/Users/user/fast_bot/tests/telegram-e2e-test.js:148:5)"
+    }
+  ],
+  "screenshots": [
+    {
+      "name": "telegram-e2e-initial-1745956959436.png",
+      "description": "Начальное состояние"
+    }
+  ],
+  "endTime": "2025-04-29T20:02:49.498Z",
+  "success": false
+}

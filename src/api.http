@@ -1,0 +1,19 @@
+### ----- ДРУГИЕ ТЕСТЫ -----
+
+### Проверка состояния сервиса
+GET https://first-bot-production.up.railway.app/health
+Content-Type: application/json
+
+### Проверка состояния Redis
+GET https://first-bot-production.up.railway.app/health/redis
+Content-Type: application/json
+
+### Проверка состояния базы данных MongoDB
+GET https://first-bot-production.up.railway.app/health/db
+Content-Type: application/json
+
+### ----- ТЕСТЫ АДМИН-ПАНЕЛИ -----
+
+### Доступ к админ-панели
+GET https://first-bot-production.up.railway.app/admin
+Content-Type: application/json 

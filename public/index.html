@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#000000">
+    <meta name="description" content="Криминальный Блеф - игра-расследование">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://telegram.org https://*.telegram.org 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; font-src 'self' data: https://cdnjs.cloudflare.com; connect-src 'self' https://*.telegram.org wss://*.telegram.org; img-src 'self' data: blob: https://*.telegram.org; frame-src 'self' https://telegram.org https://*.telegram.org; worker-src 'self' blob:;">
+    <title>Криминальный Блеф</title>
+    <link rel="icon" href="favicon.ico">
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/tutorial.css">
+
+    <!-- Проверка и загрузка fallback для браузеров без поддержки модулей -->
+    <script>
+        window.ES_MODULES_SUPPORTED = false;
+        try {
+            // Проверяем поддержку ES модулей
+            new Function('import("")');
+            window.ES_MODULES_SUPPORTED = true;
+            console.log('ES модули поддерживаются');
+        } catch (e) {
+            console.warn('ES модули не поддерживаются, загружаем fallback');
+        }
+    </script>
+
+    <!-- Обработчик ошибок модулей -->
+    <script>
+        window.addEventListener('error', function(event) {
+            if (event.message && (event.message.includes('import') || event.message.includes('module'))) {
+                console.error('Ошибка загрузки модуля:', event.message);
+                // Если произошла ошибка загрузки модуля, загружаем fallback
+                if (!document.getElementById('fallback-script')) {
+                    const fallbackScript = document.createElement('script');
+                    fallbackScript.id = 'fallback-script';
+                    fallbackScript.src = 'js/nomodule-fallback.js';
+                    document.head.appendChild(fallbackScript);
+                }
+            }
+        });
+    </script>
+    
+    <!-- Telegram WebApp -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    
+    <!-- Загрузчик для браузеров без поддержки ES-модулей -->
+    <script nomodule src="js/nomodule-fallback.js"></script>
+    
+    <!-- Импорт модулей в правильном порядке -->
+    <script type="module" defer src="js/utils.js"></script>
+    <script type="module" defer src="js/telegram.js"></script>
+    <script type="module" defer src="js/app-init.js"></script>
+    <script type="module" defer src="js/ui.js"></script>
+    <script type="module" defer src="js/gameState.js"></script>
+    <script type="module" defer src="js/gameCore.js"></script>
+    <script type="module" defer src="js/game.js"></script>
+    <script type="module" defer src="js/tutorial.js"></script>
+    <script type="module" defer src="js/app.js"></script>
+
+    <!-- Блокируем перетаскивание для лучшего UX на мобильных устройствах -->
+    <style>
+        * {
+            -webkit-user-drag: none;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+            touch-action: manipulation;
+        }
+    </style>
+</head>
+<body>
+    <!-- Оверлей для индикации загрузки -->
+    <div id="loading-overlay" class="overlay">
+        <div class="loader"></div>
+    </div>
+
+    <!-- Экран запуска приложения -->
+    <div id="start-screen" class="screen" aria-label="Стартовый экран">
+        <div class="logo">
+            <h1>Криминальный Блеф</h1>
+        </div>
+        <div class="menu-buttons">
+            <button id="start-game-btn" class="action-button" aria-label="Начать расследование">НАЧАТЬ РАССЛЕДОВАНИЕ</button>
+            <button id="tutorial-btn" class="action-button" aria-label="Обучение">ОБУЧЕНИЕ</button>
+            <button id="profile-btn" class="action-button" aria-label="Профиль">ПРОФИЛЬ</button>
+            <button id="leaderboard-btn" class="action-button" aria-label="Рейтинг">РЕЙТИНГ</button>
+        </div>
+        <div class="footer">
+            <div class="version">Версия 1.0.2</div>
+        </div>
+    </div>
+
+    <!-- Экран профиля игрока -->
+    <div id="profile-screen" class="screen hidden" aria-label="Экран профиля">
+        <h2>Профиль</h2>
+        <div class="profile-container">
+            <div class="profile-info">
+                <div class="profile-avatar" aria-label="Аватар профиля"></div>
+                <div class="profile-name" aria-label="Имя пользователя">Пользователь</div>
+            </div>
+            <div class="profile-stats">
+                <div class="stat">
+                    <div class="stat-value" id="games-played">0</div>
+                    <div class="stat-label">Игр</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="correct-guesses">0</div>
+                    <div class="stat-label">Верно</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="achievements-count">0/10</div>
+                    <div class="stat-label">Достижения</div>
+                </div>
+            </div>
+            <div class="achievements-section">
+                <h3>Достижения</h3>
+                <div class="achievements-grid" id="achievements-container">
+                    <!-- Динамически заполняется -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Экран рейтинга игроков -->
+    <div id="leaderboard-screen" class="screen hidden" aria-label="Экран рейтинга">
+        <h2>Рейтинг</h2>
+        <div class="leaderboard-tabs">
+            <button class="tab-button active" data-tab="weekly">На неделе</button>
+            <button class="tab-button" data-tab="all-time">За всё время</button>
+        </div>
+        <div class="leaderboard-container">
+            <div class="leaderboard-list" id="leaderboard-list">
+                <!-- Динамически заполняется -->
+                <div class="loading-message">Загрузка рейтинга...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Экран игры -->
+    <div id="game-screen" class="screen hidden" aria-label="Игровой экран">
+        <div class="game-header">
+            <div class="case-info">
+                <div class="case-number" id="case-number">Дело №1</div>
+                <div class="difficulty" id="difficulty">Сложность: Легкая</div>
+            </div>
+            <div class="game-timer" id="game-timer">00:00</div>
+        </div>
+        
+        <div class="game-content">
+            <div class="game-tabs">
+                <button class="tab-button active" data-tab="case-info">Информация</button>
+                <button class="tab-button" data-tab="suspects">Подозреваемые</button>
+                <button class="tab-button" data-tab="evidence">Улики</button>
+            </div>
+            
+            <div class="tab-content active" id="case-info-content">
+                <div class="scenario-text" id="scenario-text">
+                    <!-- Динамически заполняется -->
+                </div>
+                <div class="location-image">
+                    <img id="location-img" src="img/locations/default.jpg" alt="Место преступления">
+                </div>
+            </div>
+            
+            <div class="tab-content" id="suspects-content">
+                <div class="suspects-grid" id="suspects-grid">
+                    <!-- Динамически заполняется -->
+                </div>
+            </div>
+            
+            <div class="tab-content" id="evidence-content">
+                <div class="evidence-list" id="evidence-list">
+                    <!-- Динамически заполняется -->
+                </div>
+            </div>
+        </div>
+        
+        <div class="game-footer">
+            <button id="solve-case-btn" class="action-button primary">РЕШИТЬ ДЕЛО</button>
+        </div>
+    </div>
+
+    <!-- Экран решения дела -->
+    <div id="solve-screen" class="screen hidden" aria-label="Экран решения дела">
+        <h2>Решение дела</h2>
+        <div class="solve-content">
+            <div class="question">Кто совершил преступление?</div>
+            <div class="options-container" id="suspect-options">
+                <!-- Динамически заполняется -->
+            </div>
+            <div class="question">Выберите мотив:</div>
+            <div class="options-container" id="motive-options">
+                <!-- Динамически заполняется -->
+            </div>
+        </div>
+        <div class="solve-footer">
+            <button id="confirm-solution-btn" class="action-button primary">ПОДТВЕРДИТЬ</button>
+            <button id="back-to-case-btn" class="action-button secondary">ВЕРНУТЬСЯ К ДЕЛУ</button>
+        </div>
+    </div>
+
+    <!-- Экран результатов -->
+    <div id="results-screen" class="screen hidden" aria-label="Экран результатов">
+        <div class="results-header">
+            <h2 id="result-title">Результат</h2>
+            <div class="result-status" id="result-status"></div>
+        </div>
+        <div class="results-content">
+            <div class="result-explanation" id="result-explanation">
+                <!-- Динамически заполняется -->
+            </div>
+            <div class="result-stats">
+                <div class="stat">
+                    <div class="stat-label">Время расследования</div>
+                    <div class="stat-value" id="investigation-time">00:00</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">Открыто улик</div>
+                    <div class="stat-value" id="evidence-found">0/6</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">Опрошено подозреваемых</div>
+                    <div class="stat-value" id="suspects-questioned">0/4</div>
+                </div>
+            </div>
+        </div>
+        <div class="results-footer">
+            <button id="next-case-btn" class="action-button primary">СЛЕДУЮЩЕЕ ДЕЛО</button>
+            <button id="share-result-btn" class="action-button secondary">ПОДЕЛИТЬСЯ</button>
+            <button id="back-to-menu-btn" class="action-button secondary">В МЕНЮ</button>
+        </div>
+    </div>
+
+    <!-- Оверлей для туториала -->
+    <div id="tutorial-overlay" class="overlay hidden">
+        <div class="tutorial-container">
+            <div class="tutorial-step" data-step="1">
+                <h3>Добро пожаловать в игру!</h3>
+                <p>В этой игре вы - детектив, который расследует запутанные дела.</p>
+                <button class="tutorial-next action-button">Далее</button>
+            </div>
+            <div class="tutorial-step" data-step="2">
+                <h3>Расследование дела</h3>
+                <p>Изучайте сценарий, допрашивайте подозреваемых и собирайте улики.</p>
+                <button class="tutorial-next action-button">Далее</button>
+            </div>
+            <div class="tutorial-step" data-step="3">
+                <h3>Решение дела</h3>
+                <p>Когда вы готовы, выберите виновного и его мотив. Будьте внимательны!</p>
+                <button class="tutorial-next action-button">Далее</button>
+            </div>
+            <div class="tutorial-step" data-step="4">
+                <h3>Достижения и рейтинг</h3>
+                <p>Зарабатывайте достижения и соревнуйтесь с другими детективами.</p>
+                <button class="tutorial-close action-button">Начать игру</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Компонент уведомлений -->
+    <div id="notification" class="notification hidden"></div>
+</body>
+</html> 

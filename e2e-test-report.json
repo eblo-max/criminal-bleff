@@ -1,0 +1,504 @@
+{
+  "summary": {
+    "duration": "22.78 seconds",
+    "stepsCompleted": 49,
+    "errors": 3,
+    "warnings": 7,
+    "screenshots": 5,
+    "success": false
+  },
+  "steps": [
+    {
+      "step": 1,
+      "description": "Запуск профессионального E2E тестирования",
+      "status": "start",
+      "timestamp": "2025-04-30T14:05:31.315Z"
+    },
+    {
+      "step": 2,
+      "description": "Запуск браузера",
+      "status": "setup",
+      "timestamp": "2025-04-30T14:05:31.317Z"
+    },
+    {
+      "step": 3,
+      "description": "Переход на страницу приложения: https://first-bot-production.up.railway.app",
+      "status": "navigation",
+      "timestamp": "2025-04-30T14:05:31.639Z"
+    },
+    {
+      "step": 4,
+      "description": "Страница приложения загружена",
+      "status": "success",
+      "timestamp": "2025-04-30T14:05:37.123Z"
+    },
+    {
+      "step": 5,
+      "description": "Скриншот сохранен: initial-app-load_2025-04-30T14-05-40-134Z.png",
+      "status": "info",
+      "timestamp": "2025-04-30T14:05:40.473Z"
+    },
+    {
+      "step": 6,
+      "description": "Инъекция мока Telegram WebApp API",
+      "status": "inject",
+      "timestamp": "2025-04-30T14:05:40.473Z"
+    },
+    {
+      "step": 7,
+      "description": "Инжектирование мока Telegram WebApp API с пользователем ID: 377381733",
+      "status": "info",
+      "timestamp": "2025-04-30T14:05:40.473Z"
+    },
+    {
+      "step": 8,
+      "description": "Анализ начального состояния приложения",
+      "status": "analysis",
+      "timestamp": "2025-04-30T14:05:43.481Z"
+    },
+    {
+      "step": 9,
+      "description": "Найдено 4 видимых кнопок на странице",
+      "status": "info",
+      "timestamp": "2025-04-30T14:05:43.484Z"
+    },
+    {
+      "step": 10,
+      "description": "Кнопка 1: \"НАЧАТЬ РАССЛЕДОВАНИЕ\"",
+      "status": "info",
+      "timestamp": "2025-04-30T14:05:43.484Z"
+    },
+    {
+      "step": 11,
+      "description": "Кнопка 2: \"ЛИЧНОЕ ДЕЛО\"",
+      "status": "info",
+      "timestamp": "2025-04-30T14:05:43.484Z"
+    },
+    {
+      "step": 12,
+      "description": "Кнопка 3: \"УПРАВЛЕНИЕ КАДРОВ\"",
+      "status": "info",
+      "timestamp": "2025-04-30T14:05:43.484Z"
+    },
+    {
+      "step": 13,
+      "description": "Кнопка 4: \"ОБУЧЕНИЕ\"",
+      "status": "info",
+      "timestamp": "2025-04-30T14:05:43.484Z"
+    },
+    {
+      "step": 14,
+      "description": "Текущее состояние страницы: URL=https://first-bot-production.up.railway.app/, Заголовок=Криминальный Блеф - True Crime Edition",
+      "status": "info",
+      "timestamp": "2025-04-30T14:05:43.485Z"
+    },
+    {
+      "step": 15,
+      "description": "Обнаружены элементы главного экрана игры",
+      "status": "success",
+      "timestamp": "2025-04-30T14:05:43.485Z"
+    },
+    {
+      "step": 16,
+      "description": "Начало взаимодействия с приложением",
+      "status": "interaction",
+      "timestamp": "2025-04-30T14:05:43.486Z"
+    },
+    {
+      "step": 17,
+      "description": "Шаг 1: Нажатие на кнопку \"ОБУЧЕНИЕ\"",
+      "status": "step",
+      "timestamp": "2025-04-30T14:05:43.486Z"
+    },
+    {
+      "step": 18,
+      "description": "Поиск и клик по кнопке \"ОБУЧЕНИЕ\"",
+      "status": "info",
+      "timestamp": "2025-04-30T14:05:43.486Z"
+    },
+    {
+      "step": 19,
+      "description": "Кнопка \"ОБУЧЕНИЕ\" успешно нажата",
+      "status": "success",
+      "timestamp": "2025-04-30T14:05:43.487Z"
+    },
+    {
+      "step": 20,
+      "description": "Скриншот сохранен: after-first-button_2025-04-30T14-05-45-490Z.png",
+      "status": "info",
+      "timestamp": "2025-04-30T14:05:45.688Z"
+    },
+    {
+      "step": 21,
+      "description": "Проверка наличия туториала в DOM",
+      "status": "debug",
+      "timestamp": "2025-04-30T14:05:48.703Z"
+    },
+    {
+      "step": 22,
+      "description": "Результаты проверки туториала: overlay=found, \n          display=none, stepsCount=3",
+      "status": "info",
+      "timestamp": "2025-04-30T14:05:48.705Z"
+    },
+    {
+      "step": 23,
+      "description": "Найдено 5 элементов с текстом \"Далее/Пропустить\"",
+      "status": "success",
+      "timestamp": "2025-04-30T14:05:48.705Z"
+    },
+    {
+      "step": 24,
+      "description": "Попытка принудительно показать туториал",
+      "status": "debug",
+      "timestamp": "2025-04-30T14:05:48.705Z"
+    },
+    {
+      "step": 25,
+      "description": "Скриншот сохранен: after-tutorial-forced_2025-04-30T14-05-48-706Z.png",
+      "status": "info",
+      "timestamp": "2025-04-30T14:05:48.838Z"
+    },
+    {
+      "step": 26,
+      "description": "Состояние после клика: найдено 4 кнопок",
+      "status": "info",
+      "timestamp": "2025-04-30T14:05:48.840Z"
+    },
+    {
+      "step": 27,
+      "description": "Шаг 2: Анализ DOM-изменений после клика",
+      "status": "step",
+      "timestamp": "2025-04-30T14:05:48.840Z"
+    },
+    {
+      "step": 28,
+      "description": "Обнаружено 0 изменений в DOM",
+      "status": "info",
+      "timestamp": "2025-04-30T14:05:48.842Z"
+    },
+    {
+      "step": 29,
+      "description": "Шаг 3: Поиск следующего интерактивного элемента",
+      "status": "step",
+      "timestamp": "2025-04-30T14:05:48.842Z"
+    },
+    {
+      "step": 30,
+      "description": "Пробуем найти кнопку \"Далее\"",
+      "status": "info",
+      "timestamp": "2025-04-30T14:05:48.842Z"
+    },
+    {
+      "step": 31,
+      "description": "Поиск и клик по кнопке \"Далее\"",
+      "status": "info",
+      "timestamp": "2025-04-30T14:05:48.842Z"
+    },
+    {
+      "step": 32,
+      "description": "Пробуем найти кнопку \"Начать игру\"",
+      "status": "info",
+      "timestamp": "2025-04-30T14:05:48.844Z"
+    },
+    {
+      "step": 33,
+      "description": "Поиск и клик по кнопке \"Начать игру\"",
+      "status": "info",
+      "timestamp": "2025-04-30T14:05:48.844Z"
+    },
+    {
+      "step": 34,
+      "description": "Пробуем найти кнопку \"Пропустить\"",
+      "status": "info",
+      "timestamp": "2025-04-30T14:05:48.845Z"
+    },
+    {
+      "step": 35,
+      "description": "Поиск и клик по кнопке \"Пропустить\"",
+      "status": "info",
+      "timestamp": "2025-04-30T14:05:48.845Z"
+    },
+    {
+      "step": 36,
+      "description": "Пробуем найти кнопку \"Вариант\"",
+      "status": "info",
+      "timestamp": "2025-04-30T14:05:48.847Z"
+    },
+    {
+      "step": 37,
+      "description": "Поиск и клик по кнопке \"Вариант\"",
+      "status": "info",
+      "timestamp": "2025-04-30T14:05:48.847Z"
+    },
+    {
+      "step": 38,
+      "description": "Не найдено приоритетных кнопок, пробуем любой интерактивный элемент",
+      "status": "retry",
+      "timestamp": "2025-04-30T14:05:48.848Z"
+    },
+    {
+      "step": 39,
+      "description": "Поиск любого интерактивного элемента для взаимодействия",
+      "status": "info",
+      "timestamp": "2025-04-30T14:05:48.848Z"
+    },
+    {
+      "step": 40,
+      "description": "Элемент <button> \"НАЧАТЬ РАССЛЕДОВАНИЕ\" успешно нажат",
+      "status": "success",
+      "timestamp": "2025-04-30T14:05:48.850Z"
+    },
+    {
+      "step": 41,
+      "description": "Скриншот сохранен: after-second-interaction_2025-04-30T14-05-50-863Z.png",
+      "status": "info",
+      "timestamp": "2025-04-30T14:05:50.965Z"
+    },
+    {
+      "step": 42,
+      "description": "Финальное состояние: URL=https://first-bot-production.up.railway.app/",
+      "status": "info",
+      "timestamp": "2025-04-30T14:05:53.973Z"
+    },
+    {
+      "step": 43,
+      "description": "Скриншот сохранен: final-state_2025-04-30T14-05-53-973Z.png",
+      "status": "info",
+      "timestamp": "2025-04-30T14:05:54.089Z"
+    },
+    {
+      "step": 44,
+      "description": "Отладка состояния приложения",
+      "status": "debug",
+      "timestamp": "2025-04-30T14:05:54.089Z"
+    },
+    {
+      "step": 45,
+      "description": "Отладочная информация собрана",
+      "status": "success",
+      "timestamp": "2025-04-30T14:05:54.091Z"
+    },
+    {
+      "step": 46,
+      "description": "Найдено 4 видимых кнопок из 16 общих",
+      "status": "info",
+      "timestamp": "2025-04-30T14:05:54.092Z"
+    },
+    {
+      "step": 47,
+      "description": "Объект Telegram WebApp обнаружен",
+      "status": "success",
+      "timestamp": "2025-04-30T14:05:54.092Z"
+    },
+    {
+      "step": 48,
+      "description": "Тестирование завершено. Длительность: 22.78 seconds",
+      "status": "end",
+      "timestamp": "2025-04-30T14:05:54.093Z"
+    },
+    {
+      "step": 49,
+      "description": "Тест завершен с ошибками: 3",
+      "status": "error",
+      "timestamp": "2025-04-30T14:05:54.093Z"
+    }
+  ],
+  "errors": [
+    {
+      "message": "Cannot use import statement outside a module",
+      "stack": "SyntaxError: Cannot use import statement outside a module",
+      "timestamp": "2025-04-30T14:05:35.031Z",
+      "step": 3
+    },
+    {
+      "message": "Cannot use import statement outside a module",
+      "stack": "SyntaxError: Cannot use import statement outside a module",
+      "timestamp": "2025-04-30T14:05:35.801Z",
+      "step": 3
+    },
+    {
+      "message": "Cannot use import statement outside a module",
+      "stack": "SyntaxError: Cannot use import statement outside a module",
+      "timestamp": "2025-04-30T14:05:36.571Z",
+      "step": 3
+    }
+  ],
+  "warnings": [
+    {
+      "message": "Console error: Failed to load resource: the server responded with a status of 404 ()",
+      "timestamp": "2025-04-30T14:05:36.956Z",
+      "step": 3
+    },
+    {
+      "message": "Telegram WebApp API уже существует или не может быть эмулирован",
+      "timestamp": "2025-04-30T14:05:40.475Z",
+      "step": 7
+    },
+    {
+      "message": "Не обнаружены элементы обучения или игры после клика",
+      "timestamp": "2025-04-30T14:05:48.842Z",
+      "step": 28
+    },
+    {
+      "message": "Не удалось нажать кнопку \"Далее\": Button not found",
+      "timestamp": "2025-04-30T14:05:48.844Z",
+      "step": 31
+    },
+    {
+      "message": "Не удалось нажать кнопку \"Начать игру\": Button not found",
+      "timestamp": "2025-04-30T14:05:48.845Z",
+      "step": 33
+    },
+    {
+      "message": "Не удалось нажать кнопку \"Пропустить\": Button not found",
+      "timestamp": "2025-04-30T14:05:48.846Z",
+      "step": 35
+    },
+    {
+      "message": "Не удалось нажать кнопку \"Вариант\": Button not found",
+      "timestamp": "2025-04-30T14:05:48.848Z",
+      "step": 37
+    }
+  ],
+  "screenshots": [
+    {
+      "path": "test-screenshots\\initial-app-load_2025-04-30T14-05-40-134Z.png",
+      "timestamp": "2025-04-30T14:05:40.473Z",
+      "step": 4
+    },
+    {
+      "path": "test-screenshots\\after-first-button_2025-04-30T14-05-45-490Z.png",
+      "timestamp": "2025-04-30T14:05:45.688Z",
+      "step": 19
+    },
+    {
+      "path": "test-screenshots\\after-tutorial-forced_2025-04-30T14-05-48-706Z.png",
+      "timestamp": "2025-04-30T14:05:48.838Z",
+      "step": 24
+    },
+    {
+      "path": "test-screenshots\\after-second-interaction_2025-04-30T14-05-50-863Z.png",
+      "timestamp": "2025-04-30T14:05:50.965Z",
+      "step": 40
+    },
+    {
+      "path": "test-screenshots\\final-state_2025-04-30T14-05-53-973Z.png",
+      "timestamp": "2025-04-30T14:05:54.089Z",
+      "step": 42
+    }
+  ],
+  "consoleMessages": [
+    {
+      "message": {
+        "type": "log",
+        "text": "DOM observer started"
+      },
+      "timestamp": "2025-04-30T14:05:31.638Z"
+    },
+    {
+      "message": {
+        "type": "log",
+        "text": "[Telegram.WebView] > postEvent web_app_set_header_color JSHandle@object"
+      },
+      "timestamp": "2025-04-30T14:05:34.388Z"
+    },
+    {
+      "message": {
+        "type": "log",
+        "text": "[Telegram.WebView] > postEvent web_app_set_bottom_bar_color JSHandle@object"
+      },
+      "timestamp": "2025-04-30T14:05:34.388Z"
+    },
+    {
+      "message": {
+        "type": "log",
+        "text": "[Telegram.WebView] > postEvent web_app_request_theme "
+      },
+      "timestamp": "2025-04-30T14:05:34.388Z"
+    },
+    {
+      "message": {
+        "type": "log",
+        "text": "[Telegram.WebView] > postEvent web_app_request_viewport "
+      },
+      "timestamp": "2025-04-30T14:05:34.389Z"
+    },
+    {
+      "message": {
+        "type": "log",
+        "text": "[Telegram.WebView] > postEvent web_app_request_safe_area "
+      },
+      "timestamp": "2025-04-30T14:05:34.389Z"
+    },
+    {
+      "message": {
+        "type": "log",
+        "text": "[Telegram.WebView] > postEvent web_app_request_content_safe_area "
+      },
+      "timestamp": "2025-04-30T14:05:34.389Z"
+    },
+    {
+      "message": {
+        "type": "error",
+        "text": "Failed to load resource: the server responded with a status of 404 ()"
+      },
+      "timestamp": "2025-04-30T14:05:36.956Z"
+    },
+    {
+      "message": {
+        "type": "log",
+        "text": "Telegram WebApp объект уже существует."
+      },
+      "timestamp": "2025-04-30T14:05:40.475Z"
+    },
+    {
+      "message": {
+        "type": "log",
+        "text": "Найдена кнопка с текстом \"ОБУЧЕНИЕ\""
+      },
+      "timestamp": "2025-04-30T14:05:43.487Z"
+    },
+    {
+      "message": {
+        "type": "log",
+        "text": "Клик по кнопке \"ОБУЧЕНИЕ\" выполнен"
+      },
+      "timestamp": "2025-04-30T14:05:43.487Z"
+    },
+    {
+      "message": {
+        "type": "log",
+        "text": "Туториал принудительно показан"
+      },
+      "timestamp": "2025-04-30T14:05:48.706Z"
+    },
+    {
+      "message": {
+        "type": "warn",
+        "text": "Кнопка с текстом \"Далее\" не найдена"
+      },
+      "timestamp": "2025-04-30T14:05:48.843Z"
+    },
+    {
+      "message": {
+        "type": "warn",
+        "text": "Кнопка с текстом \"Начать игру\" не найдена"
+      },
+      "timestamp": "2025-04-30T14:05:48.845Z"
+    },
+    {
+      "message": {
+        "type": "warn",
+        "text": "Кнопка с текстом \"Пропустить\" не найдена"
+      },
+      "timestamp": "2025-04-30T14:05:48.846Z"
+    },
+    {
+      "message": {
+        "type": "warn",
+        "text": "Кнопка с текстом \"Вариант\" не найдена"
+      },
+      "timestamp": "2025-04-30T14:05:48.848Z"
+    }
+  ]
+}

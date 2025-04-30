@@ -1,0 +1,15 @@
+{
+  "startTime": "2025-04-29T20:22:50.440Z",
+  "testName": "Basic Telegram WebApp Test",
+  "errors": [
+    {
+      "type": "testError",
+      "message": "page.waitForTimeout is not a function",
+      "stack": "TypeError: page.waitForTimeout is not a function\n    at runBasicTelegramTest (file:///C:/Users/user/fast_bot/tests/telegram-e2e-basic-test.js:156:16)"
+    }
+  ],
+  "warnings": [],
+  "screenshots": [],
+  "endTime": "2025-04-29T20:22:51.641Z",
+  "success": false
+}

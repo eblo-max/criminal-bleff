@@ -1,0 +1,532 @@
+/* Основные стили для Криминальный Блеф - Telegram Mini App */
+
+/* Сброс стилей и базовые настройки */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    /* Основная цветовая схема (темная) */
+    --bg-primary: #1c1c28;
+    --bg-secondary: #2a2a3a;
+    --text-primary: #ffffff;
+    --text-secondary: #b3b3cc;
+    --accent-primary: #ff3366;
+    --accent-secondary: #6658f5;
+    --success-color: #4cd964;
+    --error-color: #ff3b30;
+    --warning-color: #ffcc00;
+    --shadow-color: rgba(0, 0, 0, 0.25);
+    
+    /* Размеры и отступы */
+    --container-padding: 16px;
+    --border-radius: 8px;
+    --button-height: 48px;
+    --header-height: 56px;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.5;
+    font-size: 16px;
+}
+
+/* Контейнеры и разметка */
+.container {
+    padding: var(--container-padding);
+    max-width: 100%;
+    margin: 0 auto;
+    width: 100%;
+}
+
+#app {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.screen {
+    flex: 1;
+    display: none;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.screen.active {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Заголовки и текст */
+h1, h2, h3, h4 {
+    margin-bottom: 16px;
+    color: var(--text-primary);
+}
+
+h1 {
+    font-size: 28px;
+    text-align: center;
+    margin-top: 20px;
+}
+
+h2 {
+    font-size: 24px;
+    text-align: center;
+}
+
+h3 {
+    font-size: 20px;
+}
+
+p {
+    margin-bottom: 16px;
+    color: var(--text-secondary);
+}
+
+.description {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+/* Кнопки */
+.btn {
+    display: block;
+    width: 100%;
+    height: var(--button-height);
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-bottom: 12px;
+    transition: all 0.2s ease;
+    outline: none;
+}
+
+.btn-primary {
+    background-color: var(--accent-primary);
+    color: var(--text-primary);
+}
+
+.btn-secondary {
+    background-color: var(--accent-secondary);
+    color: var(--text-primary);
+}
+
+.btn:active {
+    transform: scale(0.98);
+}
+
+.button-container {
+    margin-top: 24px;
+}
+
+/* Стартовый экран */
+#start-screen {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-top: 20px;
+}
+
+#start-screen .title {
+    margin-bottom: 16px;
+    font-size: 32px;
+    background: linear-gradient(to right, var(--accent-primary), var(--accent-secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-align: center;
+}
+
+/* Игровой экран */
+.game-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--bg-secondary);
+}
+
+.timer {
+    font-size: 18px;
+    font-weight: bold;
+    color: var(--warning-color);
+}
+
+.progress-indicator {
+    font-size: 16px;
+    color: var(--text-secondary);
+}
+
+.score {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.story-container {
+    background-color: var(--bg-secondary);
+    border-radius: var(--border-radius);
+    padding: 16px;
+    margin-bottom: 20px;
+    min-height: 180px;
+    box-shadow: 0 4px 12px var(--shadow-color);
+}
+
+.story-text {
+    font-size: 18px;
+    line-height: 1.6;
+    margin-bottom: 0;
+    color: var(--text-primary);
+}
+
+.options-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.option-btn {
+    height: auto;
+    min-height: 48px;
+    padding: 12px 16px;
+    border-radius: var(--border-radius);
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--accent-secondary);
+    color: var(--text-primary);
+    text-align: left;
+    font-size: 16px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.option-btn:hover, .option-btn:focus {
+    background-color: rgba(102, 88, 245, 0.2);
+}
+
+.option-btn.selected {
+    background-color: var(--accent-secondary);
+    border-color: var(--accent-secondary);
+}
+
+.option-btn.correct {
+    background-color: var(--success-color);
+    border-color: var(--success-color);
+}
+
+.option-btn.incorrect {
+    background-color: var(--error-color);
+    border-color: var(--error-color);
+}
+
+/* Экран результата ответа */
+.result-indicator {
+    padding: 20px;
+    border-radius: var(--border-radius);
+    text-align: center;
+    margin-bottom: 20px;
+    animation: fadeIn 0.5s ease;
+}
+
+.result-indicator.correct {
+    background-color: rgba(76, 217, 100, 0.2);
+    border: 1px solid var(--success-color);
+}
+
+.result-indicator.incorrect {
+    background-color: rgba(255, 59, 48, 0.2);
+    border: 1px solid var(--error-color);
+}
+
+.result-text {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.result-text.correct {
+    color: var(--success-color);
+}
+
+.result-text.incorrect {
+    color: var(--error-color);
+}
+
+.explanation-container {
+    background-color: var(--bg-secondary);
+    border-radius: var(--border-radius);
+    padding: 16px;
+    margin-bottom: 24px;
+}
+
+/* Экран итоговых результатов */
+.results-container {
+    margin: 24px 0;
+}
+
+.result-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--bg-secondary);
+}
+
+.result-label {
+    font-weight: normal;
+    color: var(--text-secondary);
+}
+
+.result-value {
+    font-weight: bold;
+    font-size: 18px;
+}
+
+/* Экран профиля */
+.profile-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.profile-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-bottom: 12px;
+    border: 2px solid var(--accent-secondary);
+}
+
+.profile-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-name {
+    text-align: center;
+}
+
+.stats-container {
+    background-color: var(--bg-secondary);
+    border-radius: var(--border-radius);
+    padding: 16px;
+    margin-bottom: 24px;
+}
+
+.stat-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--bg-primary);
+}
+
+.stat-item:last-child {
+    border-bottom: none;
+}
+
+.stat-label {
+    color: var(--text-secondary);
+}
+
+.stat-value {
+    font-weight: bold;
+}
+
+.achievements-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.achievement-card {
+    background-color: var(--bg-secondary);
+    border-radius: var(--border-radius);
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.achievement-card.locked {
+    opacity: 0.5;
+}
+
+.achievement-icon {
+    font-size: 32px;
+    margin-bottom: 8px;
+}
+
+.achievement-name {
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+
+.achievement-description {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+/* Экран лидерборда */
+.tabs-container {
+    display: flex;
+    margin-bottom: 16px;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+}
+
+.tab-btn {
+    flex: 1;
+    padding: 10px;
+    background-color: var(--bg-secondary);
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 14px;
+}
+
+.tab-btn.active {
+    background-color: var(--accent-secondary);
+    color: var(--text-primary);
+}
+
+.leaderboard-container {
+    background-color: var(--bg-secondary);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    margin-bottom: 16px;
+}
+
+.leaderboard-header {
+    display: flex;
+    padding: 12px 16px;
+    font-weight: bold;
+    background-color: rgba(102, 88, 245, 0.2);
+    border-bottom: 1px solid var(--accent-secondary);
+}
+
+.rank-col {
+    width: 15%;
+    text-align: center;
+}
+
+.name-col {
+    width: 60%;
+}
+
+.score-col {
+    width: 25%;
+    text-align: right;
+}
+
+.leaderboard-item {
+    display: flex;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--bg-primary);
+}
+
+.leaderboard-item:last-child {
+    border-bottom: none;
+}
+
+.leaderboard-item.current-user {
+    background-color: rgba(102, 88, 245, 0.2);
+}
+
+.user-rank-container {
+    background-color: var(--bg-secondary);
+    border-radius: var(--border-radius);
+    padding: 12px 16px;
+    margin-bottom: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.user-rank-header {
+    color: var(--text-secondary);
+}
+
+.user-rank {
+    font-weight: bold;
+}
+
+/* Модальные окна */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal {
+    background-color: var(--bg-secondary);
+    border-radius: var(--border-radius);
+    width: 90%;
+    max-width: 400px;
+    max-height: 80vh;
+    overflow-y: auto;
+    animation: modalIn 0.3s ease;
+}
+
+.modal-content {
+    padding: 20px;
+}
+
+.modal-close-btn {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    background-color: var(--accent-primary);
+    color: var(--text-primary);
+    border: none;
+    border-bottom-left-radius: var(--border-radius);
+    border-bottom-right-radius: var(--border-radius);
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.hidden {
+    display: none;
+}
+
+/* Анимации */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes modalIn {
+    from { transform: scale(0.9); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+/* Адаптивные стили */
+@media (min-width: 768px) {
+    .container {
+        max-width: 480px;
+    }
+    
+    h1 {
+        font-size: 36px;
+    }
+    
+    .achievements-container {
+        grid-template-columns: repeat(3, 1fr);
+    }
+} 

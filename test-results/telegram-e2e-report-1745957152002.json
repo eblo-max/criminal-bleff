@@ -1,0 +1,23 @@
+{
+  "startTime": "2025-04-29T20:05:50.861Z",
+  "testName": "Telegram WebApp E2E Test",
+  "steps": [],
+  "errors": [
+    {
+      "type": "testError",
+      "message": "Cannot read properties of undefined (reading 'iPhone X')",
+      "stack": "TypeError: Cannot read properties of undefined (reading 'iPhone X')\n    at runTelegramE2ETest (file:///C:/Users/user/fast_bot/tests/telegram-e2e-test.js:63:41)",
+      "timestamp": "2025-04-29T20:05:51.146Z"
+    }
+  ],
+  "warnings": [],
+  "screenshots": [
+    {
+      "name": "telegram-e2e-error-1745957151146.png",
+      "description": "Скриншот при критической ошибке"
+    }
+  ],
+  "domInfo": [],
+  "endTime": "2025-04-29T20:05:51.146Z",
+  "success": false
+}

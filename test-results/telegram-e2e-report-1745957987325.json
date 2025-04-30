@@ -1,0 +1,95 @@
+{
+  "startTime": "2025-04-29T20:16:45.120Z",
+  "testName": "Telegram WebApp E2E Test",
+  "steps": [
+    {
+      "step": 1,
+      "description": "Загрузка модуля telegram-test-utils.js",
+      "timestamp": "2025-04-29T20:16:45.381Z"
+    },
+    {
+      "step": 2,
+      "description": "Загрузка страницы приложения",
+      "timestamp": "2025-04-29T20:16:45.382Z"
+    },
+    {
+      "type": "log",
+      "message": "Инициализация приложения...",
+      "timestamp": "2025-04-29T20:16:46.327Z"
+    },
+    {
+      "type": "log",
+      "message": "[INFO] Включен автономный режим ",
+      "timestamp": "2025-04-29T20:16:46.328Z"
+    },
+    {
+      "type": "log",
+      "message": "[INFO] Инициализация Telegram WebApp: автономный режим ",
+      "timestamp": "2025-04-29T20:16:46.328Z"
+    },
+    {
+      "type": "log",
+      "message": "[INFO] Включен автономный режим ",
+      "timestamp": "2025-04-29T20:16:46.329Z"
+    },
+    {
+      "type": "log",
+      "message": "[INFO] Инициализация Telegram WebApp: автономный режим ",
+      "timestamp": "2025-04-29T20:16:46.329Z"
+    },
+    {
+      "step": 3,
+      "description": "Внедрение модуля telegram-test-utils.js в страницу",
+      "timestamp": "2025-04-29T20:16:47.310Z"
+    }
+  ],
+  "errors": [
+    {
+      "type": "console",
+      "message": "Failed to load resource: net::ERR_FILE_NOT_FOUND",
+      "timestamp": "2025-04-29T20:16:45.430Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: net::ERR_FILE_NOT_FOUND",
+      "timestamp": "2025-04-29T20:16:45.431Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: net::ERR_FILE_NOT_FOUND",
+      "timestamp": "2025-04-29T20:16:46.320Z"
+    },
+    {
+      "type": "pageError",
+      "message": "The requested module './ui.js' does not provide an export named 'state'",
+      "timestamp": "2025-04-29T20:16:46.326Z"
+    },
+    {
+      "type": "pageError",
+      "message": "addDossierEffects is not defined\ninitProfileScreen (file:///C:/Users/user/fast_bot/public/js/ui.js:69:3)",
+      "timestamp": "2025-04-29T20:16:46.328Z"
+    },
+    {
+      "type": "console",
+      "message": "[ERROR] Критическая ошибка инициализации приложения: JSHandle@error",
+      "timestamp": "2025-04-29T20:16:46.329Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: net::ERR_FILE_NOT_FOUND",
+      "timestamp": "2025-04-29T20:16:46.333Z"
+    },
+    {
+      "type": "testError",
+      "message": "Unexpected identifier 'MainButton'",
+      "stack": "SyntaxError: Unexpected identifier 'MainButton'\n    at #evaluate (file:///C:/Users/user/fast_bot/node_modules/puppeteer-core/lib/esm/puppeteer/cdp/ExecutionContext.js:347:23)\n    at async ExecutionContext.evaluate (file:///C:/Users/user/fast_bot/node_modules/puppeteer-core/lib/esm/puppeteer/cdp/ExecutionContext.js:274:16)\n    at async IsolatedWorld.evaluate (file:///C:/Users/user/fast_bot/node_modules/puppeteer-core/lib/esm/puppeteer/cdp/IsolatedWorld.js:97:16)\n    at async CdpFrame.evaluate (file:///C:/Users/user/fast_bot/node_modules/puppeteer-core/lib/esm/puppeteer/api/Frame.js:361:20)\n    at async CdpPage.evaluate (file:///C:/Users/user/fast_bot/node_modules/puppeteer-core/lib/esm/puppeteer/api/Page.js:813:20)\n    at async runTelegramE2ETest (file:///C:/Users/user/fast_bot/tests/telegram-e2e-test.js:153:7)",
+      "timestamp": "2025-04-29T20:16:47.312Z"
+    }
+  ],
+  "warnings": [],
+  "screenshots": [],
+  "domInfo": [],
+  "forcedElements": null,
+  "endTime": "2025-04-29T20:16:47.312Z",
+  "success": false
+}

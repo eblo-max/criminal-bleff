@@ -1,0 +1,138 @@
+/* Стили для туториала */
+.tutorial-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.85);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  transition: opacity 0.3s ease;
+}
+
+.tutorial-overlay.hidden {
+  display: none !important;
+}
+
+.tutorial-step {
+  background-color: #1c1c1c;
+  border: 2px solid #00c6ff;
+  border-radius: 8px;
+  padding: 20px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 0 20px rgba(0, 198, 255, 0.4);
+  position: relative;
+  color: #fff;
+}
+
+.tutorial-step h2 {
+  color: #00c6ff;
+  font-size: 1.4rem;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+}
+
+.tutorial-step p {
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+.tutorial-step img {
+  max-width: 100%;
+  border-radius: 4px;
+  margin: 10px 0;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.tutorial-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.tutorial-next,
+.tutorial-close {
+  background-color: #00c6ff;
+  color: #000;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.tutorial-next:hover,
+.tutorial-close:hover {
+  background-color: #00e6ff;
+  transform: translateY(-2px);
+}
+
+.tutorial-close {
+  background-color: #ff3c4a;
+  color: white;
+}
+
+.tutorial-close:hover {
+  background-color: #ff5c6a;
+}
+
+.tutorial-step[data-step="1"] {
+  border-color: #00c6ff;
+}
+
+.tutorial-step[data-step="2"] {
+  border-color: #00e6ff;
+}
+
+.tutorial-step[data-step="3"] {
+  border-color: #00ffaa;
+}
+
+.tutorial-step[data-step="4"] {
+  border-color: #ffcc00;
+}
+
+/* Анимация появления */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.tutorial-step {
+  animation: fadeIn 0.5s ease forwards;
+}
+
+/* Медиа-запросы для мобильных устройств */
+@media (max-width: 768px) {
+  .tutorial-step {
+    width: 95%;
+    padding: 15px;
+  }
+  
+  .tutorial-step h2 {
+    font-size: 1.2rem;
+  }
+  
+  .tutorial-buttons {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .tutorial-next,
+  .tutorial-close {
+    width: 100%;
+    padding: 12px;
+  }
+} 

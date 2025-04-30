@@ -1,0 +1,331 @@
+{
+  "timestamp": "2025-04-29T17:37:44.213Z",
+  "url": "http://localhost:8080",
+  "screenshots": {
+    "initial": "C:\\Users\\user\\fast_bot\\test-results\\initial-load_2025-04-29_21-37-42.png",
+    "tutorial": null,
+    "game": null
+  },
+  "consoleMessages": [
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "timestamp": "2025-04-29T17:37:41.070Z"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "timestamp": "2025-04-29T17:37:41.076Z"
+    },
+    {
+      "type": "log",
+      "text": "[Telegram.WebView] > postEvent web_app_set_header_color JSHandle@object",
+      "timestamp": "2025-04-29T17:37:41.793Z"
+    },
+    {
+      "type": "log",
+      "text": "[Telegram.WebView] > postEvent web_app_set_bottom_bar_color JSHandle@object",
+      "timestamp": "2025-04-29T17:37:41.793Z"
+    },
+    {
+      "type": "log",
+      "text": "[Telegram.WebView] > postEvent web_app_request_theme ",
+      "timestamp": "2025-04-29T17:37:41.794Z"
+    },
+    {
+      "type": "log",
+      "text": "[Telegram.WebView] > postEvent web_app_request_viewport ",
+      "timestamp": "2025-04-29T17:37:41.794Z"
+    },
+    {
+      "type": "log",
+      "text": "[Telegram.WebView] > postEvent web_app_request_safe_area ",
+      "timestamp": "2025-04-29T17:37:41.794Z"
+    },
+    {
+      "type": "log",
+      "text": "[Telegram.WebView] > postEvent web_app_request_content_safe_area ",
+      "timestamp": "2025-04-29T17:37:41.795Z"
+    },
+    {
+      "type": "error",
+      "text": "Refused to load the font 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/webfonts/fa-solid-900.woff2' because it violates the following Content Security Policy directive: \"font-src 'self'\".\n",
+      "timestamp": "2025-04-29T17:37:41.796Z"
+    },
+    {
+      "type": "log",
+      "text": "Инициализация загрузчика приложения...",
+      "timestamp": "2025-04-29T17:37:41.803Z"
+    },
+    {
+      "type": "log",
+      "text": "DOM загружен, инициализация компонентов...",
+      "timestamp": "2025-04-29T17:37:41.803Z"
+    },
+    {
+      "type": "log",
+      "text": "Браузер поддерживает ES модули, загружаем модули приложения...",
+      "timestamp": "2025-04-29T17:37:41.804Z"
+    },
+    {
+      "type": "log",
+      "text": "Загрузка модуля: utils...",
+      "timestamp": "2025-04-29T17:37:41.804Z"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "timestamp": "2025-04-29T17:37:42.057Z"
+    },
+    {
+      "type": "log",
+      "text": "Модуль utils успешно загружен",
+      "timestamp": "2025-04-29T17:37:42.058Z"
+    },
+    {
+      "type": "log",
+      "text": "Загрузка модуля: telegram...",
+      "timestamp": "2025-04-29T17:37:42.058Z"
+    },
+    {
+      "type": "log",
+      "text": "Загрузка модуля: ui...",
+      "timestamp": "2025-04-29T17:37:42.058Z"
+    },
+    {
+      "type": "log",
+      "text": "Загрузка модуля: effects...",
+      "timestamp": "2025-04-29T17:37:42.058Z"
+    },
+    {
+      "type": "log",
+      "text": "Загрузка модуля: tutorial...",
+      "timestamp": "2025-04-29T17:37:42.059Z"
+    },
+    {
+      "type": "log",
+      "text": "Модуль ui успешно загружен",
+      "timestamp": "2025-04-29T17:37:42.060Z"
+    },
+    {
+      "type": "log",
+      "text": "Модуль tutorial успешно загружен",
+      "timestamp": "2025-04-29T17:37:42.061Z"
+    },
+    {
+      "type": "log",
+      "text": "Модуль telegram успешно загружен",
+      "timestamp": "2025-04-29T17:37:42.061Z"
+    },
+    {
+      "type": "log",
+      "text": "Модуль effects успешно загружен",
+      "timestamp": "2025-04-29T17:37:42.063Z"
+    },
+    {
+      "type": "log",
+      "text": "Загрузка модуля: app...",
+      "timestamp": "2025-04-29T17:37:42.063Z"
+    },
+    {
+      "type": "log",
+      "text": "Модуль app успешно загружен",
+      "timestamp": "2025-04-29T17:37:42.064Z"
+    },
+    {
+      "type": "log",
+      "text": "Все компоненты загружены успешно",
+      "timestamp": "2025-04-29T17:37:42.064Z"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "timestamp": "2025-04-29T17:37:42.065Z"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "timestamp": "2025-04-29T17:37:42.649Z"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "timestamp": "2025-04-29T17:37:42.650Z"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "timestamp": "2025-04-29T17:37:42.651Z"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "timestamp": "2025-04-29T17:37:42.651Z"
+    }
+  ],
+  "pageErrors": [
+    {
+      "message": "The requested module './utils.js' does not provide an export named 'showNotification'",
+      "stack": "SyntaxError: The requested module './utils.js' does not provide an export named 'showNotification'",
+      "timestamp": "2025-04-29T17:37:42.060Z"
+    },
+    {
+      "message": "The requested module './utils.js' does not provide an export named 'showNotification'",
+      "stack": "SyntaxError: The requested module './utils.js' does not provide an export named 'showNotification'",
+      "timestamp": "2025-04-29T17:37:42.061Z"
+    },
+    {
+      "message": "The requested module './gameAchievements.js' does not provide an export named 'createAchievementConfetti'",
+      "stack": "SyntaxError: The requested module './gameAchievements.js' does not provide an export named 'createAchievementConfetti'",
+      "timestamp": "2025-04-29T17:37:42.063Z"
+    },
+    {
+      "message": "The requested module './gameAchievements.js' does not provide an export named 'createAchievementConfetti'",
+      "stack": "SyntaxError: The requested module './gameAchievements.js' does not provide an export named 'createAchievementConfetti'",
+      "timestamp": "2025-04-29T17:37:42.064Z"
+    }
+  ],
+  "failedRequests": [
+    {
+      "url": "http://localhost:8080/css/normalize.css",
+      "method": "GET",
+      "error": "net::ERR_ABORTED",
+      "timestamp": "2025-04-29T17:37:41.072Z"
+    },
+    {
+      "url": "http://localhost:8080/css/animations.css",
+      "method": "GET",
+      "error": "net::ERR_ABORTED",
+      "timestamp": "2025-04-29T17:37:41.076Z"
+    },
+    {
+      "url": "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/webfonts/fa-solid-900.woff2",
+      "method": "GET",
+      "error": "неизвестная ошибка",
+      "timestamp": "2025-04-29T17:37:41.802Z"
+    },
+    {
+      "url": "http://localhost:8080/js/css/normalize.css",
+      "method": "GET",
+      "error": "net::ERR_ABORTED",
+      "timestamp": "2025-04-29T17:37:42.649Z"
+    },
+    {
+      "url": "http://localhost:8080/js/css/styles.css",
+      "method": "GET",
+      "error": "net::ERR_ABORTED",
+      "timestamp": "2025-04-29T17:37:42.650Z"
+    },
+    {
+      "url": "http://localhost:8080/js/css/animations.css",
+      "method": "GET",
+      "error": "net::ERR_ABORTED",
+      "timestamp": "2025-04-29T17:37:42.651Z"
+    },
+    {
+      "url": "http://localhost:8080/js/css/tutorial.css",
+      "method": "GET",
+      "error": "net::ERR_ABORTED",
+      "timestamp": "2025-04-29T17:37:42.651Z"
+    }
+  ],
+  "visibleButtons": [
+    {
+      "id": "start-game-btn",
+      "text": "НАЧАТЬ РАССЛЕДОВАНИЕ",
+      "isVisible": true
+    },
+    {
+      "id": "tutorial-btn",
+      "text": "ОБУЧЕНИЕ",
+      "isVisible": true
+    },
+    {
+      "id": "profile-btn",
+      "text": "ПРОФИЛЬ",
+      "isVisible": true
+    },
+    {
+      "id": "leaderboard-btn",
+      "text": "РЕЙТИНГ",
+      "isVisible": true
+    },
+    {
+      "id": "",
+      "text": "На неделе",
+      "isVisible": false
+    },
+    {
+      "id": "",
+      "text": "За всё время",
+      "isVisible": false
+    },
+    {
+      "id": "",
+      "text": "Информация",
+      "isVisible": false
+    },
+    {
+      "id": "",
+      "text": "Подозреваемые",
+      "isVisible": false
+    },
+    {
+      "id": "",
+      "text": "Улики",
+      "isVisible": false
+    },
+    {
+      "id": "solve-case-btn",
+      "text": "РЕШИТЬ ДЕЛО",
+      "isVisible": false
+    },
+    {
+      "id": "confirm-solution-btn",
+      "text": "ПОДТВЕРДИТЬ",
+      "isVisible": false
+    },
+    {
+      "id": "back-to-case-btn",
+      "text": "ВЕРНУТЬСЯ К ДЕЛУ",
+      "isVisible": false
+    },
+    {
+      "id": "next-case-btn",
+      "text": "СЛЕДУЮЩЕЕ ДЕЛО",
+      "isVisible": false
+    },
+    {
+      "id": "share-result-btn",
+      "text": "ПОДЕЛИТЬСЯ",
+      "isVisible": false
+    },
+    {
+      "id": "back-to-menu-btn",
+      "text": "В МЕНЮ",
+      "isVisible": false
+    },
+    {
+      "id": "",
+      "text": "Далее",
+      "isVisible": false
+    },
+    {
+      "id": "",
+      "text": "Далее",
+      "isVisible": false
+    },
+    {
+      "id": "",
+      "text": "Далее",
+      "isVisible": false
+    },
+    {
+      "id": "",
+      "text": "Начать игру",
+      "isVisible": false
+    }
+  ],
+  "moduleErrors": [],
+  "success": false
+}

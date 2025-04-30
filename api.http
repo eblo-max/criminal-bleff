@@ -1,0 +1,267 @@
+### Health Check
+GET https://first-bot-production.up.railway.app/health
+
+### Create User 
+POST https://first-bot-production.up.railway.app/api/user/create
+Content-Type: application/json
+telegram-webapp-initdata: test_init_data
+
+{
+    "telegramId": "123456789",
+    "username": "testuser",
+    "firstName": "Test",
+    "lastName": "User"
+}
+
+### Invalid User Creation Test (Missing telegramId)
+POST https://first-bot-production.up.railway.app/api/user/create
+Content-Type: application/json
+telegram-webapp-initdata: test_init_data
+
+{
+    "username": "invaliduser",
+    "firstName": "Invalid",
+    "lastName": "User"
+}
+
+### Login User
+POST https://first-bot-production.up.railway.app/api/user/login
+Content-Type: application/json
+
+{
+    "telegramId": "123456789"
+}
+
+### Get User Profile
+GET https://first-bot-production.up.railway.app/api/user/profile/123456789
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZWxlZ3JhbUlkIjoiMTIzNDU2Nzg5IiwidXNlcm5hbWUiOiJ0ZXN0dXNlciIsImlhdCI6MTc0NTU3NTI4MywiZXhwIjoxNzQ2MTgwMDgzfQ.cso-Jqt5lBXUqwkDXNLgESjPgAgWu5gYQbHrfPJP6Po
+
+### Start Game
+GET https://first-bot-production.up.railway.app/api/game/start
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZWxlZ3JhbUlkIjoiMTIzNDU2Nzg5IiwidXNlcm5hbWUiOiJ0ZXN0dXNlciIsImlhdCI6MTc0NTU3NTI4MywiZXhwIjoxNzQ2MTgwMDgzfQ.cso-Jqt5lBXUqwkDXNLgESjPgAgWu5gYQbHrfPJP6Po
+
+### Submit Answer
+POST https://first-bot-production.up.railway.app/api/game/answer
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZWxlZ3JhbUlkIjoiMTIzNDU2Nzg5IiwidXNlcm5hbWUiOiJ0ZXN0dXNlciIsImlhdCI6MTc0NTU3NTI4MywiZXhwIjoxNzQ2MTgwMDgzfQ.cso-Jqt5lBXUqwkDXNLgESjPgAgWu5gYQbHrfPJP6Po
+
+{
+    "storyId": "story1",
+    "answer": "true"
+}
+
+### Finish Game
+POST https://first-bot-production.up.railway.app/api/game/finish
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZWxlZ3JhbUlkIjoiMTIzNDU2Nzg5IiwidXNlcm5hbWUiOiJ0ZXN0dXNlciIsImlhdCI6MTc0NTU3NTI4MywiZXhwIjoxNzQ2MTgwMDgzfQ.cso-Jqt5lBXUqwkDXNLgESjPgAgWu5gYQbHrfPJP6Po
+
+{
+    "gameId": "game123"
+}
+
+### ----- ЛИДЕРБОРД ТЕСТЫ -----
+
+### Инициализация лидербордов (создает лидерборды, если их нет)
+POST https://first-bot-production.up.railway.app/api/leaderboard/initialize
+Content-Type: application/json
+
+### Добавление тестовых данных в лидерборд (только для разработки)
+POST https://first-bot-production.up.railway.app/api/leaderboard/test-data?period=all-time
+Content-Type: application/json
+
+### Получение дневного лидерборда
+GET https://first-bot-production.up.railway.app/api/leaderboard/daily?page=1&limit=10
+Content-Type: application/json
+
+### Получение недельного лидерборда
+GET https://first-bot-production.up.railway.app/api/leaderboard/weekly?page=1&limit=10
+Content-Type: application/json
+
+### Получение общего лидерборда
+GET https://first-bot-production.up.railway.app/api/leaderboard/all-time?page=1&limit=10
+Content-Type: application/json
+
+### Получение ранга конкретного пользователя (замените ID после добавления тестовых данных)
+# Используйте ID из результата test-data запроса
+GET https://first-bot-production.up.railway.app/api/leaderboard/user/123456789?period=all-time
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZWxlZ3JhbUlkIjoiMTIzNDU2Nzg5IiwidXNlcm5hbWUiOiJ0ZXN0dXNlciIsImlhdCI6MTc0NTU3NTI4MywiZXhwIjoxNzQ2MTgwMDgzfQ.cso-Jqt5lBXUqwkDXNLgESjPgAgWu5gYQbHrfPJP6Po
+
+### Обновление рангов в лидерборде (требует авторизации)
+POST https://first-bot-production.up.railway.app/api/leaderboard/update-ranks
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZWxlZ3JhbUlkIjoiMTIzNDU2Nzg5IiwidXNlcm5hbWUiOiJ0ZXN0dXNlciIsImlhdCI6MTc0NTU3NTI4MywiZXhwIjoxNzQ2MTgwMDgzfQ.cso-Jqt5lBXUqwkDXNLgESjPgAgWu5gYQbHrfPJP6Po
+
+{
+    "period": "all-time"
+}
+
+### ----- ТЕСТЫ ДОСТИЖЕНИЙ -----
+
+### Получение прогресса достижений пользователя
+GET https://first-bot-production.up.railway.app/api/user/achievements/progress/123456789
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZWxlZ3JhbUlkIjoiMTIzNDU2Nzg5IiwidXNlcm5hbWUiOiJ0ZXN0dXNlciIsImlhdCI6MTc0NTU3NTI4MywiZXhwIjoxNzQ2MTgwMDgzfQ.cso-Jqt5lBXUqwkDXNLgESjPgAgWu5gYQbHrfPJP6Po
+
+### Получение списка достижений пользователя
+GET https://first-bot-production.up.railway.app/api/user/achievements/123456789
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZWxlZ3JhbUlkIjoiMTIzNDU2Nzg5IiwidXNlcm5hbWUiOiJ0ZXN0dXNlciIsImlhdCI6MTc0NTU3NTI4MywiZXhwIjoxNzQ2MTgwMDgzfQ.cso-Jqt5lBXUqwkDXNLgESjPgAgWu5gYQbHrfPJP6Po
+
+### Тестирование разблокировки достижения "Новичок" (FIRST_GAME)
+# Сначала запустите игру
+GET https://first-bot-production.up.railway.app/api/game/start
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZWxlZ3JhbUlkIjoiMTIzNDU2Nzg5IiwidXNlcm5hbWUiOiJ0ZXN0dXNlciIsImlhdCI6MTc0NTU3NTI4MywiZXhwIjoxNzQ2MTgwMDgzfQ.cso-Jqt5lBXUqwkDXNLgESjPgAgWu5gYQbHrfPJP6Po
+
+# Затем отправьте ответ
+POST https://first-bot-production.up.railway.app/api/game/answer
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZWxlZ3JhbUlkIjoiMTIzNDU2Nzg5IiwidXNlcm5hbWUiOiJ0ZXN0dXNlciIsImlhdCI6MTc0NTU3NTI4MywiZXhwIjoxNzQ2MTgwMDgzfQ.cso-Jqt5lBXUqwkDXNLgESjPgAgWu5gYQbHrfPJP6Po
+
+{
+    "storyId": "story1",
+    "answer": "true",
+    "timeSpent": 5
+}
+
+# Завершите игру и проверьте разблокировку достижения "Новичок"
+POST https://first-bot-production.up.railway.app/api/game/finish
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZWxlZ3JhbUlkIjoiMTIzNDU2Nzg5IiwidXNlcm5hbWUiOiJ0ZXN0dXNlciIsImlhdCI6MTc0NTU3NTI4MywiZXhwIjoxNzQ2MTgwMDgzfQ.cso-Jqt5lBXUqwkDXNLgESjPgAgWu5gYQbHrfPJP6Po
+
+{
+    "gameId": "game123"
+}
+
+### Тестирование разблокировки достижения "Скоростной детектив" (SPEED_DETECTIVE)
+# Запустите новую игру
+GET https://first-bot-production.up.railway.app/api/game/start
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZWxlZ3JhbUlkIjoiMTIzNDU2Nzg5IiwidXNlcm5hbWUiOiJ0ZXN0dXNlciIsImlhdCI6MTc0NTU3NTI4MywiZXhwIjoxNzQ2MTgwMDgzfQ.cso-Jqt5lBXUqwkDXNLgESjPgAgWu5gYQbHrfPJP6Po
+
+# Отправьте быстрый ответ (менее 3 секунд)
+POST https://first-bot-production.up.railway.app/api/game/answer
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZWxlZ3JhbUlkIjoiMTIzNDU2Nzg5IiwidXNlcm5hbWUiOiJ0ZXN0dXNlciIsImlhdCI6MTc0NTU3NTI4MywiZXhwIjoxNzQ2MTgwMDgzfQ.cso-Jqt5lBXUqwkDXNLgESjPgAgWu5gYQbHrfPJP6Po
+
+{
+    "storyId": "story1",
+    "answer": "true",
+    "timeSpent": 2
+}
+
+# Завершите игру и проверьте разблокировку достижения "Скоростной детектив"
+POST https://first-bot-production.up.railway.app/api/game/finish
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZWxlZ3JhbUlkIjoiMTIzNDU2Nzg5IiwidXNlcm5hbWUiOiJ0ZXN0dXNlciIsImlhdCI6MTc0NTU3NTI4MywiZXhwIjoxNzQ2MTgwMDgzfQ.cso-Jqt5lBXUqwkDXNLgESjPgAgWu5gYQbHrfPJP6Po
+
+{
+    "gameId": "game123"
+}
+
+### ----- ДРУГИЕ ТЕСТЫ -----
+
+### Проверка состояния сервиса Redis
+GET https://first-bot-production.up.railway.app/health/redis
+Content-Type: application/json
+
+### Проверка состояния базы данных MongoDB
+GET https://first-bot-production.up.railway.app/health/db
+Content-Type: application/json
+
+### TELEGRAM ТЕСТЫ ###
+
+# Установить вебхук для Telegram бота
+GET https://first-bot-production.up.railway.app/api/telegram/set-webhook
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZWxlZ3JhbUlkIjoiMTIzNDU2Nzg5IiwidXNlcm5hbWUiOiJ0ZXN0dXNlciIsImlhdCI6MTc0NTU3NTI4MywiZXhwIjoxNzQ2MTgwMDgzfQ.cso-Jqt5lBXUqwkDXNLgESjPgAgWu5gYQbHrfPJP6Po
+
+###
+
+# Создание тестового пользователя
+POST https://first-bot-production.up.railway.app/api/user/create
+Content-Type: application/json
+telegram-webapp-initdata: test_init_data
+
+{
+    "telegramId": "123456789",
+    "username": "testuser",
+    "firstName": "Test",
+    "lastName": "User"
+}
+
+###
+
+# Привязать Telegram ID к аккаунту пользователя
+POST https://first-bot-production.up.railway.app/api/telegram/link
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZWxlZ3JhbUlkIjoiMTIzNDU2Nzg5IiwidXNlcm5hbWUiOiJ0ZXN0dXNlciIsImlhdCI6MTc0NTU3NTI4MywiZXhwIjoxNzQ2MTgwMDgzfQ.cso-Jqt5lBXUqwkDXNLgESjPgAgWu5gYQbHrfPJP6Po 
+
+{
+  "userId": "680b45a331b4f03211e2d34c",
+  "telegramId": "5428724191"
+}
+
+###
+
+# Проверить привязку пользователя к Telegram
+GET https://first-bot-production.up.railway.app/api/telegram/check/680b45a331b4f03211e2d34c
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZWxlZ3JhbUlkIjoiMTIzNDU2Nzg5IiwidXNlcm5hbWUiOiJ0ZXN0dXNlciIsImlhdCI6MTc0NTU3NTI4MywiZXhwIjoxNzQ2MTgwMDgzfQ.cso-Jqt5lBXUqwkDXNLgESjPgAgWu5gYQbHrfPJP6Po
+
+###
+
+# Отвязать аккаунт пользователя от Telegram
+DELETE https://first-bot-production.up.railway.app/api/telegram/unlink/680b45a331b4f03211e2d34c
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZWxlZ3JhbUlkIjoiMTIzNDU2Nzg5IiwidXNlcm5hbWUiOiJ0ZXN0dXNlciIsImlhdCI6MTc0NTU3NTI4MywiZXhwIjoxNzQ2MTgwMDgzfQ.cso-Jqt5lBXUqwkDXNLgESjPgAgWu5gYQbHrfPJP6Po
+
+###
+
+# Получение списка пользователей (тестовый endpoint)
+GET https://first-bot-production.up.railway.app/api/user/list-all
+Content-Type: application/json
+
+### Telegram Bot Story Command
+# @name getWebhook
+GET https://first-bot-production.up.railway.app/api/telegram/webhook
+Content-Type: application/json
+
+### Test Story API endpoints
+# @name getAllStories
+GET https://first-bot-production.up.railway.app/api/stories
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+### Get story by ID
+# @name getStoryById
+GET https://first-bot-production.up.railway.app/api/stories/64f23e2b6a6e982a4fb66a2c
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+### Get stories by date
+# @name getStoriesByDate
+GET https://first-bot-production.up.railway.app/api/stories/date/2023-09-01
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+### Get recent stories
+# @name getRecentStories
+GET https://first-bot-production.up.railway.app/api/stories/recent
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+### Login to get token
+# @name login
+POST https://first-bot-production.up.railway.app/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "Password123!"
+}
+
+###
+@authToken = {{login.response.body.token}}
+
+### 

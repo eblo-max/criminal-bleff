@@ -1,0 +1,72 @@
+{
+  "name": "Криминальный Блеф",
+  "short_name": "КримБлеф",
+  "description": "Мрачная игра-викторина о криминальных загадках и ошибках преступников",
+  "version": "1.0.0",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#131313",
+  "theme_color": "#090909",
+  "start_url": "/index.html",
+  "scope": "/",
+  "telegram_app_info": {
+    "app_id": "criminal_bluff_app",
+    "author": "Criminal Bluff Team",
+    "description": "Проверь свои детективные навыки! Угадывай, какие ошибки совершили преступники, получай очки и достижения в атмосфере криминального нуара.",
+    "categories": ["games", "entertainment", "trivia"]
+  },
+  "permissions": [
+    "telegram-mini-app:webapp:vibration",
+    "telegram-mini-app:webapp:clipboard"
+  ],
+  "icons": [
+    {
+      "src": "img/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "img/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "img/maskable-icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "img/screenshot-1.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "platform": "narrow",
+      "label": "Главный экран игры"
+    },
+    {
+      "src": "img/screenshot-2.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "platform": "narrow",
+      "label": "Игровой процесс"
+    },
+    {
+      "src": "img/screenshot-3.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "platform": "narrow",
+      "label": "Результаты игры"
+    }
+  ],
+  "related_applications": [
+    {
+      "platform": "telegram",
+      "url": "https://t.me/CriminalBluffBot"
+    }
+  ],
+  "offline_enabled": true,
+  "prefer_related_applications": false,
+  "lang": "ru-RU"
+} 

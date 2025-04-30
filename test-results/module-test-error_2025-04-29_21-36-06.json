@@ -1,0 +1,8 @@
+{
+  "timestamp": "2025-04-29T17:36:06.431Z",
+  "error": {
+    "message": "page.waitForTimeout is not a function",
+    "stack": "TypeError: page.waitForTimeout is not a function\n    at runModuleLoadingTest (C:\\Users\\user\\fast_bot\\tests\\e2e-module-test.js:117:16)"
+  },
+  "success": false
+}
