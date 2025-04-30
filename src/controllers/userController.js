@@ -1,10 +1,10 @@
-const { createLogger } = require('../config/logger');
-const { ValidationError } = require('../utils/errorHandler');
-const { success } = require('../utils/responseFormatter');
-const userService = require('../services/userService');
-const authService = require('../services/authService');
-const gameService = require('../services/gameLogicService');
-const { validateTelegramWebAppData, validateTelegramUser } = require('../middlewares/auth');
+import { createLogger } from '../config/logger.js';
+import { ValidationError } from '../utils/errorHandler.js';
+import { success } from '../utils/responseFormatter.js';
+import userService from '../services/userService.js';
+import authService from '../services/authService.js';
+import gameService from '../services/gameLogicService.js';
+import { validateTelegramWebAppData, validateTelegramUser } from '../middlewares/auth.js';
 
 const logger = createLogger('UserController');
 
@@ -130,4 +130,4 @@ class UserController {
   }
 }
 
-module.exports = new UserController(); 
+export default new UserController(); 

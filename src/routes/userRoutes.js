@@ -1,8 +1,9 @@
-const express = require('express');
+import express from 'express';
+import userController from '../controllers/userController.js';
+import { requireAuth, validateTelegramUser } from '../middlewares/auth.js';
+import User from '../models/User.js';
+
 const router = express.Router();
-const userController = require('../controllers/userController');
-const { requireAuth, validateTelegramUser } = require('../middlewares/auth');
-const User = require('../models/User');
 
 // Маршруты для пользователей
 router.post('/create', userController.createUser);
@@ -28,4 +29,4 @@ router.get('/list-all', async (req, res) => {
   }
 });
 
-module.exports = router; 
+export default router; 
