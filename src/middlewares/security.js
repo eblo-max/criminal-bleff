@@ -1,7 +1,7 @@
-const rateLimit = require('express-rate-limit');
-const { createLogger } = require('../config/logger');
-const { ValidationError } = require('../utils/errorHandler');
-const { getRedisClient } = require('../config/redis');
+import rateLimit from 'express-rate-limit';
+import { createLogger } from '../utils/logger.js';
+import ValidationError from '../errors/ValidationError.js';
+import { getRedisClient } from '../config/redis.js';
 
 const logger = createLogger('SecurityMiddleware');
 
@@ -161,7 +161,7 @@ const validateInput = (req, res, next) => {
   }
 };
 
-module.exports = {
+export {
   rateLimiter,
   securityHeaders,
   validateInput,
