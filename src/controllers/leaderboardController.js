@@ -1,10 +1,10 @@
-const { createLogger } = require('../config/logger');
-const { ValidationError } = require('../utils/errorHandler');
-const { success, error } = require('../utils/responseFormatter');
-const leaderboardService = require('../services/leaderboardService');
-const { validateTelegramWebAppData, validateTelegramUser } = require('../middlewares/auth');
-const Leaderboard = require('../models/Leaderboard');
-const mongoose = require('mongoose');
+import { createLogger } from '../config/logger.js';
+import { ValidationError } from '../utils/errorHandler.js';
+import { success, error } from '../utils/responseFormatter.js';
+import leaderboardService from '../services/leaderboardService.js';
+import { validateTelegramWebAppData, validateTelegramUser } from '../middlewares/auth.js';
+import Leaderboard from '../models/Leaderboard.js';
+import mongoose from 'mongoose';
 
 const logger = createLogger('LeaderboardController');
 
@@ -166,4 +166,4 @@ class LeaderboardController {
 
 // Создаем и экспортируем экземпляр контроллера
 const leaderboardController = new LeaderboardController();
-module.exports = leaderboardController; 
+export default leaderboardController; 

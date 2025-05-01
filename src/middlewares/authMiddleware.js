@@ -1,6 +1,6 @@
-const { ValidationError, UnauthorizedError } = require('../utils/errorHandler');
-const { createLogger } = require('../utils/logger');
-const jwt = require('jsonwebtoken');
+import { ValidationError, UnauthorizedError } from '../utils/errorHandler.js';
+import { createLogger } from '../config/logger.js';
+import jwt from 'jsonwebtoken';
 
 const logger = createLogger('AuthMiddleware');
 
@@ -38,6 +38,4 @@ const authenticate = async (req, res, next) => {
   }
 };
 
-module.exports = {
-  authenticate
-}; 
+export { authenticate }; 

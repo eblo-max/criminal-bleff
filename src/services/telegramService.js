@@ -1,6 +1,6 @@
-const axios = require('axios');
-const { createLogger } = require('../utils/logger');
-const User = require('../models/User');
+import axios from 'axios';
+import { createLogger } from '../config/logger.js';
+import User from '../models/User.js';
 
 const logger = createLogger('telegramService');
 
@@ -248,96 +248,93 @@ class TelegramService {
 
   /**
    * Обработка команды /start
-   * @param {string} chatId - ID чата
+   * @param {number} chatId - ID чата
    * @param {Object} user - Информация о пользователе
    */
   async handleStartCommand(chatId, user) {
-    const firstName = user.first_name || 'детектив';
+    const startText = `👋 Привет, <b>${user.first_name}</b>!\n\n` +
+      'Добро пожаловать в бота Criminal Bluff! Я помогаю следить за игровыми событиями и достижениями.\n\n' +
+      'Чтобы привязать свой аккаунт, используй команду /link или соответствующую кнопку в приложении.\n\n' +
+      'Для получения списка команд используй /help.';
     
-    const message = `👋 Привет, ${firstName}!\n\n` +
-                    'Я бот для игры <b>Criminal Bluff</b>.\n\n' +
-                    'Чтобы связать свой аккаунт с ботом, используй команду /link\n' +
-                    'Для получения помощи используй /help';
-    
-    await this.sendMessage(chatId, message);
+    await this.sendMessage(chatId, startText);
   }
 
   /**
    * Обработка команды /help
-   * @param {string} chatId - ID чата
+   * @param {number} chatId - ID чата
    */
   async handleHelpCommand(chatId) {
-    const message = '<b>Помощь по боту Criminal Bluff</b>\n\n' +
-                    '<b>Доступные команды:</b>\n' +
-                    '/start - Начать взаимодействие с ботом\n' +
-                    '/help - Показать эту справку\n' +
-                    '/link - Связать аккаунт в игре с этим чатом\n\n' +
-                    '<b>После связывания аккаунта вы будете получать:</b>\n' +
-                    '- Уведомления о достижениях\n' +
-                    '- Напоминания о ежедневных наградах\n' +
-                    '- Уведомления о важных игровых событиях';
+    const helpText = '🔍 <b>Доступные команды:</b>\n\n' +
+      '/start - Начать взаимодействие с ботом\n' +
+      '/help - Показать список команд\n' +
+      '/link - Привязать аккаунт (если вы уже в игре, используйте кнопку в приложении)\n\n' +
+      'Если у тебя возникли проблемы или вопросы, обратись в поддержку через игру.';
     
-    await this.sendMessage(chatId, message);
+    await this.sendMessage(chatId, helpText);
   }
 
   /**
    * Обработка команды /link
-   * @param {string} chatId - ID чата
-   * @param {Object} message - Сообщение
+   * @param {number} chatId - ID чата
+   * @param {Object} message - Сообщение пользователя
    */
   async handleLinkCommand(chatId, message) {
-    try {
-      // Проверяем, есть ли уже пользователь с таким telegramId
-      const existingUser = await User.findOne({ telegramId: chatId.toString() });
-      
-      if (existingUser) {
-        await this.sendMessage(chatId, `Ваш Telegram уже привязан к аккаунту <b>${existingUser.username}</b>. Если вы хотите отвязать аккаунт, используйте веб-интерфейс игры.`);
-        return;
-      }
+    const linkText = '🔗 <b>Привязка аккаунта</b>\n\n' +
+      'Для привязки аккаунта перейди в игру и используй соответствующую кнопку в настройках.\n\n' +
+      'Твой Telegram ID: <code>' + chatId + '</code>\n\n' +
+      'Скопируй этот ID и вставь его в поле "Telegram ID" в настройках игры.';
+    
+    await this.sendMessage(chatId, linkText);
+  }
 
-      // Отправляем инструкции по привязке
-      await this.sendMessage(chatId, `Чтобы привязать аккаунт, войдите в игру и в настройках профиля введите следующий ID:\n\n<b>${chatId}</b>\n\nПосле этого нажмите кнопку "Привязать Telegram".`);
-    } catch (error) {
-      logger.error(`Ошибка при обработке команды link: ${error.message}`);
-      await this.sendMessage(chatId, 'Произошла ошибка при обработке команды. Пожалуйста, попробуйте позже.');
+  /**
+   * Обработка обычного текстового сообщения
+   * @param {number} chatId - ID чата
+   * @param {string} text - Текст сообщения
+   * @param {Object} from - Информация о пользователе
+   */
+  async handleTextMessage(chatId, text, from) {
+    // Проверяем, привязан ли пользователь к аккаунту
+    const user = await User.findOne({ telegramId: chatId });
+    
+    if (user) {
+      await this.sendMessage(chatId, `Твое сообщение получено, ${user.username || 'детектив'}! Если нужна помощь, используй команду /help.`);
+    } else {
+      await this.sendMessage(chatId, 'Твой аккаунт не привязан к игре. Используй команду /link для привязки или перейди в настройки игры.');
     }
   }
 
   /**
-   * Обработка текстового сообщения
-   * @param {string} chatId - ID чата
-   * @param {string} text - Текст сообщения
-   * @param {Object} from - Информация об отправителе
-   */
-  async handleTextMessage(chatId, text, from) {
-    // Здесь можно добавить дополнительную логику для обработки текстовых сообщений
-    // В данном случае, просто отправляем общее сообщение
-    await this.sendMessage(chatId, 'Я понимаю только команды. Используйте /help для получения списка команд.');
-  }
-
-  /**
-   * Обрабатывает callback_query от inline кнопок
-   * @param {Object} query - Объект callback_query от Telegram
-   * @returns {Promise<void>}
+   * Обработка callback query (нажатия на inline кнопки)
+   * @param {Object} query - Объект callback query
    */
   async processCallbackQuery(query) {
     const chatId = query.message.chat.id;
     const data = query.data;
-
+    
+    // Обработка различных типов callback query
+    switch (data) {
+    case 'help':
+      await this.handleHelpCommand(chatId);
+      break;
+    case 'link':
+      await this.handleLinkCommand(chatId, query.message);
+      break;
+    default:
+      // Неизвестный callback query
+      await this.sendMessage(chatId, 'Неизвестная команда.');
+    }
+    
+    // Отправляем ответ на callback query
     try {
-      // Здесь можно добавить обработку различных callback_query
-      // В зависимости от значения data
-      
-      // Используем axios для ответа на callback_query
       await axios.post(`${this.apiUrl}/answerCallbackQuery`, {
         callback_query_id: query.id
       });
-      
-      await this.sendMessage(chatId, `Получен запрос: ${data}. Эта функция еще не реализована.`);
     } catch (error) {
-      logger.error(`Ошибка при обработке callback_query: ${error.message}`);
+      logger.error(`Ошибка при ответе на callback query: ${error.message}`);
     }
   }
 }
 
-module.exports = TelegramService; 
+export default TelegramService; 

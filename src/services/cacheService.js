@@ -7,6 +7,7 @@ import Leaderboard from '../models/Leaderboard.js';
 
 const logger = createLogger('CacheService');
 const RECONNECT_INTERVAL = 5000; // 5 секунд между попытками переподключения
+const MAX_RECONNECT_ATTEMPTS = 3; // Максимальное число попыток переподключения
 
 class CacheService {
   constructor() {
@@ -14,6 +15,8 @@ class CacheService {
     this.connected = false;
     this.reconnecting = false;
     this.reconnectTimer = null;
+    this.reconnectAttempts = 0;
+    this.redisEnabled = true;
     this.ttl = {
       stories: 60 * 60, // 1 час
       profiles: 15 * 60, // 15 минут
@@ -39,6 +42,7 @@ class CacheService {
       // Проверка наличия URL для подключения
       if (!process.env.REDIS_URL) {
         logger.warn('REDIS_URL not found in environment variables, Redis caching disabled');
+        this.redisEnabled = false;
         this.connected = false;
         return;
       }
@@ -61,6 +65,7 @@ class CacheService {
         logger.info('Connected to Redis successfully');
         this.connected = true;
         this.reconnecting = false;
+        this.reconnectAttempts = 0;
       });
 
       this.client.on('end', () => {
@@ -68,9 +73,15 @@ class CacheService {
         this.handleDisconnect();
       });
 
-      // Попытка подключения к Redis
-      await this.client.connect();
+      // Попытка подключения к Redis с таймаутом
+      const connectPromise = this.client.connect();
+      const timeoutPromise = new Promise((_, reject) => {
+        setTimeout(() => reject(new Error('Connection timeout')), 5000);
+      });
+      
+      await Promise.race([connectPromise, timeoutPromise]);
       this.connected = true;
+      this.redisEnabled = true;
       logger.info('Redis client initialized successfully');
     } catch (error) {
       logger.error('Failed to initialize Redis client:', error);
@@ -80,30 +91,45 @@ class CacheService {
 
   // Поддержка совместимости
   initConnection() {
-    this.connect();
+    this.connect().catch(err => {
+      logger.error('Initial Redis connection failed:', err);
+      this.redisEnabled = false;
+      this.connected = false;
+    });
   }
 
   // Обработка отключения и планирование переподключения
   handleDisconnect() {
     this.connected = false;
     
+    // Проверяем, не превысили ли лимит попыток
+    if (this.reconnectAttempts >= MAX_RECONNECT_ATTEMPTS) {
+      logger.warn(`Maximum reconnect attempts (${MAX_RECONNECT_ATTEMPTS}) reached. Disabling Redis.`);
+      this.redisEnabled = false;
+      this.reconnecting = false;
+      return;
+    }
+    
     // Предотвращаем создание множества таймеров
     if (!this.reconnecting) {
       this.reconnecting = true;
-      logger.info(`Scheduling Redis reconnect in ${RECONNECT_INTERVAL/1000} seconds`);
+      this.reconnectAttempts++;
+      
+      const delay = RECONNECT_INTERVAL * this.reconnectAttempts;
+      logger.info(`Scheduling Redis reconnect in ${delay/1000} seconds (attempt ${this.reconnectAttempts}/${MAX_RECONNECT_ATTEMPTS})`);
       
       this.reconnectTimer = setTimeout(async () => {
-        logger.info('Attempting to reconnect to Redis...');
+        logger.info(`Attempting to reconnect to Redis (attempt ${this.reconnectAttempts}/${MAX_RECONNECT_ATTEMPTS})...`);
         await this.connect();
-      }, RECONNECT_INTERVAL);
+      }, delay);
     }
   }
 
   // Безопасное получение данных из кеша
   async get(key) {
     try {
-      // Если Redis недоступен, сразу возвращаем null
-      if (!this.connected || !this.client) {
+      // Если Redis отключен или недоступен, сразу возвращаем null
+      if (!this.redisEnabled || !this.connected || !this.client) {
         return null;
       }
       
@@ -124,8 +150,8 @@ class CacheService {
   // Безопасное сохранение данных в кеш
   async set(key, data, expiration = null) {
     try {
-      // Если Redis недоступен, пропускаем операцию кеширования
-      if (!this.connected || !this.client) {
+      // Если Redis отключен или недоступен, пропускаем операцию кеширования
+      if (!this.redisEnabled || !this.connected || !this.client) {
         return false;
       }
       
@@ -151,8 +177,8 @@ class CacheService {
   // Безопасное удаление ключа из кеша
   async del(key) {
     try {
-      // Если Redis недоступен, пропускаем операцию удаления
-      if (!this.connected || !this.client) {
+      // Если Redis отключен или недоступен, пропускаем операцию удаления
+      if (!this.redisEnabled || !this.connected || !this.client) {
         return false;
       }
       
@@ -173,8 +199,8 @@ class CacheService {
   // Оптимизированная инвалидация ключей по паттерну
   async invalidatePattern(pattern) {
     try {
-      // Если Redis недоступен, пропускаем операцию инвалидации
-      if (!this.connected || !this.client) {
+      // Если Redis отключен или недоступен, пропускаем операцию инвалидации
+      if (!this.redisEnabled || !this.connected || !this.client) {
         return false;
       }
       

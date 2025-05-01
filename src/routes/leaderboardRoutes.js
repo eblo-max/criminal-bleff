@@ -1,9 +1,9 @@
-const express = require('express');
+import express from 'express';
+import leaderboardController from '../controllers/leaderboardController.js';
+import { requireAuth, validateTelegramWebAppData } from '../middlewares/auth.js';
+import { validateLeaderboardQueryParams } from '../utils/validator.js';
+
 const router = express.Router();
-const leaderboardController = require('../controllers/leaderboardController');
-const { requireAuth } = require('../middlewares/auth');
-const { validateLeaderboardQueryParams } = require('../utils/validator');
-const { validateTelegramWebAppData } = require('../middlewares/auth');
 
 // Публичные маршруты для таблицы лидеров
 router.get('/daily', validateLeaderboardQueryParams, leaderboardController.getDailyLeaderboard);
@@ -15,4 +15,4 @@ router.get('/user/:userId', leaderboardController.getUserRank);
 router.post('/initialize', leaderboardController.initializeLeaderboards);
 router.post('/update-ranks', requireAuth, leaderboardController.updateRanks);
 
-module.exports = router; 
+export default router; 

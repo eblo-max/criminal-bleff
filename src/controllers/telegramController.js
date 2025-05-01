@@ -1,8 +1,8 @@
-const mongoose = require('mongoose');
-const User = require('../models/User');
-const TelegramService = require('../services/telegramService');
-const { GameError } = require('../utils/errorHandler');
-const { createLogger } = require('../utils/logger');
+import mongoose from 'mongoose';
+import User from '../models/User.js';
+import TelegramService from '../services/telegramService.js';
+import { GameError } from '../utils/errorHandler.js';
+import { createLogger } from '../config/logger.js';
 
 const logger = createLogger('telegramController');
 const telegramService = new TelegramService();
@@ -234,10 +234,13 @@ const setWebhook = async (req, res, next) => {
   }
 };
 
-module.exports = {
+// Создаем объект контроллера
+const telegramController = {
   linkUserAccount,
   unlinkUserAccount,
   checkUserLink,
   handleWebhook,
   setWebhook
-}; 
+};
+
+export default telegramController; 

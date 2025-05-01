@@ -1,9 +1,9 @@
-const { createLogger } = require('../config/logger');
-const { ValidationError } = require('../utils/errorHandler');
-const { success, error } = require('../utils/responseFormatter');
-const gameService = require('../services/gameLogicService');
-const { validateTelegramWebAppData, validateTelegramUser } = require('../middlewares/auth');
-const userService = require('../services/userService');
+import { createLogger } from '../config/logger.js';
+import { ValidationError } from '../utils/errorHandler.js';
+import { success, error } from '../utils/responseFormatter.js';
+import gameService from '../services/gameLogicService.js';
+import { validateTelegramWebAppData, validateTelegramUser } from '../middlewares/auth.js';
+import userService from '../services/userService.js';
 
 const logger = createLogger('GameController');
 
@@ -143,4 +143,5 @@ class GameController {
 
 // Создаем и экспортируем экземпляр контроллера
 const gameController = new GameController();
-module.exports = gameController; 
+export default gameController;
+export const { getRandomStories, submitAnswer, finishGame, startGame, trackAction } = gameController; 

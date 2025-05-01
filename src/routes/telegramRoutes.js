@@ -1,6 +1,6 @@
-const express = require('express');
-const { authenticate } = require('../middlewares/authMiddleware');
-const telegramController = require('../controllers/telegramController');
+import express from 'express';
+import { authenticate } from '../middlewares/authMiddleware.js';
+import telegramController from '../controllers/telegramController.js';
 
 const router = express.Router();
 
@@ -39,4 +39,4 @@ router.post('/webhook', telegramController.handleWebhook);
  */
 router.get('/set-webhook', authenticate, telegramController.setWebhook);
 
-module.exports = router; 
+export default router; 

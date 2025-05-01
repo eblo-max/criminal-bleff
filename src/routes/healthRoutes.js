@@ -1,10 +1,10 @@
-const express = require('express');
-const router = express.Router();
-const mongoose = require('mongoose');
-const { createLogger } = require('../config/logger');
-const cacheService = require('../services/cacheService');
-const { success, error } = require('../utils/responseFormatter');
+import express from 'express';
+import mongoose from 'mongoose';
+import { createLogger } from '../config/logger.js';
+import cacheService from '../services/cacheService.js';
+import { success, error } from '../utils/responseFormatter.js';
 
+const router = express.Router();
 const logger = createLogger('HealthRoutes');
 
 // Общая проверка здоровья сервиса
@@ -87,4 +87,4 @@ router.get('/redis', async (req, res) => {
   }
 });
 
-module.exports = router; 
+export default router; 

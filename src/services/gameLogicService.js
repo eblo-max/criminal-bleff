@@ -6,7 +6,7 @@ import Achievement from '../models/Achievement.js';
 import cacheService from './cacheService.js';
 import leaderboardService from './leaderboardService.js';
 import mongoose from 'mongoose';
-import scoreCalculator from '../utils/scoreCalculator.js';
+import * as scoreCalculator from '../utils/scoreCalculator.js';
 
 const logger = createLogger('GameLogicService');
 

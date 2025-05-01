@@ -3,9 +3,9 @@
  * Предоставляет middleware для проверки запросов на соответствие схемам
  */
 
-const { createLogger } = require('../config/logger');
-const { ValidationError } = require('../utils/errorHandler');
-const Joi = require('joi');
+import { createLogger } from '../config/logger.js';
+import { ValidationError } from '../utils/errorHandler.js';
+import Joi from 'joi';
 
 const logger = createLogger('ValidationMiddleware');
 
@@ -14,7 +14,7 @@ const logger = createLogger('ValidationMiddleware');
  * @param {Object} schema - Joi схема для валидации
  * @returns {Function} middleware для валидации
  */
-function validateBody(schema) {
+export function validateBody(schema) {
   return (req, res, next) => {
     const { error, value } = schema.validate(req.body, {
       abortEarly: false,
@@ -43,7 +43,7 @@ function validateBody(schema) {
  * @param {Object} schema - Joi схема для валидации
  * @returns {Function} middleware для валидации
  */
-function validateParams(schema) {
+export function validateParams(schema) {
   return (req, res, next) => {
     const { error, value } = schema.validate(req.params, {
       abortEarly: false,
@@ -72,7 +72,7 @@ function validateParams(schema) {
  * @param {Object} schema - Joi схема для валидации
  * @returns {Function} middleware для валидации
  */
-function validateQuery(schema) {
+export function validateQuery(schema) {
   return (req, res, next) => {
     const { error, value } = schema.validate(req.query, {
       abortEarly: false,
@@ -97,7 +97,7 @@ function validateQuery(schema) {
 }
 
 // Схемы валидации для различных эндпоинтов
-const schemas = {
+export const schemas = {
   // Схема для проверки ответа на вопрос
   submitAnswer: Joi.object({
     storyId: Joi.string().required().trim(),
@@ -139,11 +139,4 @@ const schemas = {
     page: Joi.number().min(1).default(1),
     limit: Joi.number().min(1).max(100).default(10)
   })
-};
-
-module.exports = {
-  validateBody,
-  validateParams,
-  validateQuery,
-  schemas
 }; 

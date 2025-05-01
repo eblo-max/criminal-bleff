@@ -1,7 +1,12 @@
-const winston = require('winston');
+import winston from 'winston';
 const { format } = winston;
-const path = require('path');
-const fs = require('fs');
+import path from 'path';
+import fs from 'fs';
+import { fileURLToPath } from 'url';
+
+// Get current directory with ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Создаем директорию для логов если её нет
 const logDir = 'logs';
@@ -19,7 +24,7 @@ const logFormat = format.combine(
 const logger = winston.createLogger({
   level: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
   format: logFormat,
-  defaultMeta: { service: 'fast-bot' },
+  defaultMeta: { service: 'criminal-bluff-api' },
   transports: [
     new winston.transports.File({ 
       filename: path.join(__dirname, '../../logs/error.log'), 
@@ -57,11 +62,8 @@ process.on('unhandledRejection', (reason, promise) => {
 });
 
 // Создание дочернего логгера с указанным именем
-const createLogger = (name) => {
+export const createLogger = (name) => {
   return logger.child({ module: name });
 };
 
-module.exports = {
-  logger,
-  createLogger
-}; 
+export { logger }; 
