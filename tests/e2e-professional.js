@@ -29,7 +29,7 @@ const CONFIG = {
       interaction: 2000,
       rendering: 3000,
     },
-    uiVersion: 'new', // 'new' или 'old' - выбор версии интерфейса для тестирования
+    uiVersion: 'new', // Теперь всегда используется новый интерфейс
     forceMobile: true  // Принудительно использовать мобильный user-agent
   },
   browser: {
@@ -710,13 +710,8 @@ class TelegramAppTest {
   }
   
   async navigateToApp() {
-    // Формируем URL с параметрами версии интерфейса, если указана 'new'
+    // Формируем URL без дополнительных параметров, так как новый интерфейс теперь по умолчанию
     let appUrl = CONFIG.app.url;
-    if (CONFIG.app.uiVersion === 'new') {
-      // Добавляем параметр для принудительного использования нового интерфейса
-      const separator = appUrl.includes('?') ? '&' : '?';
-      appUrl += `${separator}ui=new&v=2`;
-    }
     
     this.report.addStep(`Переход на страницу приложения: ${appUrl}`, 'navigation');
     try {
@@ -770,7 +765,7 @@ class TelegramAppTest {
       const state = await this.mainPage.getPageState();
       this.report.addStep(`Текущее состояние страницы: URL=${state.url}, Заголовок=${state.title}`, 'info');
       
-      // Проверка наличия ключевых элементов игры - обновленный список для нового дизайна
+      // Проверка наличия ключевых элементов игры для нового дизайна
       const gameKeywords = [
         'НАЧАТЬ РАССЛЕДОВАНИЕ', 'ЛИЧНОЕ ДЕЛО', 'УПРАВЛЕНИЕ КАДРОВ',
         'ГЛАВНАЯ', 'АРХИВ', 'ДЕЛА', 'ДОСЬЕ', 'РЕЙТИНГ',
@@ -797,12 +792,12 @@ class TelegramAppTest {
       
       // Проверка наличия элементов нижнего меню
       const hasBottomMenu = await this.page.evaluate(() => {
-        // Проверяем наличие элементов нижнего меню
-        const menuItems = Array.from(document.querySelectorAll('nav a, .bottom-menu a, .navigation a, footer a'))
+        // Проверяем наличие элементов нижнего меню нового дизайна
+        const menuItems = Array.from(document.querySelectorAll('.bottom-navigation .nav-item'))
           .filter(el => el.offsetParent !== null)
           .map(el => ({
             text: el.innerText.trim(),
-            hasIcon: el.querySelector('img, svg, i') !== null
+            hasIcon: el.querySelector('.nav-icon') !== null
           }));
           
         return {

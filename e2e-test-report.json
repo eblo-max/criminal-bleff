@@ -1,9 +1,9 @@
 {
   "summary": {
-    "duration": "21.32 seconds",
-    "stepsCompleted": 65,
+    "duration": "21.26 seconds",
+    "stepsCompleted": 63,
     "errors": 3,
-    "warnings": 16,
+    "warnings": 17,
     "screenshots": 4,
     "success": false
   },
@@ -12,515 +12,508 @@
       "step": 1,
       "description": "Запуск профессионального E2E тестирования",
       "status": "start",
-      "timestamp": "2025-05-01T13:14:41.017Z"
+      "timestamp": "2025-05-01T13:44:56.292Z"
     },
     {
       "step": 2,
       "description": "Запуск браузера",
       "status": "setup",
-      "timestamp": "2025-05-01T13:14:41.019Z"
+      "timestamp": "2025-05-01T13:44:56.293Z"
     },
     {
       "step": 3,
       "description": "Установлен мобильный User-Agent",
       "status": "info",
-      "timestamp": "2025-05-01T13:14:41.342Z"
+      "timestamp": "2025-05-01T13:44:56.607Z"
     },
     {
       "step": 4,
-      "description": "Переход на страницу приложения: https://web-production-43380.up.railway.app/?ui=new&v=2",
+      "description": "Переход на страницу приложения: https://web-production-43380.up.railway.app/",
       "status": "navigation",
-      "timestamp": "2025-05-01T13:14:41.346Z"
+      "timestamp": "2025-05-01T13:44:56.613Z"
     },
     {
       "step": 5,
       "description": "Страница приложения загружена",
       "status": "success",
-      "timestamp": "2025-05-01T13:14:45.964Z"
+      "timestamp": "2025-05-01T13:45:01.175Z"
     },
     {
       "step": 6,
-      "description": "Скриншот сохранен: initial-app-load_2025-05-01T13-14-48-967Z.png",
+      "description": "Скриншот сохранен: initial-app-load_2025-05-01T13-45-04-181Z.png",
       "status": "info",
-      "timestamp": "2025-05-01T13:14:49.040Z"
+      "timestamp": "2025-05-01T13:45:04.264Z"
     },
     {
       "step": 7,
       "description": "Инъекция мока Telegram WebApp API",
       "status": "inject",
-      "timestamp": "2025-05-01T13:14:49.040Z"
+      "timestamp": "2025-05-01T13:45:04.264Z"
     },
     {
       "step": 8,
       "description": "Инжектирование мока Telegram WebApp API с пользователем ID: 377381733",
       "status": "info",
-      "timestamp": "2025-05-01T13:14:49.040Z"
+      "timestamp": "2025-05-01T13:45:04.264Z"
     },
     {
       "step": 9,
       "description": "Telegram WebApp API успешно эмулирован",
       "status": "success",
-      "timestamp": "2025-05-01T13:14:49.042Z"
+      "timestamp": "2025-05-01T13:45:04.266Z"
     },
     {
       "step": 10,
       "description": "Анализ начального состояния приложения",
       "status": "analysis",
-      "timestamp": "2025-05-01T13:14:52.057Z"
+      "timestamp": "2025-05-01T13:45:07.280Z"
     },
     {
       "step": 11,
-      "description": "Найдено 4 видимых кнопок на странице",
+      "description": "Найдено 3 видимых кнопок на странице",
       "status": "info",
-      "timestamp": "2025-05-01T13:14:52.059Z"
+      "timestamp": "2025-05-01T13:45:07.281Z"
     },
     {
       "step": 12,
       "description": "Кнопка 1: \"НАЧАТЬ РАССЛЕДОВАНИЕ\"",
       "status": "info",
-      "timestamp": "2025-05-01T13:14:52.059Z"
+      "timestamp": "2025-05-01T13:45:07.282Z"
     },
     {
       "step": 13,
-      "description": "Кнопка 2: \"ОБУЧЕНИЕ\"",
+      "description": "Кнопка 2: \"ЛИЧНОЕ ДЕЛО\"",
       "status": "info",
-      "timestamp": "2025-05-01T13:14:52.059Z"
+      "timestamp": "2025-05-01T13:45:07.282Z"
     },
     {
       "step": 14,
-      "description": "Кнопка 3: \"ПРОФИЛЬ\"",
+      "description": "Кнопка 3: \"УПРАВЛЕНИЕ КАДРОВ\"",
       "status": "info",
-      "timestamp": "2025-05-01T13:14:52.059Z"
+      "timestamp": "2025-05-01T13:45:07.282Z"
     },
     {
       "step": 15,
-      "description": "Кнопка 4: \"РЕЙТИНГ\"",
+      "description": "Текущее состояние страницы: URL=https://web-production-43380.up.railway.app/, Заголовок=Криминальный Блеф",
       "status": "info",
-      "timestamp": "2025-05-01T13:14:52.059Z"
+      "timestamp": "2025-05-01T13:45:07.284Z"
     },
     {
       "step": 16,
-      "description": "Текущее состояние страницы: URL=https://web-production-43380.up.railway.app/?ui=new&v=2, Заголовок=Криминальный Блеф",
-      "status": "info",
-      "timestamp": "2025-05-01T13:14:52.061Z"
+      "description": "Обнаружены элементы игры: НАЧАТЬ РАССЛЕДОВАНИЕ, ЛИЧНОЕ ДЕЛО, УПРАВЛЕНИЕ КАДРОВ",
+      "status": "success",
+      "timestamp": "2025-05-01T13:45:07.284Z"
     },
     {
       "step": 17,
-      "description": "Обнаружены элементы игры: НАЧАТЬ РАССЛЕДОВАНИЕ, РЕЙТИНГ, КРИМИНАЛЬНЫЙ БЛЕФ",
-      "status": "success",
-      "timestamp": "2025-05-01T13:14:52.061Z"
+      "description": "Статистика UI: кнопок=18, ссылок=5, изображений=1",
+      "status": "info",
+      "timestamp": "2025-05-01T13:45:07.286Z"
     },
     {
       "step": 18,
-      "description": "Статистика UI: кнопок=19, ссылок=0, изображений=1",
-      "status": "info",
-      "timestamp": "2025-05-01T13:14:52.062Z"
+      "description": "Начало взаимодействия с приложением",
+      "status": "interaction",
+      "timestamp": "2025-05-01T13:45:07.286Z"
     },
     {
       "step": 19,
-      "description": "Начало взаимодействия с приложением",
-      "status": "interaction",
-      "timestamp": "2025-05-01T13:14:52.063Z"
+      "description": "Шаг 1: Нажатие на основную кнопку",
+      "status": "step",
+      "timestamp": "2025-05-01T13:45:07.287Z"
     },
     {
       "step": 20,
-      "description": "Шаг 1: Нажатие на основную кнопку",
-      "status": "step",
-      "timestamp": "2025-05-01T13:14:52.063Z"
+      "description": "Пробуем нажать кнопку \"НАЧАТЬ РАССЛЕДОВАНИЕ\"",
+      "status": "info",
+      "timestamp": "2025-05-01T13:45:07.287Z"
     },
     {
       "step": 21,
-      "description": "Пробуем нажать кнопку \"НАЧАТЬ РАССЛЕДОВАНИЕ\"",
+      "description": "Поиск и клик по кнопке \"НАЧАТЬ РАССЛЕДОВАНИЕ\"",
       "status": "info",
-      "timestamp": "2025-05-01T13:14:52.063Z"
+      "timestamp": "2025-05-01T13:45:07.287Z"
     },
     {
       "step": 22,
-      "description": "Поиск и клик по кнопке \"НАЧАТЬ РАССЛЕДОВАНИЕ\"",
-      "status": "info",
-      "timestamp": "2025-05-01T13:14:52.063Z"
+      "description": "Элемент <button> \"НАЧАТЬ РАССЛЕДОВАНИЕ\" успешно нажат",
+      "status": "success",
+      "timestamp": "2025-05-01T13:45:07.289Z"
     },
     {
       "step": 23,
-      "description": "Элемент <button> \"НАЧАТЬ РАССЛЕДОВАНИЕ\" успешно нажат",
+      "description": "Успешно нажата кнопка \"НАЧАТЬ РАССЛЕДОВАНИЕ\"",
       "status": "success",
-      "timestamp": "2025-05-01T13:14:52.064Z"
+      "timestamp": "2025-05-01T13:45:09.299Z"
     },
     {
       "step": 24,
-      "description": "Успешно нажата кнопка \"НАЧАТЬ РАССЛЕДОВАНИЕ\"",
-      "status": "success",
-      "timestamp": "2025-05-01T13:14:54.079Z"
+      "description": "Скриншот сохранен: after-first-button_2025-05-01T13-45-09-299Z.png",
+      "status": "info",
+      "timestamp": "2025-05-01T13:45:09.384Z"
     },
     {
       "step": 25,
-      "description": "Скриншот сохранен: after-first-button_2025-05-01T13-14-54-080Z.png",
+      "description": "Состояние после клика: найдено 3 кнопок",
       "status": "info",
-      "timestamp": "2025-05-01T13:14:54.143Z"
+      "timestamp": "2025-05-01T13:45:12.389Z"
     },
     {
       "step": 26,
-      "description": "Состояние после клика: найдено 4 кнопок",
+      "description": "Обнаружена кнопка 1: \"НАЧАТЬ РАССЛЕДОВАНИЕ\"",
       "status": "info",
-      "timestamp": "2025-05-01T13:14:57.155Z"
+      "timestamp": "2025-05-01T13:45:12.390Z"
     },
     {
       "step": 27,
-      "description": "Обнаружена кнопка 1: \"НАЧАТЬ РАССЛЕДОВАНИЕ\"",
+      "description": "Обнаружена кнопка 2: \"ЛИЧНОЕ ДЕЛО\"",
       "status": "info",
-      "timestamp": "2025-05-01T13:14:57.155Z"
+      "timestamp": "2025-05-01T13:45:12.390Z"
     },
     {
       "step": 28,
-      "description": "Обнаружена кнопка 2: \"ОБУЧЕНИЕ\"",
+      "description": "Обнаружена кнопка 3: \"УПРАВЛЕНИЕ КАДРОВ\"",
       "status": "info",
-      "timestamp": "2025-05-01T13:14:57.156Z"
+      "timestamp": "2025-05-01T13:45:12.390Z"
     },
     {
       "step": 29,
-      "description": "Обнаружена кнопка 3: \"ПРОФИЛЬ\"",
+      "description": "Обнаружено 6 текстовых элементов",
       "status": "info",
-      "timestamp": "2025-05-01T13:14:57.156Z"
+      "timestamp": "2025-05-01T13:45:12.390Z"
     },
     {
       "step": 30,
-      "description": "Обнаружена кнопка 4: \"РЕЙТИНГ\"",
+      "description": "Текстовый элемент 1: \"КРИМИНАЛЬНЫЙ\nБЛЕФ\nНАЧАТЬ РАССЛЕДОВАНИЕ\nЛИЧНОЕ ДЕЛО\nУПРАВЛЕНИЕ КАДРОВ\"",
       "status": "info",
-      "timestamp": "2025-05-01T13:14:57.156Z"
+      "timestamp": "2025-05-01T13:45:12.390Z"
     },
     {
       "step": 31,
-      "description": "Обнаружено 7 текстовых элементов",
+      "description": "Текстовый элемент 2: \"КРИМИНАЛЬНЫЙ\nБЛЕФ\"",
       "status": "info",
-      "timestamp": "2025-05-01T13:14:57.156Z"
+      "timestamp": "2025-05-01T13:45:12.390Z"
     },
     {
       "step": 32,
-      "description": "Текстовый элемент 1: \"КРИМИНАЛЬНЫЙ БЛЕФ\nНАЧАТЬ РАССЛЕДОВАНИЕ ОБУЧЕНИЕ ПРОФИЛЬ РЕЙТИНГ\"",
+      "description": "Текстовый элемент 3: \"НАЧАТЬ РАССЛЕДОВАНИЕ\nЛИЧНОЕ ДЕЛО\nУПРАВЛЕНИЕ КАДРОВ\"",
       "status": "info",
-      "timestamp": "2025-05-01T13:14:57.156Z"
+      "timestamp": "2025-05-01T13:45:12.390Z"
     },
     {
       "step": 33,
-      "description": "Текстовый элемент 2: \"КРИМИНАЛЬНЫЙ БЛЕФ\"",
+      "description": "Текстовый элемент 4: \"НАЧАТЬ РАССЛЕДОВАНИЕ\"",
       "status": "info",
-      "timestamp": "2025-05-01T13:14:57.156Z"
+      "timestamp": "2025-05-01T13:45:12.390Z"
     },
     {
       "step": 34,
-      "description": "Текстовый элемент 3: \"НАЧАТЬ РАССЛЕДОВАНИЕ ОБУЧЕНИЕ ПРОФИЛЬ РЕЙТИНГ\"",
+      "description": "Текстовый элемент 5: \"ЛИЧНОЕ ДЕЛО\"",
       "status": "info",
-      "timestamp": "2025-05-01T13:14:57.156Z"
+      "timestamp": "2025-05-01T13:45:12.390Z"
     },
     {
       "step": 35,
-      "description": "Текстовый элемент 4: \"НАЧАТЬ РАССЛЕДОВАНИЕ\"",
-      "status": "info",
-      "timestamp": "2025-05-01T13:14:57.156Z"
+      "description": "Шаг 2: Взаимодействие со страницей расследования",
+      "status": "step",
+      "timestamp": "2025-05-01T13:45:12.390Z"
     },
     {
       "step": 36,
-      "description": "Текстовый элемент 5: \"ОБУЧЕНИЕ\"",
+      "description": "Пробуем найти кнопку \"РЕШИТЬ ДЕЛО\"",
       "status": "info",
-      "timestamp": "2025-05-01T13:14:57.156Z"
+      "timestamp": "2025-05-01T13:45:12.391Z"
     },
     {
       "step": 37,
-      "description": "Шаг 2: Взаимодействие со страницей расследования",
-      "status": "step",
-      "timestamp": "2025-05-01T13:14:57.156Z"
+      "description": "Поиск и клик по кнопке \"РЕШИТЬ ДЕЛО\"",
+      "status": "info",
+      "timestamp": "2025-05-01T13:45:12.391Z"
     },
     {
       "step": 38,
-      "description": "Пробуем найти кнопку \"РЕШИТЬ ДЕЛО\"",
+      "description": "Пробуем найти кнопку \"ПОДТВЕРДИТЬ\"",
       "status": "info",
-      "timestamp": "2025-05-01T13:14:57.156Z"
+      "timestamp": "2025-05-01T13:45:12.392Z"
     },
     {
       "step": 39,
-      "description": "Поиск и клик по кнопке \"РЕШИТЬ ДЕЛО\"",
+      "description": "Поиск и клик по кнопке \"ПОДТВЕРДИТЬ\"",
       "status": "info",
-      "timestamp": "2025-05-01T13:14:57.157Z"
+      "timestamp": "2025-05-01T13:45:12.392Z"
     },
     {
       "step": 40,
-      "description": "Пробуем найти кнопку \"ПОДТВЕРДИТЬ\"",
+      "description": "Пробуем найти кнопку \"ДАЛЕЕ\"",
       "status": "info",
-      "timestamp": "2025-05-01T13:14:57.158Z"
+      "timestamp": "2025-05-01T13:45:12.393Z"
     },
     {
       "step": 41,
-      "description": "Поиск и клик по кнопке \"ПОДТВЕРДИТЬ\"",
+      "description": "Поиск и клик по кнопке \"ДАЛЕЕ\"",
       "status": "info",
-      "timestamp": "2025-05-01T13:14:57.158Z"
+      "timestamp": "2025-05-01T13:45:12.393Z"
     },
     {
       "step": 42,
-      "description": "Пробуем найти кнопку \"ДАЛЕЕ\"",
+      "description": "Пробуем найти кнопку \"УЛИКИ\"",
       "status": "info",
-      "timestamp": "2025-05-01T13:14:57.160Z"
+      "timestamp": "2025-05-01T13:45:12.395Z"
     },
     {
       "step": 43,
-      "description": "Поиск и клик по кнопке \"ДАЛЕЕ\"",
+      "description": "Поиск и клик по кнопке \"УЛИКИ\"",
       "status": "info",
-      "timestamp": "2025-05-01T13:14:57.160Z"
+      "timestamp": "2025-05-01T13:45:12.395Z"
     },
     {
       "step": 44,
-      "description": "Пробуем найти кнопку \"УЛИКИ\"",
+      "description": "Пробуем найти кнопку \"ПОДОЗРЕВАЕМЫЕ\"",
       "status": "info",
-      "timestamp": "2025-05-01T13:14:57.161Z"
+      "timestamp": "2025-05-01T13:45:12.396Z"
     },
     {
       "step": 45,
-      "description": "Поиск и клик по кнопке \"УЛИКИ\"",
+      "description": "Поиск и клик по кнопке \"ПОДОЗРЕВАЕМЫЕ\"",
       "status": "info",
-      "timestamp": "2025-05-01T13:14:57.161Z"
+      "timestamp": "2025-05-01T13:45:12.396Z"
     },
     {
       "step": 46,
-      "description": "Пробуем найти кнопку \"ПОДОЗРЕВАЕМЫЕ\"",
+      "description": "Пробуем найти кнопку \"ИНФОРМАЦИЯ\"",
       "status": "info",
-      "timestamp": "2025-05-01T13:14:57.162Z"
+      "timestamp": "2025-05-01T13:45:12.397Z"
     },
     {
       "step": 47,
-      "description": "Поиск и клик по кнопке \"ПОДОЗРЕВАЕМЫЕ\"",
+      "description": "Поиск и клик по кнопке \"ИНФОРМАЦИЯ\"",
       "status": "info",
-      "timestamp": "2025-05-01T13:14:57.162Z"
+      "timestamp": "2025-05-01T13:45:12.397Z"
     },
     {
       "step": 48,
-      "description": "Пробуем найти кнопку \"ИНФОРМАЦИЯ\"",
+      "description": "Пробуем найти кнопку \"ВЕРНУТЬСЯ К ДЕЛУ\"",
       "status": "info",
-      "timestamp": "2025-05-01T13:14:57.163Z"
+      "timestamp": "2025-05-01T13:45:12.398Z"
     },
     {
       "step": 49,
-      "description": "Поиск и клик по кнопке \"ИНФОРМАЦИЯ\"",
+      "description": "Поиск и клик по кнопке \"ВЕРНУТЬСЯ К ДЕЛУ\"",
       "status": "info",
-      "timestamp": "2025-05-01T13:14:57.163Z"
+      "timestamp": "2025-05-01T13:45:12.398Z"
     },
     {
       "step": 50,
-      "description": "Пробуем найти кнопку \"ВЕРНУТЬСЯ К ДЕЛУ\"",
+      "description": "Пробуем найти кнопку \"СЛЕДУЮЩЕЕ ДЕЛО\"",
       "status": "info",
-      "timestamp": "2025-05-01T13:14:57.164Z"
+      "timestamp": "2025-05-01T13:45:12.399Z"
     },
     {
       "step": 51,
-      "description": "Поиск и клик по кнопке \"ВЕРНУТЬСЯ К ДЕЛУ\"",
+      "description": "Поиск и клик по кнопке \"СЛЕДУЮЩЕЕ ДЕЛО\"",
       "status": "info",
-      "timestamp": "2025-05-01T13:14:57.164Z"
+      "timestamp": "2025-05-01T13:45:12.399Z"
     },
     {
       "step": 52,
-      "description": "Пробуем найти кнопку \"СЛЕДУЮЩЕЕ ДЕЛО\"",
-      "status": "info",
-      "timestamp": "2025-05-01T13:14:57.166Z"
+      "description": "Не найдено известных кнопок, пробуем любой интерактивный элемент",
+      "status": "retry",
+      "timestamp": "2025-05-01T13:45:12.401Z"
     },
     {
       "step": 53,
-      "description": "Поиск и клик по кнопке \"СЛЕДУЮЩЕЕ ДЕЛО\"",
+      "description": "Поиск любого интерактивного элемента для взаимодействия",
       "status": "info",
-      "timestamp": "2025-05-01T13:14:57.166Z"
+      "timestamp": "2025-05-01T13:45:12.401Z"
     },
     {
       "step": 54,
-      "description": "Не найдено известных кнопок, пробуем любой интерактивный элемент",
-      "status": "retry",
-      "timestamp": "2025-05-01T13:14:57.167Z"
+      "description": "Элемент <button> \"НАЧАТЬ РАССЛЕДОВАНИЕ\" успешно нажат",
+      "status": "success",
+      "timestamp": "2025-05-01T13:45:12.402Z"
     },
     {
       "step": 55,
-      "description": "Поиск любого интерактивного элемента для взаимодействия",
+      "description": "Селектор: button:not([disabled])",
       "status": "info",
-      "timestamp": "2025-05-01T13:14:57.167Z"
+      "timestamp": "2025-05-01T13:45:12.403Z"
     },
     {
       "step": 56,
-      "description": "Элемент <button> \"НАЧАТЬ РАССЛЕДОВАНИЕ\" успешно нажат",
-      "status": "success",
-      "timestamp": "2025-05-01T13:14:57.168Z"
+      "description": "Скриншот сохранен: after-second-interaction_2025-05-01T13-45-14-408Z.png",
+      "status": "info",
+      "timestamp": "2025-05-01T13:45:14.477Z"
     },
     {
       "step": 57,
-      "description": "Селектор: button:not([disabled])",
+      "description": "Скриншот сохранен: final-state_2025-05-01T13-45-17-481Z.png",
       "status": "info",
-      "timestamp": "2025-05-01T13:14:57.168Z"
+      "timestamp": "2025-05-01T13:45:17.547Z"
     },
     {
       "step": 58,
-      "description": "Скриншот сохранен: after-second-interaction_2025-05-01T13-14-59-181Z.png",
-      "status": "info",
-      "timestamp": "2025-05-01T13:14:59.252Z"
+      "description": "Отладка состояния приложения",
+      "status": "debug",
+      "timestamp": "2025-05-01T13:45:17.547Z"
     },
     {
       "step": 59,
-      "description": "Скриншот сохранен: final-state_2025-05-01T13-15-02-261Z.png",
-      "status": "info",
-      "timestamp": "2025-05-01T13:15:02.329Z"
+      "description": "Отладочная информация собрана",
+      "status": "success",
+      "timestamp": "2025-05-01T13:45:17.548Z"
     },
     {
       "step": 60,
-      "description": "Отладка состояния приложения",
-      "status": "debug",
-      "timestamp": "2025-05-01T13:15:02.329Z"
+      "description": "Найдено 3 видимых кнопок из 18 общих",
+      "status": "info",
+      "timestamp": "2025-05-01T13:45:17.548Z"
     },
     {
       "step": 61,
-      "description": "Отладочная информация собрана",
+      "description": "Объект Telegram WebApp обнаружен",
       "status": "success",
-      "timestamp": "2025-05-01T13:15:02.330Z"
+      "timestamp": "2025-05-01T13:45:17.548Z"
     },
     {
       "step": 62,
-      "description": "Найдено 4 видимых кнопок из 19 общих",
-      "status": "info",
-      "timestamp": "2025-05-01T13:15:02.330Z"
+      "description": "Тестирование завершено. Длительность: 21.26 seconds",
+      "status": "end",
+      "timestamp": "2025-05-01T13:45:17.549Z"
     },
     {
       "step": 63,
-      "description": "Объект Telegram WebApp обнаружен",
-      "status": "success",
-      "timestamp": "2025-05-01T13:15:02.331Z"
-    },
-    {
-      "step": 64,
-      "description": "Тестирование завершено. Длительность: 21.31 seconds",
-      "status": "end",
-      "timestamp": "2025-05-01T13:15:02.331Z"
-    },
-    {
-      "step": 65,
       "description": "Тест завершен с ошибками: 3",
       "status": "error",
-      "timestamp": "2025-05-01T13:15:02.332Z"
+      "timestamp": "2025-05-01T13:45:17.549Z"
     }
   ],
   "errors": [
     {
       "message": "Identifier 'calculateStreakBonus' has already been declared",
       "stack": "SyntaxError: Identifier 'calculateStreakBonus' has already been declared",
-      "timestamp": "2025-05-01T13:14:45.434Z",
+      "timestamp": "2025-05-01T13:45:00.641Z",
       "step": 4
     },
     {
       "message": "addDossierEffects is not defined\ninitProfileScreen (https://web-production-43380.up.railway.app/js/ui.js:69:3)",
-      "stack": "ReferenceError: addDossierEffects is not defined\ninitProfileScreen (https://web-production-43380.up.railway.app/js/ui.js:69:3)\n    at initProfileScreen (https://web-production-43380.up.railway.app/js/ui.js:69:3)\n    at <anonymous> (https://web-production-43380.up.railway.app/js/ui.js:39:9)\n    at initAllScreens (https://web-production-43380.up.railway.app/js/ui.js:33:11)\n    at initApp (https://web-production-43380.up.railway.app/js/app-init.js:23:3)\n    at <anonymous> (https://web-production-43380.up.railway.app/js/app-init.js:39:3)",
-      "timestamp": "2025-05-01T13:14:45.435Z",
+      "stack": "ReferenceError: addDossierEffects is not defined\ninitProfileScreen (https://web-production-43380.up.railway.app/js/ui.js:69:3)\n    at initProfileScreen (https://web-production-43380.up.railway.app/js/ui.js:69:3)\n    at <anonymous> (https://web-production-43380.up.railway.app/js/ui.js:39:9)\n    at initAllScreens (https://web-production-43380.up.railway.app/js/ui.js:33:11)\n    at initApp (https://web-production-43380.up.railway.app/js/app-init.js:29:3)\n    at <anonymous> (https://web-production-43380.up.railway.app/js/app-init.js:45:3)",
+      "timestamp": "2025-05-01T13:45:00.642Z",
       "step": 4
     },
     {
       "message": "logger is not defined",
       "stack": "ReferenceError: logger is not defined\n    at <anonymous> (https://web-production-43380.up.railway.app/js/app.js:152:5)",
-      "timestamp": "2025-05-01T13:14:45.436Z",
+      "timestamp": "2025-05-01T13:45:00.643Z",
       "step": 4
     }
   ],
   "warnings": [
     {
       "message": "Console error: Refused to apply style from 'https://web-production-43380.up.railway.app/css/normalize.css' because its MIME type ('application/json') is not a supported stylesheet MIME type, and strict MIME checking is enabled.",
-      "timestamp": "2025-05-01T13:14:43.043Z",
+      "timestamp": "2025-05-01T13:44:58.455Z",
       "step": 4
     },
     {
       "message": "Failed request: https://web-production-43380.up.railway.app/css/normalize.css",
-      "timestamp": "2025-05-01T13:14:43.044Z",
+      "timestamp": "2025-05-01T13:44:58.456Z",
       "step": 4
     },
     {
       "message": "Console error: Refused to apply style from 'https://web-production-43380.up.railway.app/css/animations.css' because its MIME type ('application/json') is not a supported stylesheet MIME type, and strict MIME checking is enabled.",
-      "timestamp": "2025-05-01T13:14:43.209Z",
+      "timestamp": "2025-05-01T13:44:58.459Z",
       "step": 4
     },
     {
       "message": "Failed request: https://web-production-43380.up.railway.app/css/animations.css",
-      "timestamp": "2025-05-01T13:14:43.210Z",
+      "timestamp": "2025-05-01T13:44:58.459Z",
       "step": 4
     },
     {
       "message": "Console error: Failed to load resource: the server responded with a status of 404 ()",
-      "timestamp": "2025-05-01T13:14:44.574Z",
-      "step": 4
-    },
-    {
-      "message": "Console error: Ошибка загрузки модуля: JSHandle@object",
-      "timestamp": "2025-05-01T13:14:45.435Z",
-      "step": 4
-    },
-    {
-      "message": "Console error: Ошибка загрузки модуля: JSHandle@object",
-      "timestamp": "2025-05-01T13:14:45.436Z",
+      "timestamp": "2025-05-01T13:44:59.642Z",
       "step": 4
     },
     {
       "message": "Console error: Failed to load resource: the server responded with a status of 404 ()",
-      "timestamp": "2025-05-01T13:14:45.773Z",
+      "timestamp": "2025-05-01T13:44:59.643Z",
+      "step": 4
+    },
+    {
+      "message": "Console error: Ошибка загрузки модуля: JSHandle@object",
+      "timestamp": "2025-05-01T13:45:00.642Z",
+      "step": 4
+    },
+    {
+      "message": "Console error: Ошибка загрузки модуля: JSHandle@object",
+      "timestamp": "2025-05-01T13:45:00.643Z",
+      "step": 4
+    },
+    {
+      "message": "Console error: Failed to load resource: the server responded with a status of 404 ()",
+      "timestamp": "2025-05-01T13:45:00.979Z",
       "step": 4
     },
     {
       "message": "Не удалось найти и нажать элемент \"РЕШИТЬ ДЕЛО\": Element not found",
-      "timestamp": "2025-05-01T13:14:57.158Z",
-      "step": 39
+      "timestamp": "2025-05-01T13:45:12.392Z",
+      "step": 37
     },
     {
       "message": "Не удалось найти и нажать элемент \"ПОДТВЕРДИТЬ\": Element not found",
-      "timestamp": "2025-05-01T13:14:57.159Z",
-      "step": 41
+      "timestamp": "2025-05-01T13:45:12.393Z",
+      "step": 39
     },
     {
       "message": "Не удалось найти и нажать элемент \"ДАЛЕЕ\": Element not found",
-      "timestamp": "2025-05-01T13:14:57.161Z",
-      "step": 43
+      "timestamp": "2025-05-01T13:45:12.395Z",
+      "step": 41
     },
     {
       "message": "Не удалось найти и нажать элемент \"УЛИКИ\": Element not found",
-      "timestamp": "2025-05-01T13:14:57.162Z",
-      "step": 45
+      "timestamp": "2025-05-01T13:45:12.396Z",
+      "step": 43
     },
     {
       "message": "Не удалось найти и нажать элемент \"ПОДОЗРЕВАЕМЫЕ\": Element not found",
-      "timestamp": "2025-05-01T13:14:57.163Z",
-      "step": 47
+      "timestamp": "2025-05-01T13:45:12.397Z",
+      "step": 45
     },
     {
       "message": "Не удалось найти и нажать элемент \"ИНФОРМАЦИЯ\": Element not found",
-      "timestamp": "2025-05-01T13:14:57.164Z",
-      "step": 49
+      "timestamp": "2025-05-01T13:45:12.398Z",
+      "step": 47
     },
     {
       "message": "Не удалось найти и нажать элемент \"ВЕРНУТЬСЯ К ДЕЛУ\": Element not found",
-      "timestamp": "2025-05-01T13:14:57.165Z",
-      "step": 51
+      "timestamp": "2025-05-01T13:45:12.399Z",
+      "step": 49
     },
     {
       "message": "Не удалось найти и нажать элемент \"СЛЕДУЮЩЕЕ ДЕЛО\": Element not found",
-      "timestamp": "2025-05-01T13:14:57.166Z",
-      "step": 53
+      "timestamp": "2025-05-01T13:45:12.401Z",
+      "step": 51
     }
   ],
   "screenshots": [
     {
-      "path": "test-screenshots\\initial-app-load_2025-05-01T13-14-48-967Z.png",
-      "timestamp": "2025-05-01T13:14:49.040Z",
+      "path": "test-screenshots\\initial-app-load_2025-05-01T13-45-04-181Z.png",
+      "timestamp": "2025-05-01T13:45:04.264Z",
       "step": 5
     },
     {
-      "path": "test-screenshots\\after-first-button_2025-05-01T13-14-54-080Z.png",
-      "timestamp": "2025-05-01T13:14:54.143Z",
-      "step": 24
+      "path": "test-screenshots\\after-first-button_2025-05-01T13-45-09-299Z.png",
+      "timestamp": "2025-05-01T13:45:09.384Z",
+      "step": 23
     },
     {
-      "path": "test-screenshots\\after-second-interaction_2025-05-01T13-14-59-181Z.png",
-      "timestamp": "2025-05-01T13:14:59.252Z",
-      "step": 57
+      "path": "test-screenshots\\after-second-interaction_2025-05-01T13-45-14-408Z.png",
+      "timestamp": "2025-05-01T13:45:14.477Z",
+      "step": 55
     },
     {
-      "path": "test-screenshots\\final-state_2025-05-01T13-15-02-261Z.png",
-      "timestamp": "2025-05-01T13:15:02.329Z",
-      "step": 58
+      "path": "test-screenshots\\final-state_2025-05-01T13-45-17-481Z.png",
+      "timestamp": "2025-05-01T13:45:17.547Z",
+      "step": 56
     }
   ],
   "consoleMessages": [
@@ -529,308 +522,315 @@
         "type": "log",
         "text": "DOM observer started"
       },
-      "timestamp": "2025-05-01T13:14:41.345Z"
+      "timestamp": "2025-05-01T13:44:56.613Z"
     },
     {
       "message": {
         "type": "error",
         "text": "Refused to apply style from 'https://web-production-43380.up.railway.app/css/normalize.css' because its MIME type ('application/json') is not a supported stylesheet MIME type, and strict MIME checking is enabled."
       },
-      "timestamp": "2025-05-01T13:14:43.043Z"
+      "timestamp": "2025-05-01T13:44:58.455Z"
     },
     {
       "message": {
         "type": "error",
         "text": "Refused to apply style from 'https://web-production-43380.up.railway.app/css/animations.css' because its MIME type ('application/json') is not a supported stylesheet MIME type, and strict MIME checking is enabled."
       },
-      "timestamp": "2025-05-01T13:14:43.209Z"
+      "timestamp": "2025-05-01T13:44:58.459Z"
     },
     {
       "message": {
         "type": "warn",
         "text": "ES модули не поддерживаются, загружаем fallback"
       },
-      "timestamp": "2025-05-01T13:14:43.539Z"
+      "timestamp": "2025-05-01T13:44:58.622Z"
     },
     {
       "message": {
         "type": "log",
         "text": "[Telegram.WebView] > postEvent web_app_set_header_color JSHandle@object"
       },
-      "timestamp": "2025-05-01T13:14:44.247Z"
+      "timestamp": "2025-05-01T13:44:59.316Z"
     },
     {
       "message": {
         "type": "log",
         "text": "[Telegram.WebView] > postEvent web_app_set_bottom_bar_color JSHandle@object"
       },
-      "timestamp": "2025-05-01T13:14:44.248Z"
+      "timestamp": "2025-05-01T13:44:59.316Z"
     },
     {
       "message": {
         "type": "log",
         "text": "[Telegram.WebView] > postEvent web_app_request_theme "
       },
-      "timestamp": "2025-05-01T13:14:44.248Z"
+      "timestamp": "2025-05-01T13:44:59.317Z"
     },
     {
       "message": {
         "type": "log",
         "text": "[Telegram.WebView] > postEvent web_app_request_viewport "
       },
-      "timestamp": "2025-05-01T13:14:44.248Z"
+      "timestamp": "2025-05-01T13:44:59.317Z"
     },
     {
       "message": {
         "type": "log",
         "text": "[Telegram.WebView] > postEvent web_app_request_safe_area "
       },
-      "timestamp": "2025-05-01T13:14:44.248Z"
+      "timestamp": "2025-05-01T13:44:59.317Z"
     },
     {
       "message": {
         "type": "log",
         "text": "[Telegram.WebView] > postEvent web_app_request_content_safe_area "
       },
-      "timestamp": "2025-05-01T13:14:44.248Z"
+      "timestamp": "2025-05-01T13:44:59.317Z"
     },
     {
       "message": {
         "type": "error",
         "text": "Failed to load resource: the server responded with a status of 404 ()"
       },
-      "timestamp": "2025-05-01T13:14:44.574Z"
+      "timestamp": "2025-05-01T13:44:59.642Z"
+    },
+    {
+      "message": {
+        "type": "error",
+        "text": "Failed to load resource: the server responded with a status of 404 ()"
+      },
+      "timestamp": "2025-05-01T13:44:59.643Z"
     },
     {
       "message": {
         "type": "info",
         "text": "[INFO] Оффлайн-модуль инициализирован "
       },
-      "timestamp": "2025-05-01T13:14:45.249Z"
+      "timestamp": "2025-05-01T13:45:00.305Z"
     },
     {
       "message": {
         "type": "log",
         "text": "Инициализация приложения..."
       },
-      "timestamp": "2025-05-01T13:14:45.434Z"
+      "timestamp": "2025-05-01T13:45:00.641Z"
     },
     {
       "message": {
         "type": "log",
         "text": "[Telegram.WebView] > postEvent web_app_ready "
       },
-      "timestamp": "2025-05-01T13:14:45.434Z"
+      "timestamp": "2025-05-01T13:45:00.641Z"
     },
     {
       "message": {
         "type": "log",
         "text": "[Telegram.WebView] > postEvent web_app_expand "
       },
-      "timestamp": "2025-05-01T13:14:45.434Z"
+      "timestamp": "2025-05-01T13:45:00.641Z"
     },
     {
       "message": {
         "type": "warn",
         "text": "[WARN] Не удалось получить данные пользователя Telegram "
       },
-      "timestamp": "2025-05-01T13:14:45.434Z"
+      "timestamp": "2025-05-01T13:45:00.642Z"
     },
     {
       "message": {
         "type": "info",
         "text": "[INFO] Включен автономный режим "
       },
-      "timestamp": "2025-05-01T13:14:45.434Z"
+      "timestamp": "2025-05-01T13:45:00.642Z"
     },
     {
       "message": {
         "type": "log",
         "text": "[NOTIFICATION] warning: Запущен в автономном режиме."
       },
-      "timestamp": "2025-05-01T13:14:45.434Z"
+      "timestamp": "2025-05-01T13:45:00.642Z"
     },
     {
       "message": {
         "type": "info",
         "text": "[INFO] Инициализация Telegram WebApp: автономный режим "
       },
-      "timestamp": "2025-05-01T13:14:45.435Z"
+      "timestamp": "2025-05-01T13:45:00.642Z"
     },
     {
       "message": {
         "type": "error",
         "text": "Ошибка загрузки модуля: JSHandle@object"
       },
-      "timestamp": "2025-05-01T13:14:45.435Z"
+      "timestamp": "2025-05-01T13:45:00.642Z"
     },
     {
       "message": {
         "type": "log",
         "text": "Инициализация туториала"
       },
-      "timestamp": "2025-05-01T13:14:45.435Z"
+      "timestamp": "2025-05-01T13:45:00.642Z"
     },
     {
       "message": {
         "type": "error",
         "text": "Ошибка загрузки модуля: JSHandle@object"
       },
-      "timestamp": "2025-05-01T13:14:45.436Z"
+      "timestamp": "2025-05-01T13:45:00.643Z"
     },
     {
       "message": {
         "type": "log",
         "text": "Utils модуль успешно загружен"
       },
-      "timestamp": "2025-05-01T13:14:45.437Z"
+      "timestamp": "2025-05-01T13:45:00.643Z"
     },
     {
       "message": {
         "type": "log",
         "text": "Зависимости туториала успешно загружены"
       },
-      "timestamp": "2025-05-01T13:14:45.437Z"
+      "timestamp": "2025-05-01T13:45:00.644Z"
     },
     {
       "message": {
         "type": "log",
         "text": "UI модуль успешно загружен"
       },
-      "timestamp": "2025-05-01T13:14:45.437Z"
+      "timestamp": "2025-05-01T13:45:00.644Z"
     },
     {
       "message": {
         "type": "log",
         "text": "Telegram модуль успешно загружен"
       },
-      "timestamp": "2025-05-01T13:14:45.437Z"
+      "timestamp": "2025-05-01T13:45:00.644Z"
     },
     {
       "message": {
         "type": "log",
         "text": "Effects модуль успешно загружен"
       },
-      "timestamp": "2025-05-01T13:14:45.437Z"
+      "timestamp": "2025-05-01T13:45:00.644Z"
     },
     {
       "message": {
         "type": "log",
         "text": "GameAchievements модуль успешно загружен"
       },
-      "timestamp": "2025-05-01T13:14:45.437Z"
+      "timestamp": "2025-05-01T13:45:00.644Z"
     },
     {
       "message": {
         "type": "log",
         "text": "Инициализация туториала"
       },
-      "timestamp": "2025-05-01T13:14:45.437Z"
+      "timestamp": "2025-05-01T13:45:00.644Z"
     },
     {
       "message": {
         "type": "error",
         "text": "Failed to load resource: the server responded with a status of 404 ()"
       },
-      "timestamp": "2025-05-01T13:14:45.773Z"
+      "timestamp": "2025-05-01T13:45:00.979Z"
     },
     {
       "message": {
-        "type": "log",
-        "text": "Найдена кнопка туториала, добавляем обработчик"
+        "type": "warn",
+        "text": "Кнопка туториала не найдена"
       },
-      "timestamp": "2025-05-01T13:14:45.940Z"
+      "timestamp": "2025-05-01T13:45:01.150Z"
     },
     {
       "message": {
-        "type": "log",
-        "text": "Найдена кнопка туториала, добавляем обработчик"
+        "type": "warn",
+        "text": "Кнопка туториала не найдена"
       },
-      "timestamp": "2025-05-01T13:14:45.940Z"
+      "timestamp": "2025-05-01T13:45:01.151Z"
     },
     {
       "message": {
         "type": "log",
         "text": "Telegram WebApp объект уже существует."
       },
-      "timestamp": "2025-05-01T13:14:49.042Z"
+      "timestamp": "2025-05-01T13:45:04.266Z"
     },
     {
       "message": {
         "type": "log",
         "text": "Telegram WebApp API обновлен"
       },
-      "timestamp": "2025-05-01T13:14:49.042Z"
+      "timestamp": "2025-05-01T13:45:04.266Z"
     },
     {
       "message": {
         "type": "log",
         "text": "Найден элемент с текстом \"НАЧАТЬ РАССЛЕДОВАНИЕ\": BUTTON"
       },
-      "timestamp": "2025-05-01T13:14:52.064Z"
+      "timestamp": "2025-05-01T13:45:07.288Z"
     },
     {
       "message": {
         "type": "log",
         "text": "Клик по элементу \"НАЧАТЬ РАССЛЕДОВАНИЕ\" выполнен"
       },
-      "timestamp": "2025-05-01T13:14:52.064Z"
+      "timestamp": "2025-05-01T13:45:07.289Z"
     },
     {
       "message": {
         "type": "warn",
         "text": "Элемент с текстом \"РЕШИТЬ ДЕЛО\" не найден"
       },
-      "timestamp": "2025-05-01T13:14:57.158Z"
+      "timestamp": "2025-05-01T13:45:12.392Z"
     },
     {
       "message": {
         "type": "warn",
         "text": "Элемент с текстом \"ПОДТВЕРДИТЬ\" не найден"
       },
-      "timestamp": "2025-05-01T13:14:57.159Z"
+      "timestamp": "2025-05-01T13:45:12.393Z"
     },
     {
       "message": {
         "type": "warn",
         "text": "Элемент с текстом \"ДАЛЕЕ\" не найден"
       },
-      "timestamp": "2025-05-01T13:14:57.161Z"
+      "timestamp": "2025-05-01T13:45:12.395Z"
     },
     {
       "message": {
         "type": "warn",
         "text": "Элемент с текстом \"УЛИКИ\" не найден"
       },
-      "timestamp": "2025-05-01T13:14:57.162Z"
+      "timestamp": "2025-05-01T13:45:12.396Z"
     },
     {
       "message": {
         "type": "warn",
         "text": "Элемент с текстом \"ПОДОЗРЕВАЕМЫЕ\" не найден"
       },
-      "timestamp": "2025-05-01T13:14:57.163Z"
+      "timestamp": "2025-05-01T13:45:12.397Z"
     },
     {
       "message": {
         "type": "warn",
         "text": "Элемент с текстом \"ИНФОРМАЦИЯ\" не найден"
       },
-      "timestamp": "2025-05-01T13:14:57.164Z"
+      "timestamp": "2025-05-01T13:45:12.398Z"
     },
     {
       "message": {
         "type": "warn",
         "text": "Элемент с текстом \"ВЕРНУТЬСЯ К ДЕЛУ\" не найден"
       },
-      "timestamp": "2025-05-01T13:14:57.165Z"
+      "timestamp": "2025-05-01T13:45:12.399Z"
     },
     {
       "message": {
         "type": "warn",
         "text": "Элемент с текстом \"СЛЕДУЮЩЕЕ ДЕЛО\" не найден"
       },
-      "timestamp": "2025-05-01T13:14:57.166Z"
+      "timestamp": "2025-05-01T13:45:12.401Z"
     }
   ]
 }

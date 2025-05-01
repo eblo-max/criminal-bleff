@@ -42,7 +42,7 @@ const appState = {
 };
 
 // Объект логгера для отладки
-const logger = {
+export const logger = {
   info: function(message, data) {
     console.info(`[INFO] ${message}`, data || '');
   },
@@ -58,6 +58,38 @@ const logger = {
     }
   }
 };
+
+// Дополнительная функция для обновления досье пользователя
+export function addDossierEffects() {
+  logger.info('Добавление эффектов для досье пользователя');
+  const profileElements = document.querySelectorAll('.profile-avatar, .profile-stats, .achievement');
+  
+  if (profileElements.length > 0) {
+    profileElements.forEach((el, index) => {
+      // Добавляем задержку для последовательного появления элементов
+      el.style.animationDelay = `${index * 0.1}s`;
+      el.classList.add('fade-in');
+    });
+  }
+}
+
+// Функция для расчета бонуса за серию успешных решений
+export function calculateStreakBonus(streak) {
+  if (streak <= 0) return 0;
+  
+  // Базовый бонус за серию
+  let bonus = 0;
+  
+  if (streak >= 3 && streak < 5) {
+    bonus = 10; // +10 очков за серию 3-4
+  } else if (streak >= 5 && streak < 10) {
+    bonus = 25; // +25 очков за серию 5-9
+  } else if (streak >= 10) {
+    bonus = 50; // +50 очков за серию 10+
+  }
+  
+  return bonus;
+}
 
 // Объект уведомлений
 const notifications = {
