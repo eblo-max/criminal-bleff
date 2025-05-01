@@ -21,14 +21,16 @@ console.log('Путь к текущей директории:', __dirname);
 // Константы настроек
 const CONFIG = {
   app: {
-    url: 'https://first-bot-production.up.railway.app',
+    url: 'https://web-production-43380.up.railway.app/',
     timeouts: {
       navigation: 60000,
       element: 15000,
       animation: 1000,
       interaction: 2000,
       rendering: 3000,
-    }
+    },
+    uiVersion: 'new', // 'new' или 'old' - выбор версии интерфейса для тестирования
+    forceMobile: true  // Принудительно использовать мобильный user-agent
   },
   browser: {
     headless: false, // Изменить на true для запуска без UI
@@ -204,20 +206,69 @@ class MainPage {
         title: document.title,
         h1: Array.from(document.querySelectorAll('h1'))
           .map(h => h.innerText.trim()),
-        texts: Array.from(document.querySelectorAll('p, h1, h2, h3, h4, button'))
-          .filter(el => el.offsetParent !== null)
+        h2: Array.from(document.querySelectorAll('h2'))
+          .map(h => h.innerText.trim()),
+        h3: Array.from(document.querySelectorAll('h3'))
+          .map(h => h.innerText.trim()),
+        texts: Array.from(document.querySelectorAll('p, h1, h2, h3, h4, button, label, div, span'))
+          .filter(el => {
+            // Только видимые элементы с текстом
+            const isVisible = el.offsetParent !== null;
+            const hasText = el.innerText && el.innerText.trim().length > 0;
+            const isSmall = el.innerText && el.innerText.trim().length < 100; // Игнорируем слишком длинные тексты
+            return isVisible && hasText && isSmall;
+          })
           .map(el => el.innerText.trim())
-          .filter(txt => txt.length > 0),
-        buttons: Array.from(document.querySelectorAll('button'))
+          .filter((txt, idx, arr) => arr.indexOf(txt) === idx), // Удаляем дубликаты
+        buttons: Array.from(document.querySelectorAll('button, .button, [role="button"]'))
           .filter(btn => btn.offsetParent !== null)
-          .map(btn => btn.innerText.trim()),
-        inputs: Array.from(document.querySelectorAll('input, textarea'))
+          .map(btn => btn.innerText.trim())
+          .filter(txt => txt.length > 0),
+        // Навигационные элементы (нижнее меню)
+        navigationItems: Array.from(document.querySelectorAll('nav a, footer a, .navigation a, .bottom-menu a, .tab'))
+          .filter(nav => nav.offsetParent !== null)
+          .map(nav => {
+            const text = nav.innerText.trim() || nav.getAttribute('aria-label') || nav.title || '';
+            const icon = nav.querySelector('img, svg, i');
+            const iconAlt = icon ? (icon.getAttribute('alt') || icon.getAttribute('title') || '') : '';
+            return {
+              text: text,
+              iconAlt: iconAlt,
+              isActive: nav.classList.contains('active') || nav.getAttribute('aria-selected') === 'true',
+              href: nav.href || ''
+            };
+          }),
+        inputs: Array.from(document.querySelectorAll('input, textarea, select'))
           .filter(inp => inp.offsetParent !== null)
           .map(inp => ({
             type: inp.type,
             id: inp.id,
-            placeholder: inp.placeholder
-          }))
+            name: inp.name,
+            placeholder: inp.placeholder,
+            value: inp.value
+          })),
+        // Дополнительная информация
+        images: Array.from(document.querySelectorAll('img'))
+          .filter(img => img.offsetParent !== null)
+          .map(img => ({
+            src: img.src,
+            alt: img.alt,
+            width: img.width,
+            height: img.height
+          })),
+        // Идентификация страницы по характерным элементам
+        pageIdentifiers: {
+          isMainMenu: !!document.querySelector('.main-menu, header h1, [data-page="main"]'),
+          isCasePage: !!document.querySelector('.case, .story, [data-page="case"]'),
+          isProfilePage: !!document.querySelector('.profile, [data-page="profile"]'),
+          isLeaderboardPage: !!document.querySelector('.leaderboard, [data-page="leaderboard"]')
+        },
+        classes: [...new Set(
+          Array.from(document.querySelectorAll('*'))
+            .filter(el => el.className && typeof el.className === 'string')
+            .flatMap(el => el.className.split(' '))
+            .filter(cls => cls.length > 0)
+        )].slice(0, 20) // Берем только первые 20 уникальных классов
       };
     });
   }
@@ -260,9 +311,46 @@ class MainPage {
     return this.page.evaluate((user, initData) => {
       if (window.Telegram) {
         console.log('Telegram WebApp объект уже существует.');
-        return false;
+        
+        // Проверим структуру существующего объекта и исправим её при необходимости
+        if (!window.Telegram.WebApp) {
+          console.log('Создаём WebApp в существующем объекте Telegram');
+          window.Telegram.WebApp = {};
+        }
+        
+        // Обновляем данные пользователя
+        window.Telegram.WebApp.initData = initData;
+        window.Telegram.WebApp.initDataUnsafe = {
+          user: user
+        };
+        
+        // Добавляем методы, если их нет
+        if (!window.Telegram.WebApp.ready) {
+          window.Telegram.WebApp.ready = () => console.log('Telegram.WebApp.ready called');
+        }
+        if (!window.Telegram.WebApp.expand) {
+          window.Telegram.WebApp.expand = () => console.log('Telegram.WebApp.expand called');
+        }
+        if (!window.Telegram.WebApp.close) {
+          window.Telegram.WebApp.close = () => console.log('Telegram.WebApp.close called');
+        }
+        
+        // Проверяем и создаём MainButton, если его нет
+        if (!window.Telegram.WebApp.MainButton) {
+          window.Telegram.WebApp.MainButton = {
+            text: '',
+            isVisible: false,
+            show: function() { this.isVisible = true; console.log('MainButton.show called'); },
+            hide: function() { this.isVisible = false; console.log('MainButton.hide called'); },
+            setText: function(text) { this.text = text; console.log('MainButton.setText called with:', text); }
+          };
+        }
+        
+        console.log('Telegram WebApp API обновлен');
+        return true;
       }
 
+      // Если объект Telegram не существует, создаём его полностью
       window.Telegram = {
         WebApp: {
           initData: initData,
@@ -281,6 +369,18 @@ class MainPage {
             show: function() { this.isVisible = true; console.log('MainButton.show called'); },
             hide: function() { this.isVisible = false; console.log('MainButton.hide called'); },
             setText: function(text) { this.text = text; console.log('MainButton.setText called with:', text); }
+          },
+          // Добавляем BackButton
+          BackButton: {
+            isVisible: false,
+            show: function() { this.isVisible = true; console.log('BackButton.show called'); },
+            hide: function() { this.isVisible = false; console.log('BackButton.hide called'); }
+          },
+          // Добавляем HapticFeedback
+          HapticFeedback: {
+            impactOccurred: (style) => console.log(`HapticFeedback.impactOccurred called with: ${style}`),
+            notificationOccurred: (type) => console.log(`HapticFeedback.notificationOccurred called with: ${type}`),
+            selectionChanged: () => console.log('HapticFeedback.selectionChanged called')
           }
         }
       };
@@ -291,6 +391,16 @@ class MainPage {
       const readyEvent = new Event('telegram:ready');
       window.dispatchEvent(readyEvent);
       
+      // Также вызываем window.TelegramWebviewProxy метод, если он существует
+      if (window.TelegramWebviewProxy && window.TelegramWebviewProxy.postEvent) {
+        try {
+          window.TelegramWebviewProxy.postEvent('web_app_ready', '{}');
+          console.log('Вызван TelegramWebviewProxy.postEvent("web_app_ready")');
+        } catch (e) {
+          console.error('Ошибка при вызове TelegramWebviewProxy.postEvent:', e);
+        }
+      }
+      
       return true;
     }, telegramUser, telegramInitData);
   }
@@ -299,38 +409,136 @@ class MainPage {
     this.report.addStep(`Поиск и клик по кнопке "${buttonText}"`, 'info');
     
     const result = await this.page.evaluate((text) => {
-      // Ищем точное совпадение
-      let button = Array.from(document.querySelectorAll('button'))
-        .find(btn => btn.innerText.trim() === text && btn.offsetParent !== null);
+      // Расширенный селектор - включает все кликабельные элементы
+      const selector = 'button, .button, [role="button"], a, .btn, nav a, .menu-item, .tab, [onclick], .clickable';
       
-      // Если не найдено, ищем частичное совпадение
-      if (!button) {
-        button = Array.from(document.querySelectorAll('button'))
-          .find(btn => btn.innerText.includes(text) && btn.offsetParent !== null);
+      // Ищем точное совпадение
+      let element = Array.from(document.querySelectorAll(selector))
+        .find(el => {
+          const visible = el.offsetParent !== null;
+          const hasExactText = el.innerText.trim() === text;
+          return visible && hasExactText;
+        });
+      
+      // Если не найдено, ищем элемент, содержащий текст
+      if (!element) {
+        element = Array.from(document.querySelectorAll(selector))
+          .find(el => {
+            const visible = el.offsetParent !== null;
+            const containsText = el.innerText.trim().includes(text);
+            return visible && containsText;
+          });
       }
       
-      if (button) {
-        console.log(`Найдена кнопка с текстом "${text}"`);
+      // Ищем по атрибутам
+      if (!element) {
+        element = Array.from(document.querySelectorAll(selector))
+          .find(el => {
+            const visible = el.offsetParent !== null;
+            const matchesAttribute = 
+              el.getAttribute('value') === text || 
+              el.getAttribute('aria-label') === text ||
+              el.getAttribute('title') === text || 
+              el.getAttribute('data-text') === text ||
+              el.getAttribute('name') === text;
+            return visible && matchesAttribute;
+          });
+      }
+      
+      // Ищем элемент с изображением и текстом в подписи или со скрытым текстом
+      if (!element) {
+        const navItems = Array.from(document.querySelectorAll('nav a, footer a, .navigation a, .menu a'))
+          .filter(el => el.offsetParent !== null);
+          
+        for (const navItem of navItems) {
+          // Проверяем текст навигационного элемента (может быть скрыт в подэлементе)
+          const navItemText = navItem.innerText.trim() || 
+                            navItem.querySelector('.label')?.innerText.trim() || 
+                            navItem.getAttribute('aria-label') || 
+                            navItem.title || 
+                            '';
+                            
+          if (navItemText.includes(text)) {
+            element = navItem;
+            break;
+          }
+          
+          // Проверяем иконки с атрибутами alt и title
+          const icon = navItem.querySelector('img, svg');
+          if (icon) {
+            const iconText = icon.getAttribute('alt') || icon.getAttribute('title') || '';
+            if (iconText.includes(text)) {
+              element = navItem;
+              break;
+            }
+          }
+        }
+      }
+      
+      if (element) {
+        console.log(`Найден элемент с текстом "${text}": ${element.tagName}`);
         
         try {
-          button.click();
-          console.log(`Клик по кнопке "${text}" выполнен`);
-          return { clicked: true, buttonText: button.innerText.trim() };
+          // Скроллим к элементу
+          element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          
+          // Сначала пробуем естественный клик
+          element.click();
+          console.log(`Клик по элементу "${text}" выполнен`);
+          
+          // Получаем текст элемента для отчета
+          const elementText = element.innerText.trim() || element.value || element.getAttribute('aria-label') || element.title || text;
+          
+          return { 
+            clicked: true, 
+            buttonText: elementText, 
+            elementType: element.tagName.toLowerCase()
+          };
         } catch (e) {
-          console.error(`Ошибка при клике по кнопке "${text}": ${e.message}`);
-          return { clicked: false, error: e.message };
+          // Если обычный клик не работает, пробуем создать и диспатчить событие клика
+          try {
+            console.log(`Попытка альтернативного клика по элементу "${text}"`);
+            const clickEvent = new MouseEvent('click', {
+              bubbles: true,
+              cancelable: true,
+              view: window
+            });
+            element.dispatchEvent(clickEvent);
+            
+            // Если элемент - ссылка, пробуем также программно перейти по ней
+            if (element.tagName.toLowerCase() === 'a' && element.href) {
+              console.log(`Программный переход по ссылке: ${element.href}`);
+              window.location.href = element.href;
+            }
+            
+            const elementText = element.innerText.trim() || element.value || element.getAttribute('aria-label') || element.title || text;
+            
+            return { 
+              clicked: true, 
+              buttonText: elementText, 
+              elementType: element.tagName.toLowerCase(),
+              alternate: true 
+            };
+          } catch (err) {
+            console.error(`Ошибка при альтернативном клике по элементу "${text}": ${err.message}`);
+            return { clicked: false, error: err.message };
+          }
         }
       } else {
-        console.warn(`Кнопка с текстом "${text}" не найдена`);
-        return { clicked: false, error: 'Button not found' };
+        console.warn(`Элемент с текстом "${text}" не найден`);
+        return { clicked: false, error: 'Element not found' };
       }
     }, buttonText);
     
     if (result.clicked) {
-      this.report.addStep(`Кнопка "${result.buttonText}" успешно нажата`, 'success');
+      if (result.alternate) {
+        this.report.addStep(`Элемент <${result.elementType}> "${result.buttonText}" успешно нажат (альтернативным способом)`, 'success');
+      } else {
+        this.report.addStep(`Элемент <${result.elementType}> "${result.buttonText}" успешно нажат`, 'success');
+      }
       await TestUtils.delay(CONFIG.app.timeouts.interaction);
     } else {
-      this.report.addWarning(`Не удалось нажать кнопку "${buttonText}": ${result.error}`);
+      this.report.addWarning(`Не удалось найти и нажать элемент "${buttonText}": ${result.error}`);
     }
     
     return result.clicked;
@@ -340,35 +548,83 @@ class MainPage {
     this.report.addStep('Поиск любого интерактивного элемента для взаимодействия', 'info');
     
     const result = await this.page.evaluate(() => {
-      // Приоритетные элементы для клика
+      // Приоритетные элементы для клика, адаптированные для нового интерфейса
       const selectors = [
+        // Основные кнопки действий
+        'button.primary, .primary-button, .main-button',
         'button:not([disabled])',
+        
+        // Ссылки и навигация
+        'nav a, footer a, .tab',
         'a[href]',
-        '.button',
-        '.btn',
+        
+        // Специфичные элементы интерфейса
+        '.action-button, .card, .case-card, .item-card',
+        '.button, .btn, .clickable',
         '[role="button"]',
         '[onclick]',
-        '.clickable'
+        
+        // Любые интерактивные элементы
+        '.menu-item, .tab-item, .list-item',
+        'input[type="button"], input[type="submit"]'
       ];
       
+      // Последовательный перебор селекторов с возвратом первого видимого элемента
       for (const selector of selectors) {
         const elements = Array.from(document.querySelectorAll(selector))
-          .filter(el => el.offsetParent !== null); // только видимые
+          .filter(el => {
+            // Проверяем, что элемент видим и имеет достаточные размеры для взаимодействия
+            const visible = el.offsetParent !== null;
+            const hasSize = el.offsetWidth > 10 && el.offsetHeight > 10;
+            return visible && hasSize;
+          });
           
         if (elements.length > 0) {
-          const element = elements[0];
-          const text = element.innerText.trim();
+          // Пробуем сначала найти элементы с текстом
+          const elementsWithText = elements.filter(el => el.innerText.trim().length > 0);
+          const element = elementsWithText.length > 0 ? elementsWithText[0] : elements[0];
+          
+          const text = element.innerText.trim() || 
+                       element.value || 
+                       element.getAttribute('aria-label') || 
+                       element.title || 
+                       element.getAttribute('data-text') || 
+                       `[${element.tagName}]`;
+                       
           const elementType = element.tagName.toLowerCase();
           
           try {
+            // Скроллим к элементу и кликаем
+            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
             element.click();
+            
             return { 
               clicked: true, 
               element: elementType,
-              text: text || '[No text]'
+              text: text,
+              selector
             };
           } catch (e) {
             console.error(`Ошибка при клике по ${elementType}: ${e.message}`);
+            // Пробуем альтернативный клик через событие
+            try {
+              const clickEvent = new MouseEvent('click', {
+                bubbles: true,
+                cancelable: true,
+                view: window
+              });
+              element.dispatchEvent(clickEvent);
+              
+              return { 
+                clicked: true, 
+                element: elementType,
+                text: text,
+                selector,
+                alternate: true
+              };
+            } catch (err) {
+              console.error(`Ошибка при альтернативном клике: ${err.message}`);
+            }
           }
         }
       }
@@ -377,7 +633,12 @@ class MainPage {
     });
     
     if (result.clicked) {
-      this.report.addStep(`Элемент <${result.element}> "${result.text}" успешно нажат`, 'success');
+      if (result.alternate) {
+        this.report.addStep(`Элемент <${result.element}> "${result.text}" успешно нажат (альтернативно)`, 'success');
+      } else {
+        this.report.addStep(`Элемент <${result.element}> "${result.text}" успешно нажат`, 'success');
+      }
+      this.report.addStep(`Селектор: ${result.selector}`, 'info');
       await TestUtils.delay(CONFIG.app.timeouts.interaction);
     } else {
       this.report.addWarning('Не найдено интерактивных элементов для взаимодействия');
@@ -407,6 +668,13 @@ class TelegramAppTest {
       
       this.page = await this.browser.newPage();
       this.mainPage = new MainPage(this.page, this.report);
+      
+      // Установка мобильного User-Agent, если включена опция
+      if (CONFIG.app.forceMobile) {
+        const mobileUserAgent = 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1';
+        await this.page.setUserAgent(mobileUserAgent);
+        this.report.addStep('Установлен мобильный User-Agent', 'info');
+      }
       
       // Настройка обработчиков событий консоли и ошибок
       this.page.on('console', message => {
@@ -442,9 +710,17 @@ class TelegramAppTest {
   }
   
   async navigateToApp() {
-    this.report.addStep(`Переход на страницу приложения: ${CONFIG.app.url}`, 'navigation');
+    // Формируем URL с параметрами версии интерфейса, если указана 'new'
+    let appUrl = CONFIG.app.url;
+    if (CONFIG.app.uiVersion === 'new') {
+      // Добавляем параметр для принудительного использования нового интерфейса
+      const separator = appUrl.includes('?') ? '&' : '?';
+      appUrl += `${separator}ui=new&v=2`;
+    }
+    
+    this.report.addStep(`Переход на страницу приложения: ${appUrl}`, 'navigation');
     try {
-      await this.page.goto(CONFIG.app.url, { 
+      await this.page.goto(appUrl, { 
         waitUntil: 'networkidle2',
         timeout: CONFIG.app.timeouts.navigation
       });
@@ -494,17 +770,68 @@ class TelegramAppTest {
       const state = await this.mainPage.getPageState();
       this.report.addStep(`Текущее состояние страницы: URL=${state.url}, Заголовок=${state.title}`, 'info');
       
-      // Проверка наличия ключевых элементов игры
-      const hasGameElements = state.texts.some(text => 
-        text.includes('НАЧАТЬ РАССЛЕДОВАНИЕ') || 
-        text.includes('ОБУЧЕНИЕ') ||
-        text.includes('Криминальный Блеф'));
+      // Проверка наличия ключевых элементов игры - обновленный список для нового дизайна
+      const gameKeywords = [
+        'НАЧАТЬ РАССЛЕДОВАНИЕ', 'ЛИЧНОЕ ДЕЛО', 'УПРАВЛЕНИЕ КАДРОВ',
+        'ГЛАВНАЯ', 'АРХИВ', 'ДЕЛА', 'ДОСЬЕ', 'РЕЙТИНГ',
+        'Криминальный Блеф', 'КРИМИНАЛЬНЫЙ БЛЕФ'
+      ];
       
-      if (hasGameElements) {
-        this.report.addStep('Обнаружены элементы главного экрана игры', 'success');
+      const foundKeywords = gameKeywords.filter(keyword => 
+        state.texts.some(text => text.includes(keyword))
+      );
+      
+      if (foundKeywords.length > 0) {
+        this.report.addStep(`Обнаружены элементы игры: ${foundKeywords.join(', ')}`, 'success');
       } else {
-        this.report.addWarning('Не обнаружены элементы главного экрана игры');
+        this.report.addWarning('Не обнаружены характерные элементы игры');
+        
+        // Выводим первые 5 текстовых элементов для отладки
+        if (state.texts.length > 0) {
+          this.report.addStep('Найденные текстовые элементы:', 'info');
+          state.texts.slice(0, 5).forEach((text, idx) => {
+            this.report.addStep(`Текст ${idx+1}: "${text}"`, 'info');
+          });
+        }
       }
+      
+      // Проверка наличия элементов нижнего меню
+      const hasBottomMenu = await this.page.evaluate(() => {
+        // Проверяем наличие элементов нижнего меню
+        const menuItems = Array.from(document.querySelectorAll('nav a, .bottom-menu a, .navigation a, footer a'))
+          .filter(el => el.offsetParent !== null)
+          .map(el => ({
+            text: el.innerText.trim(),
+            hasIcon: el.querySelector('img, svg, i') !== null
+          }));
+          
+        return {
+          count: menuItems.length,
+          items: menuItems
+        };
+      });
+      
+      if (hasBottomMenu.count > 0) {
+        this.report.addStep(`Обнаружено ${hasBottomMenu.count} элементов в нижнем меню`, 'success');
+      }
+      
+      // Проверка наличия элементов интерфейса
+      const hasUI = await this.page.evaluate(() => {
+        // Проверяем наличие кнопок, навигации и других элементов UI
+        const buttons = document.querySelectorAll('button').length;
+        const links = document.querySelectorAll('a').length;
+        const divs = document.querySelectorAll('div').length;
+        const images = document.querySelectorAll('img').length;
+        
+        return {
+          buttons, links, divs, images,
+          hasHeader: !!document.querySelector('header'),
+          hasFooter: !!document.querySelector('footer'),
+          hasNav: !!document.querySelector('nav'),
+        };
+      });
+      
+      this.report.addStep(`Статистика UI: кнопок=${hasUI.buttons}, ссылок=${hasUI.links}, изображений=${hasUI.images}`, 'info');
       
       return true;
     } catch (error) {
@@ -516,112 +843,77 @@ class TelegramAppTest {
   async interactWithApp() {
     this.report.addStep('Начало взаимодействия с приложением', 'interaction');
     try {
-      // Шаг 1: Нажать на кнопку "ОБУЧЕНИЕ"
-      this.report.addStep('Шаг 1: Нажатие на кнопку "ОБУЧЕНИЕ"', 'step');
-      let clicked = await this.mainPage.clickButtonByText('ОБУЧЕНИЕ');
+      // Шаг 1: Нажать на кнопку "НАЧАТЬ РАССЛЕДОВАНИЕ" или альтернативные кнопки
+      this.report.addStep('Шаг 1: Нажатие на основную кнопку', 'step');
+      let clicked = false;
       
+      // Обновленный список возможных кнопок на главном экране для нового дизайна
+      const mainButtons = ['НАЧАТЬ РАССЛЕДОВАНИЕ', 'ЛИЧНОЕ ДЕЛО', 'УПРАВЛЕНИЕ КАДРОВ'];
+      
+      for (const buttonText of mainButtons) {
+        this.report.addStep(`Пробуем нажать кнопку "${buttonText}"`, 'info');
+        clicked = await this.mainPage.clickButtonByText(buttonText);
+        if (clicked) {
+          this.report.addStep(`Успешно нажата кнопка "${buttonText}"`, 'success');
+          break;
+        }
+      }
+      
+      // Если не удалось нажать на кнопки, проверяем нижнее меню
       if (!clicked) {
-        this.report.addStep('Пробуем альтернативу: кнопка "НАЧАТЬ РАССЛЕДОВАНИЕ"', 'retry');
-        clicked = await this.mainPage.clickButtonByText('НАЧАТЬ РАССЛЕДОВАНИЕ');
+        this.report.addStep('Не удалось найти основные кнопки. Проверяем нижнее меню.', 'retry');
+        
+        const menuItems = ['ГЛАВНАЯ', 'АРХИВ', 'ДЕЛА', 'ДОСЬЕ', 'РЕЙТИНГ'];
+        
+        for (const menuText of menuItems) {
+          this.report.addStep(`Пробуем нажать на элемент меню "${menuText}"`, 'info');
+          clicked = await this.mainPage.clickButtonByText(menuText);
+          if (clicked) {
+            this.report.addStep(`Успешно нажат элемент меню "${menuText}"`, 'success');
+            break;
+          }
+        }
+      }
+      
+      // Если до сих пор ничего не нажали, пробуем любой интерактивный элемент
+      if (!clicked) {
+        this.report.addStep('Не удалось найти известные элементы. Пробуем найти любой интерактивный элемент', 'retry');
+        clicked = await this.mainPage.findAndClickAnyInteractiveElement();
       }
       
       await this.mainPage.takeScreenshot('after-first-button');
       await TestUtils.delay(CONFIG.app.timeouts.rendering);
       
-      // Дополнительное логирование для отладки туториала
-      this.report.addStep('Проверка наличия туториала в DOM', 'debug');
-      
-      const tutorialInfo = await this.page.evaluate(() => {
-        const tutorialOverlay = document.getElementById('tutorial-overlay');
-        const tutorialSteps = document.querySelectorAll('.tutorial-step');
-        
-        return {
-          overlayExists: !!tutorialOverlay,
-          overlayDisplay: tutorialOverlay ? window.getComputedStyle(tutorialOverlay).display : 'not found',
-          overlayClass: tutorialOverlay ? tutorialOverlay.className : 'not found',
-          stepsCount: tutorialSteps.length,
-          stepContents: Array.from(tutorialSteps).map(step => ({
-            step: step.dataset.step,
-            display: window.getComputedStyle(step).display,
-            content: step.innerHTML.substring(0, 100) + '...'
-          })),
-          elementsWithDaleeText: Array.from(document.querySelectorAll('button')).filter(btn => 
-            btn.innerText.includes('Далее') || 
-            btn.innerText.includes('Пропустить')).length
-        };
-      });
-      
-      // Логируем результаты
-      this.report.addStep(`Результаты проверки туториала: overlay=${tutorialInfo.overlayExists ? 'found' : 'not found'}, 
-          display=${tutorialInfo.overlayDisplay}, stepsCount=${tutorialInfo.stepsCount}`, 'info');
-      
-      // Пытаемся найти любые кнопки или элементы туториала
-      if (tutorialInfo.elementsWithDaleeText > 0) {
-        this.report.addStep(`Найдено ${tutorialInfo.elementsWithDaleeText} элементов с текстом "Далее/Пропустить"`, 'success');
-      } else {
-        this.report.addWarning('Не найдено элементов с текстом "Далее/Пропустить"');
-      }
-      
-      // Принудительно показываем туториал
-      this.report.addStep('Попытка принудительно показать туториал', 'debug');
-      await this.page.evaluate(() => {
-        const tutorialOverlay = document.getElementById('tutorial-overlay');
-        if (tutorialOverlay) {
-          // Удаляем класс hidden
-          tutorialOverlay.classList.remove('hidden');
-          
-          // Применяем встроенные стили для принудительного отображения
-          tutorialOverlay.style.cssText = 'display: flex !important; z-index: 9999 !important; position: fixed !important; opacity: 1 !important; visibility: visible !important; top: 0; left: 0; width: 100%; height: 100%;';
-          
-          // Делаем видимым первый шаг
-          const firstStep = document.querySelector('.tutorial-step[data-step="1"]');
-          if (firstStep) {
-            firstStep.style.display = 'block';
-          }
-          
-          console.log('Туториал принудительно показан');
-          return true;
-        }
-        return false;
-      });
-      
-      // Делаем дополнительный скриншот
-      await this.mainPage.takeScreenshot('after-tutorial-forced');
-      
-      // Проверяем состояние после первого клика
+      // Анализируем текущее состояние страницы после клика
       const stateAfterClick = await this.mainPage.getPageState();
       this.report.addStep(`Состояние после клика: найдено ${stateAfterClick.buttons.length} кнопок`, 'info');
       
-      // Шаг 2: Смотрим DOM-изменения после клика
-      this.report.addStep('Шаг 2: Анализ DOM-изменений после клика', 'step');
-      const domChanges = await this.page.evaluate(() => {
-        return window._domChanges || [];
-      });
-      
-      this.report.addStep(`Обнаружено ${domChanges.length} изменений в DOM`, 'info');
-      
-      // Проверяем наличие элементов обучения или игры
-      const hasGameOrTutorial = stateAfterClick.texts.some(text => 
-        text.includes('Далее') || 
-        text.includes('Пропустить') ||
-        text.includes('Вариант') ||
-        text.includes('Играть') ||
-        text.includes('Как играть'));
-      
-      if (hasGameOrTutorial) {
-        this.report.addStep('Обнаружены элементы обучения или игры', 'success');
-      } else {
-        this.report.addWarning('Не обнаружены элементы обучения или игры после клика');
+      // Выводим список найденных кнопок для отладки
+      if (stateAfterClick.buttons.length > 0) {
+        stateAfterClick.buttons.forEach((btnText, idx) => {
+          this.report.addStep(`Обнаружена кнопка ${idx+1}: "${btnText}"`, 'info');
+        });
       }
       
-      // Шаг 3: Попробуем найти и нажать на следующую интерактивную кнопку
-      this.report.addStep('Шаг 3: Поиск следующего интерактивного элемента', 'step');
+      // Дополнительное логирование текстовых элементов
+      if (stateAfterClick.texts.length > 0) {
+        this.report.addStep(`Обнаружено ${stateAfterClick.texts.length} текстовых элементов`, 'info');
+        stateAfterClick.texts.slice(0, 5).forEach((text, idx) => {
+          this.report.addStep(`Текстовый элемент ${idx+1}: "${text}"`, 'info');
+        });
+      }
       
-      // Приоритетные кнопки для нажатия
-      const buttonPriorities = ['Далее', 'Начать игру', 'Пропустить', 'Вариант'];
+      // Шаг 2: Взаимодействие со страницей дела/расследования
+      this.report.addStep('Шаг 2: Взаимодействие со страницей расследования', 'step');
+      
+      // Обновленный список возможных кнопок в интерфейсе расследования
+      const caseButtons = [
+        'РЕШИТЬ ДЕЛО', 'ПОДТВЕРДИТЬ', 'ДАЛЕЕ', 'УЛИКИ', 'ПОДОЗРЕВАЕМЫЕ', 
+        'ИНФОРМАЦИЯ', 'ВЕРНУТЬСЯ К ДЕЛУ', 'СЛЕДУЮЩЕЕ ДЕЛО'
+      ];
+      
       let secondInteraction = false;
-      
-      for (const buttonText of buttonPriorities) {
+      for (const buttonText of caseButtons) {
         this.report.addStep(`Пробуем найти кнопку "${buttonText}"`, 'info');
         secondInteraction = await this.mainPage.clickButtonByText(buttonText);
         
@@ -632,16 +924,12 @@ class TelegramAppTest {
       }
       
       if (!secondInteraction) {
-        this.report.addStep('Не найдено приоритетных кнопок, пробуем любой интерактивный элемент', 'retry');
+        this.report.addStep('Не найдено известных кнопок, пробуем любой интерактивный элемент', 'retry');
         secondInteraction = await this.mainPage.findAndClickAnyInteractiveElement();
       }
       
       await this.mainPage.takeScreenshot('after-second-interaction');
       await TestUtils.delay(CONFIG.app.timeouts.rendering);
-      
-      // Финальная проверка состояния
-      const finalState = await this.mainPage.getPageState();
-      this.report.addStep(`Финальное состояние: URL=${finalState.url}`, 'info');
       
       // Делаем финальный скриншот
       await this.mainPage.takeScreenshot('final-state');

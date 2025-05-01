@@ -5471,3 +5471,162 @@ body::after,
     opacity: 0 !important;
     visibility: hidden !important;
 }
+
+/* Стили для нового интерфейса */
+
+/* Темный фон для главного экрана */
+#start-screen {
+  background-color: #121212;
+  background-image: url('../img/bg-pattern.png');
+  background-size: cover;
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  padding-bottom: 80px; /* Для нижнего меню */
+}
+
+/* Заголовок */
+#start-screen h1 {
+  color: #ffffff;
+  font-size: 32px;
+  text-align: center;
+  margin-bottom: 40px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+}
+
+/* Кнопки главного меню */
+.menu-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  max-width: 350px;
+  margin: 0 auto;
+}
+
+/* Стили кнопок */
+.action-button {
+  padding: 16px 20px;
+  border-radius: 4px;
+  border: none;
+  font-size: 16px;
+  font-weight: 600;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  letter-spacing: 1px;
+  text-align: center;
+  width: 100%;
+}
+
+.primary-btn {
+  background-color: #e74c3c;
+  color: white;
+  border: 2px solid #c0392b;
+}
+
+.secondary-btn {
+  background-color: rgba(0, 0, 0, 0.5);
+  color: #00FFFF;
+  border: 2px solid #00FFFF;
+}
+
+.primary-btn:hover {
+  background-color: #c0392b;
+}
+
+.secondary-btn:hover {
+  background-color: rgba(0, 160, 160, 0.2);
+}
+
+/* Нижняя навигация */
+.bottom-navigation {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  background-color: #1f1f1f;
+  padding: 8px 0;
+  z-index: 100;
+  border-top: 1px solid #333;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  color: #888;
+  font-size: 10px;
+  padding: 6px 0;
+  width: 20%;
+}
+
+.nav-icon {
+  width: 24px;
+  height: 24px;
+  margin-bottom: 4px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.nav-label {
+  text-transform: uppercase;
+  font-size: 9px;
+  font-weight: 500;
+}
+
+.nav-item.active {
+  color: #00FFFF;
+}
+
+/* Иконки для навигации */
+.home-icon {
+  background-image: url('../img/icons/home.svg');
+}
+
+.archive-icon {
+  background-image: url('../img/icons/archive.svg');
+}
+
+.cases-icon {
+  background-image: url('../img/icons/case.svg');
+}
+
+.profile-icon {
+  background-image: url('../img/icons/profile.svg');
+}
+
+.leaderboard-icon {
+  background-image: url('../img/icons/ranking.svg');
+}
+
+.nav-item.active .home-icon {
+  background-image: url('../img/icons/home-active.svg');
+}
+
+.nav-item.active .archive-icon {
+  background-image: url('../img/icons/archive-active.svg');
+}
+
+.nav-item.active .cases-icon {
+  background-image: url('../img/icons/case-active.svg');
+}
+
+.nav-item.active .profile-icon {
+  background-image: url('../img/icons/profile-active.svg');
+}
+
+.nav-item.active .leaderboard-icon {
+  background-image: url('../img/icons/ranking-active.svg');
+}

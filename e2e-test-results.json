@@ -1,8 +1,8 @@
 {
-  "duration": "23.00 seconds",
-  "stepsCompleted": 51,
+  "duration": "21.45 seconds",
+  "stepsCompleted": 67,
   "errors": 3,
-  "warnings": 7,
-  "screenshots": 5,
+  "warnings": 16,
+  "screenshots": 4,
   "success": false
 }

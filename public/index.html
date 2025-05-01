@@ -77,20 +77,40 @@
         <div class="loader"></div>
     </div>
 
-    <!-- Экран запуска приложения -->
+    <!-- Экран запуска приложения (новый дизайн) -->
     <div id="start-screen" class="screen" aria-label="Стартовый экран">
         <div class="logo">
-            <h1>Криминальный Блеф</h1>
+            <h1>КРИМИНАЛЬНЫЙ<br>БЛЕФ</h1>
         </div>
         <div class="menu-buttons">
-            <button id="start-game-btn" class="action-button" aria-label="Начать расследование">НАЧАТЬ РАССЛЕДОВАНИЕ</button>
-            <button id="tutorial-btn" class="action-button" aria-label="Обучение">ОБУЧЕНИЕ</button>
-            <button id="profile-btn" class="action-button" aria-label="Профиль">ПРОФИЛЬ</button>
-            <button id="leaderboard-btn" class="action-button" aria-label="Рейтинг">РЕЙТИНГ</button>
+            <button id="start-game-btn" class="action-button primary-btn" aria-label="Начать расследование">НАЧАТЬ РАССЛЕДОВАНИЕ</button>
+            <button id="profile-btn" class="action-button secondary-btn" aria-label="Личное дело">ЛИЧНОЕ ДЕЛО</button>
+            <button id="admin-btn" class="action-button secondary-btn" aria-label="Управление кадров">УПРАВЛЕНИЕ КАДРОВ</button>
         </div>
-        <div class="footer">
-            <div class="version">Версия 1.0.2</div>
-        </div>
+        
+        <!-- Нижняя навигация -->
+        <nav class="bottom-navigation">
+            <a href="#main" class="nav-item active" aria-label="Главная">
+                <span class="nav-icon home-icon"></span>
+                <span class="nav-label">ГЛАВНАЯ</span>
+            </a>
+            <a href="#archive" class="nav-item" aria-label="Архив">
+                <span class="nav-icon archive-icon"></span>
+                <span class="nav-label">АРХИВ</span>
+            </a>
+            <a href="#cases" class="nav-item" aria-label="Дела">
+                <span class="nav-icon cases-icon"></span>
+                <span class="nav-label">ДЕЛА</span>
+            </a>
+            <a href="#profile" class="nav-item" aria-label="Досье">
+                <span class="nav-icon profile-icon"></span>
+                <span class="nav-label">ДОСЬЕ</span>
+            </a>
+            <a href="#leaderboard" class="nav-item" aria-label="Рейтинг">
+                <span class="nav-icon leaderboard-icon"></span>
+                <span class="nav-label">РЕЙТИНГ</span>
+            </a>
+        </nav>
     </div>
 
     <!-- Экран профиля игрока -->

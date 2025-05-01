@@ -8,6 +8,9 @@ import { initTelegramWebApp } from './telegram.js';
 import { navigateTo, initAllScreens, setupEventListeners } from './ui.js';
 import { logger } from './utils.js';
 
+// Глобальная настройка интерфейса
+window.UI_VERSION = 'new'; // всегда используем новый интерфейс
+
 // Экспортируемая функция инициализации
 export function initApp() {
   console.log('Инициализация приложения...');
@@ -19,6 +22,9 @@ export function initApp() {
   const telegramInitialized = initTelegramWebApp();
   logger.info(`Инициализация Telegram WebApp: ${telegramInitialized ? 'успешно' : 'автономный режим'}`);
 
+  // Установка класса для нового интерфейса
+  document.body.classList.add('new-ui');
+  
   // Инициализируем UI
   initAllScreens();
   
