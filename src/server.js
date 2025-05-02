@@ -9,6 +9,9 @@ import formidable from 'express-formidable';
 import { setupMiddleware, setupRoutes, setupErrorHandling } from './config/app.js';
 import { connectDB, closeDB } from './config/database.js';
 import { connectRedis, closeRedis } from './config/redis.js';
+import http from 'http';
+import mongoose from 'mongoose';
+import config from './config/index.js';
 
 // Настройка путей для ES модулей
 const __filename = fileURLToPath(import.meta.url);
@@ -73,149 +76,91 @@ const logger = createLogger({
 
 let server;
 
-// Async function to start the server
-async function start() {
+// Создаем HTTP-сервер
+const serverHttp = http.createServer(app);
+
+// Подключаемся к MongoDB
+async function connectToDatabase() {
   try {
-    // Connect to databases first
-    logger.info('Connecting to databases...');
-    
-    // Попытка подключиться к MongoDB и Redis
-    try {
-      await connectDB();
-    } catch (mongoError) {
-      logger.error('Failed to connect to MongoDB:', mongoError);
-      logger.warn('Server will continue with limited MongoDB functionality');
-    }
-    
-    try {
-      await connectRedis();
-    } catch (redisError) {
-      logger.error('Failed to connect to Redis:', redisError);
-      logger.warn('Server will continue without Redis cache');
-    }
-    
-    logger.info('Database connections attempted, continuing with server setup');
-
-    // Setup Middleware, Routes, Error Handling
-    // Настройка безопасности
-    const helmetOptions = {
-      contentSecurityPolicy: isProduction ? {
-        directives: {
-          defaultSrc: ["'self'"],
-          scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https://telegram.org", "https://*.telegram.org", "https://t.me", "https://*.t.me", "https://unpkg.com"],
-          styleSrc: ["'self'", "'unsafe-inline'"],
-          imgSrc: ["'self'", "data:", "https:", "blob:"],
-          connectSrc: ["'self'", process.env.API_URL, "https://t.me", "https://*.t.me", "https://web.telegram.org", "https://*.telegram.org", "wss://*.telegram.org", "https://unpkg.com"],
-          fontSrc: ["'self'", "https:", "data:"],
-          objectSrc: ["'none'"],
-          mediaSrc: ["'self'"],
-          frameSrc: ["https://telegram.org", "https://*.telegram.org", "https://t.me", "https://*.t.me", "https://web.telegram.org"],
-          workerSrc: ["'self'", "blob:"]
-        }
-      } : false
-    };
-    app.use(helmet(helmetOptions)); 
-    
-    // Настраиваем CORS для продакшена
-    const corsOptions = {
-      origin: isProduction 
-        ? process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : [
-            'https://first-bot-production.up.railway.app',
-            'https://t.me',
-            'https://web.telegram.org',
-            'https://telegram.org'
-          ]
-        : '*', // В разработке разрешаем любой источник
-      methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-      allowedHeaders: ['Content-Type', 'Authorization', 'telegram-webapp-initdata', 'X-Requested-With'],
-      credentials: true,
-      maxAge: 86400 // 24 часа
-    };
-    app.use(cors(corsOptions));
-    
-    // Настройка парсеров
-    app.use(express.json({ limit: '1mb' })); // Ограничиваем размер JSON
-    app.use(express.urlencoded({ extended: true, limit: '1mb' }));
-    
-    // Важно: теперь setupMiddleware асинхронная функция
-    await setupMiddleware(app);
-    setupRoutes(app);
-    setupErrorHandling(app);
-
-    // Start the server
-    const PORT = process.env.PORT || 3000;
-    server = app.listen(PORT, () => {
-      logger.info(`Server is running on port ${PORT} in ${process.env.NODE_ENV} mode`);
+    await mongoose.connect(config.database.url, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true
     });
-
-    server.on('error', (error) => {
-      logger.error('Server error:', error);
-      process.exit(1);
-    });
-
+    logger.info('Connected to MongoDB');
   } catch (error) {
-    logger.error('Failed to start application:', error);
+    logger.error('MongoDB connection error:', error);
     process.exit(1);
   }
 }
 
-// Graceful shutdown
-const shutdown = async (signal) => {
-  logger.info(`${signal} received. Starting graceful shutdown...`);
-
-  try {
-    // Stop accepting new connections
-    if (server) {
-      await new Promise((resolve, reject) => {
-        server.close((err) => {
-          if (err) {
-            logger.error('Error closing HTTP server:', err);
-            return reject(err);
-          }
-          logger.info('HTTP server closed');
-          resolve();
-        });
-      });
-    }
-
-    // Close database connections
-    await Promise.all([
-      closeDB(),
-      closeRedis()
-    ]);
-
-    logger.info('Graceful shutdown completed');
-    process.exit(0);
-  } catch (error) {
-    logger.error('Error during graceful shutdown:', error);
+// Запускаем сервер
+async function startServer() {
+  // Подключаемся к БД перед запуском сервера
+  await connectToDatabase();
+  
+  serverHttp.listen(process.env.PORT || 3000, () => {
+    logger.info(`Server running on port ${process.env.PORT || 3000}`);
+  });
+  
+  // Обработчики событий сервера
+  serverHttp.on('error', (error) => {
+    logger.error('Server error:', error);
     process.exit(1);
-  }
-};
+  });
+  
+  // Корректная обработка сигналов завершения
+  process.on('SIGTERM', gracefulShutdown);
+  process.on('SIGINT', gracefulShutdown);
+}
 
-// Handle termination signals
-process.on('SIGTERM', () => shutdown('SIGTERM'));
-process.on('SIGINT', () => shutdown('SIGINT'));
+// Функция для корректного завершения работы сервера
+function gracefulShutdown() {
+  logger.info('SIGTERM/SIGINT received, shutting down gracefully...');
+  
+  // Останавливаем сервер
+  serverHttp.close(() => {
+    logger.info('HTTP server closed');
+    
+    // Закрываем соединение с БД
+    mongoose.connection.close(false, () => {
+      logger.info('MongoDB connection closed');
+      process.exit(0);
+    });
+    
+    // На случай, если БД не отвечает, добавляем таймаут
+    setTimeout(() => {
+      logger.error('Could not close MongoDB connection in time, forcing shutdown');
+      process.exit(1);
+    }, 5000);
+  });
+  
+  // Если сервер не закрылся за 10 секунд, принудительно завершаем
+  setTimeout(() => {
+    logger.error('Could not close server in time, forcing shutdown');
+    process.exit(1);
+  }, 10000);
+}
 
-// В продакшене немедленное завершение при необработанных ошибках
+// Обработчик необработанных исключений
 process.on('uncaughtException', (error) => {
-  logger.error('Uncaught Exception:', error);
-  if (isProduction) {
-    // В продакшене немедленное завершение при критических ошибках
-    logger.error('Critical error in production, exiting process');
-    process.exit(1);
-  }
+  logger.error('Uncaught exception:', error);
+  gracefulShutdown();
 });
 
+// Обработчик необработанных отклонений промисов
 process.on('unhandledRejection', (reason, promise) => {
   logger.error('Unhandled Rejection at:', promise, 'reason:', reason);
-  if (isProduction) {
-    // В продакшене немедленное завершение при критических ошибках
-    logger.error('Critical unhandled rejection in production, exiting process');
-    process.exit(1);
+  // В production среде можно просто залогировать, не завершая процесс
+  // В development среде лучше завершить процесс
+  if (process.env.NODE_ENV === 'development') {
+    gracefulShutdown();
   }
 });
 
-// Start the application
-start();
+// Запускаем сервер
+startServer().catch(error => {
+  logger.error('Failed to start server:', error);
+  process.exit(1);
+});
 
 export default app; // Export app for testing or other purposes 

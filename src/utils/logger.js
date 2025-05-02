@@ -1,71 +1,108 @@
+/**
+ * Модуль логирования для приложения "Криминальный Блеф"
+ */
+
 import winston from 'winston';
-const { format } = winston;
-import path from 'path';
-import fs from 'fs';
-import { fileURLToPath } from 'url';
+import config from '../config/index.js';
 
-// Get current directory with ES modules
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-// Создаем директорию для логов если её нет
-const logDir = 'logs';
-if (!fs.existsSync(logDir)) {
-  fs.mkdirSync(logDir);
-}
-
-const logFormat = format.combine(
-  format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
-  format.errors({ stack: true }),
-  format.splat(),
-  format.json()
+// Создаем кастомные форматы
+const customFormat = winston.format.combine(
+  winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
+  winston.format.errors({ stack: true }),
+  winston.format.printf((info) => {
+    const { timestamp, level, message, module, ...rest } = info;
+    const moduleStr = module ? `[${module}]` : '';
+    const restString = Object.keys(rest).length ? JSON.stringify(rest, null, 2) : '';
+    
+    return `${timestamp} ${level.toUpperCase()} ${moduleStr} ${message} ${restString}`;
+  })
 );
 
-// Единственный экземпляр логгера для всего приложения
-const logger = winston.createLogger({
-  level: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
-  format: logFormat,
-  defaultMeta: { service: 'criminal-bluff-api' },
-  transports: [
-    new winston.transports.File({ 
-      filename: path.join(__dirname, '../../logs/error.log'), 
-      level: 'error',
-      maxsize: 5242880, // 5MB
-      maxFiles: 5,
-      tailable: true
-    }),
-    new winston.transports.File({ 
-      filename: path.join(__dirname, '../../logs/combined.log'),
-      maxsize: 5242880, // 5MB
-      maxFiles: 5,
-      tailable: true
-    })
-  ]
-});
+// Набор предустановленных транспортов для разных окружений
+const transports = [];
 
-if (process.env.NODE_ENV !== 'production') {
-  logger.add(new winston.transports.Console({
-    format: format.combine(
-      format.colorize(),
-      format.simple()
-    )
-  }));
+// Для разработки выводим в консоль
+if (config.env === 'development') {
+  transports.push(
+    new winston.transports.Console({
+      format: winston.format.combine(
+        winston.format.colorize(),
+        customFormat
+      ),
+      level: 'debug'
+    })
+  );
 }
 
-// Обработка необработанных исключений
-process.on('uncaughtException', (error) => {
-  logger.error('Uncaught Exception:', error);
-  process.exit(1);
+// Для продакшена пишем в файлы и только важные ошибки в консоль
+if (config.env === 'production') {
+  // Логи ошибок
+  transports.push(
+    new winston.transports.File({
+      filename: 'logs/error.log',
+      level: 'error',
+      maxsize: 5242880, // 5MB
+      maxFiles: 5
+    }),
+    new winston.transports.File({
+      filename: 'logs/combined.log',
+      level: 'info',
+      maxsize: 5242880, // 5MB
+      maxFiles: 10
+    }),
+    new winston.transports.Console({
+      format: winston.format.combine(
+        winston.format.colorize(),
+        customFormat
+      ),
+      level: 'warn' // В консоль только warnings и errors
+    })
+  );
+}
+
+// Создаем базовый логгер
+const logger = winston.createLogger({
+  level: config.env === 'development' ? 'debug' : 'info',
+  format: customFormat,
+  transports,
+  exitOnError: false
 });
 
-process.on('unhandledRejection', (reason, promise) => {
-  logger.error('Unhandled Rejection at:', promise, 'reason:', reason);
-});
+// Создаем фабрику логгеров для разных модулей
+export function createLogger(moduleName) {
+  // Создаем детский логгер с указанием модуля
+  return logger.child({ module: moduleName });
+}
 
-// Создание дочернего логгера с указанным именем
-const createLogger = (name) => {
-  return logger.child({ module: name });
-};
+// Мидлвэр для логирования запросов
+export function requestLogger() {
+  const requestLog = createLogger('HTTP');
+  
+  return (req, res, next) => {
+    const start = Date.now();
+    
+    // Логируем начало запроса
+    requestLog.debug(`${req.method} ${req.originalUrl} - Request started`);
+    
+    // Логируем завершение запроса
+    res.on('finish', () => {
+      const duration = Date.now() - start;
+      const status = res.statusCode;
+      
+      const level = status >= 500 ? 'error' :
+                   status >= 400 ? 'warn' :
+                   'info';
+      
+      requestLog[level](
+        `${req.method} ${req.originalUrl} - ${status} ${res.statusMessage} - ${duration}ms`
+      );
+    });
+    
+    next();
+  };
+}
 
-// Экспортируем только ОДИН раз - все модули должны импортировать отсюда
-export { logger, createLogger }; 
+export default {
+  createLogger,
+  requestLogger
+}; 

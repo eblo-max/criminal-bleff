@@ -30,7 +30,7 @@ const storySchema = new mongoose.Schema({
   },
   category: {
     type: String,
-    enum: ['robbery', 'theft', 'fraud', 'other'],
+    enum: ['robbery', 'theft', 'fraud', 'murder', 'other'],
     required: true
   },
   mistakes: {
@@ -50,6 +50,14 @@ const storySchema = new mongoose.Schema({
       }
     ]
   },
+  explanation: {
+    type: String,
+    default: ''
+  },
+  imageUrl: {
+    type: String,
+    default: 'img/stories/default.jpg'
+  },
   timesPlayed: {
     type: Number,
     default: 0
@@ -61,6 +69,10 @@ const storySchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now
+  },
+  isActive: {
+    type: Boolean,
+    default: true
   }
 }, {
   timestamps: true
@@ -77,19 +89,38 @@ storySchema.methods.incrementCorrectGuesses = function() {
   return this.save();
 };
 
+// Виртуальные поля
+storySchema.virtual('correctRate').get(function() {
+  if (this.timesPlayed === 0) return 0;
+  return (this.correctGuesses / this.timesPlayed) * 100;
+});
+
+// Преобразование JSON
+storySchema.set('toJSON', {
+  virtuals: true,
+  transform: function(doc, ret) {
+    ret.id = ret._id;
+    delete ret._id;
+    delete ret.__v;
+    return ret;
+  }
+});
+
 // Статические методы
 storySchema.statics.findByDifficultyAndCategory = function(difficulty, category) {
-  return this.find({ difficulty, category });
+  return this.find({ difficulty, category, isActive: true });
 };
 
-storySchema.statics.getRandomStory = function(difficulty, category) {
-  const query = {};
-  if (difficulty) query.difficulty = difficulty;
-  if (category) query.category = category;
+storySchema.statics.getRandomStories = function(count = 5, options = {}) {
+  const query = { isActive: true };
+  
+  // Применяем фильтры, если они указаны
+  if (options.difficulty) query.difficulty = options.difficulty;
+  if (options.category) query.category = options.category;
   
   return this.aggregate([
     { $match: query },
-    { $sample: { size: 1 } }
+    { $sample: { size: count } }
   ]);
 };
 
@@ -97,7 +128,7 @@ storySchema.statics.getRandomStory = function(difficulty, category) {
 storySchema.index({ difficulty: 1, category: 1 });
 storySchema.index({ timesPlayed: -1 });
 storySchema.index({ createdAt: -1 });
-storySchema.index({ text: 'text' });
+storySchema.index({ content: 'text' });
 
 const Story = mongoose.model('Story', storySchema);
 

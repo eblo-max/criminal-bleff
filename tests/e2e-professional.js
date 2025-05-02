@@ -790,23 +790,22 @@ class TelegramAppTest {
       const state = await this.mainPage.getPageState();
       this.report.addStep(`Текущее состояние страницы: URL=${state.url}, Заголовок=${state.title}`, 'info');
       
-      // Проверка наличия ключевых элементов игры для нового дизайна
+      // Обновленные ключевые слова для игры-викторины согласно ТЗ
       const gameKeywords = [
-        'НАЧАТЬ РАССЛЕДОВАНИЕ', 'ЛИЧНОЕ ДЕЛО', 'УПРАВЛЕНИЕ КАДРОВ',
-        'ГЛАВНАЯ', 'АРХИВ', 'ДЕЛА', 'ДОСЬЕ', 'РЕЙТИНГ',
-        'Криминальный Блеф', 'КРИМИНАЛЬНЫЙ БЛЕФ'
+        'Начать игру', 'Мой профиль', 'Рейтинг',
+        'Криминальный Блеф', 'Викторина', 'Игра',
+        'История', 'Ошибка преступника', 'Загадка'
       ];
       
       const foundKeywords = gameKeywords.filter(keyword => 
-        state.texts.some(text => text.includes(keyword))
+        state.texts.some(text => text.toUpperCase().includes(keyword.toUpperCase()))
       );
       
       if (foundKeywords.length > 0) {
         this.report.addStep(`Обнаружены элементы игры: ${foundKeywords.join(', ')}`, 'success');
       } else {
-        this.report.addWarning('Не обнаружены характерные элементы игры');
+        this.report.addWarning('Не обнаружены характерные элементы игры-викторины');
         
-        // Выводим первые 5 текстовых элементов для отладки
         if (state.texts.length > 0) {
           this.report.addStep('Найденные текстовые элементы:', 'info');
           state.texts.slice(0, 5).forEach((text, idx) => {
@@ -815,43 +814,50 @@ class TelegramAppTest {
         }
       }
       
-      // Проверка наличия элементов нижнего меню
-      const hasBottomMenu = await this.page.evaluate(() => {
-        // Проверяем наличие элементов нижнего меню нового дизайна
-        const menuItems = Array.from(document.querySelectorAll('.bottom-navigation .nav-item'))
-          .filter(el => el.offsetParent !== null)
-          .map(el => ({
-            text: el.innerText.trim(),
-            hasIcon: el.querySelector('.nav-icon') !== null
-          }));
+      // Проверка элементов, характерных для игры-викторины
+      const hasGameElements = await this.page.evaluate(() => {
+        const elements = {
+          // Проверка наличия таймера
+          hasTimer: !!document.querySelector('.timer, .countdown, [data-timer], .time-remaining'),
           
-        return {
-          count: menuItems.length,
-          items: menuItems
+          // Проверка наличия индикатора прогресса
+          hasProgressIndicator: !!document.querySelector('.progress, .progress-bar, .indicator, [data-progress]'),
+          
+          // Проверка наличия счетчика очков/правильных ответов
+          hasScoreCounter: !!document.querySelector('.score, .points, .counter, [data-score]'),
+          
+          // Проверка наличия меню
+          hasMenu: !!document.querySelector('nav, .menu, .navigation, .tabs'),
+          
+          // Дополнительные проверки специфичных для игры элементов
+          hasStoryContainer: !!document.querySelector('.story, .question, .scenario, .case'),
+          hasOptionsContainer: !!document.querySelector('.options, .answers, .variants, .choices')
         };
-      });
-      
-      if (hasBottomMenu.count > 0) {
-        this.report.addStep(`Обнаружено ${hasBottomMenu.count} элементов в нижнем меню`, 'success');
-      }
-      
-      // Проверка наличия элементов интерфейса
-      const hasUI = await this.page.evaluate(() => {
-        // Проверяем наличие кнопок, навигации и других элементов UI
-        const buttons = document.querySelectorAll('button').length;
-        const links = document.querySelectorAll('a').length;
-        const divs = document.querySelectorAll('div').length;
-        const images = document.querySelectorAll('img').length;
         
         return {
-          buttons, links, divs, images,
-          hasHeader: !!document.querySelector('header'),
-          hasFooter: !!document.querySelector('footer'),
-          hasNav: !!document.querySelector('nav'),
+          ...elements,
+          // Подсчитываем общее количество найденных элементов
+          foundElementsCount: Object.values(elements).filter(Boolean).length
         };
       });
       
-      this.report.addStep(`Статистика UI: кнопок=${hasUI.buttons}, ссылок=${hasUI.links}, изображений=${hasUI.images}`, 'info');
+      this.report.addStep(`Найдено ${hasGameElements.foundElementsCount} элементов игрового интерфейса`, 'info');
+      
+      if (hasGameElements.hasStoryContainer) {
+        this.report.addStep('Обнаружен контейнер для истории', 'success');
+      }
+      
+      if (hasGameElements.hasOptionsContainer) {
+        this.report.addStep('Обнаружен контейнер для вариантов ответа', 'success');
+      }
+      
+      if (hasGameElements.hasTimer) {
+        this.report.addStep('Обнаружен таймер', 'success');
+      }
+      
+      if (hasGameElements.hasProgressIndicator) {
+        this.report.addStep('Обнаружен индикатор прогресса', 'success');
+      }
       
       return true;
     } catch (error) {
@@ -863,32 +869,31 @@ class TelegramAppTest {
   async interactWithApp() {
     this.report.addStep('Начало взаимодействия с приложением', 'interaction');
     try {
-      // Шаг 1: Нажать на кнопку "НАЧАТЬ РАССЛЕДОВАНИЕ" или альтернативные кнопки
-      this.report.addStep('Шаг 1: Нажатие на основную кнопку', 'step');
+      // Шаг 1: Нажать на кнопку "Начать игру" или аналогичную
+      this.report.addStep('Шаг 1: Нажатие на кнопку Начать игру', 'step');
       let clicked = false;
       
-      // Обновленный список возможных кнопок на главном экране для нового дизайна
-      const mainButtons = ['НАЧАТЬ РАССЛЕДОВАНИЕ', 'ЛИЧНОЕ ДЕЛО', 'УПРАВЛЕНИЕ КАДРОВ'];
+      // Список возможных кнопок для начала игры (в соответствии с ТЗ)
+      const startButtons = ['Начать игру', 'НАЧАТЬ ИГРУ', 'Играть', 'ИГРАТЬ', 'Начать', 'НАЧАТЬ'];
       
-      for (const buttonText of mainButtons) {
+      for (const buttonText of startButtons) {
         this.report.addStep(`Пробуем нажать кнопку "${buttonText}"`, 'info');
         clicked = await this.mainPage.clickButtonByText(buttonText);
         if (clicked) {
           this.report.addStep(`Успешно нажата кнопка "${buttonText}"`, 'success');
-          // Добавляем увеличенную паузу после первого взаимодействия для загрузки ресурсов
           await TestUtils.delay(CONFIG.app.timeouts.rendering * 2);
           break;
         }
       }
       
-      // Если не удалось нажать на кнопки, проверяем нижнее меню
+      // Если стартовые кнопки не найдены, проверяем меню
       if (!clicked) {
-        this.report.addStep('Не удалось найти основные кнопки. Проверяем нижнее меню.', 'retry');
+        this.report.addStep('Стартовые кнопки не найдены, проверяем меню', 'retry');
         
-        const menuItems = ['ГЛАВНАЯ', 'АРХИВ', 'ДЕЛА', 'ДОСЬЕ', 'РЕЙТИНГ'];
+        const menuItems = ['Мой профиль', 'Рейтинг', 'Главная', 'Профиль'];
         
         for (const menuText of menuItems) {
-          this.report.addStep(`Пробуем нажать на элемент меню "${menuText}"`, 'info');
+          this.report.addStep(`Пробуем нажать элемент меню "${menuText}"`, 'info');
           clicked = await this.mainPage.clickButtonByText(menuText);
           if (clicked) {
             this.report.addStep(`Успешно нажат элемент меню "${menuText}"`, 'success');
@@ -897,9 +902,9 @@ class TelegramAppTest {
         }
       }
       
-      // Если до сих пор ничего не нажали, пробуем любой интерактивный элемент
+      // Если до сих пор ничего не нашли, пробуем любой интерактивный элемент
       if (!clicked) {
-        this.report.addStep('Не удалось найти известные элементы. Пробуем найти любой интерактивный элемент', 'retry');
+        this.report.addStep('Не найдены стандартные элементы, ищем любой интерактивный элемент', 'retry');
         clicked = await this.mainPage.findAndClickAnyInteractiveElement();
       }
       
@@ -910,110 +915,204 @@ class TelegramAppTest {
       const stateAfterClick = await this.mainPage.getPageState();
       this.report.addStep(`Состояние после клика: найдено ${stateAfterClick.buttons.length} кнопок`, 'info');
       
-      // Выводим список найденных кнопок для отладки
       if (stateAfterClick.buttons.length > 0) {
         stateAfterClick.buttons.forEach((btnText, idx) => {
           this.report.addStep(`Обнаружена кнопка ${idx+1}: "${btnText}"`, 'info');
         });
       }
       
-      // Дополнительное логирование текстовых элементов
-      if (stateAfterClick.texts.length > 0) {
-        this.report.addStep(`Обнаружено ${stateAfterClick.texts.length} текстовых элементов`, 'info');
-        stateAfterClick.texts.slice(0, 5).forEach((text, idx) => {
-          this.report.addStep(`Текстовый элемент ${idx+1}: "${text}"`, 'info');
-        });
+      // Проверка наличия истории и вариантов ответов
+      const hasStory = await this.page.evaluate(() => {
+        // Ищем контейнер с историей или текстом
+        const storyContainers = [
+          '.scenario-text', '.story-text', '.game-content', '.question-text',
+          '.history', '.case-description', '[data-story]', '.story-container'
+        ];
+        
+        // Проверяем наличие вариантов ответов
+        const answerContainers = [
+          '.options-container', '.answer-options', '.variants', '.choices',
+          '[data-answers]', '.answers-container', '.game-options'
+        ];
+        
+        let foundStory = false;
+        let storyText = '';
+        let foundOptions = false;
+        let optionsCount = 0;
+        
+        // Проверяем контейнеры с историей
+        for (const selector of storyContainers) {
+          const container = document.querySelector(selector);
+          if (container && container.offsetParent !== null) {
+            foundStory = true;
+            storyText = container.innerText.trim().substring(0, 50) + '...';
+            break;
+          }
+        }
+        
+        // Проверяем контейнеры с вариантами ответов
+        for (const selector of answerContainers) {
+          const container = document.querySelector(selector);
+          if (container && container.offsetParent !== null) {
+            foundOptions = true;
+            const options = container.querySelectorAll('button, .option, [role="button"]');
+            optionsCount = Array.from(options).filter(el => el.offsetParent !== null).length;
+            break;
+          }
+        }
+        
+        // Проверяем наличие таймера
+        const hasTimer = !!document.querySelector('.timer, .countdown, [data-timer], .time-remaining');
+        
+        return {
+          foundStory,
+          storyText,
+          foundOptions,
+          optionsCount,
+          hasTimer
+        };
+      });
+      
+      if (hasStory.foundStory) {
+        this.report.addStep(`Обнаружен текст истории: "${hasStory.storyText}"`, 'success');
+      } else {
+        this.report.addWarning('Не обнаружен текст истории');
       }
       
-      // Шаг 2: Взаимодействие со страницей дела/расследования
-      this.report.addStep('Шаг 2: Взаимодействие со страницей расследования', 'step');
+      if (hasStory.foundOptions) {
+        this.report.addStep(`Обнаружено ${hasStory.optionsCount} вариантов ответа`, 'success');
+      } else {
+        this.report.addWarning('Не обнаружены варианты ответов');
+      }
       
-      // Обновленный расширенный список возможных кнопок в интерфейсе расследования
-      const caseButtons = [
-        'РЕШИТЬ ДЕЛО', 'ПОДТВЕРДИТЬ', 'ДАЛЕЕ', 'УЛИКИ', 'ПОДОЗРЕВАЕМЫЕ', 
-        'ИНФОРМАЦИЯ', 'ВЕРНУТЬСЯ К ДЕЛУ', 'СЛЕДУЮЩЕЕ ДЕЛО',
-        // Расширяем список русскоязычных кнопок для игрового интерфейса
-        'ПРОДОЛЖИТЬ', 'СЛЕДУЮЩАЯ УЛИКА', 'ПОСМОТРЕТЬ УЛИКИ', 'ОБВИНИТЬ',
-        'ЗАВЕРШИТЬ ДЕЛО', 'НАЧАТЬ', 'ВПЕРЕД', 'ПОКАЗАТЬ ДЕЛО', 'РЕШИТЬ'
+      if (hasStory.hasTimer) {
+        this.report.addStep('Обнаружен таймер', 'success');
+      }
+      
+      // Шаг 2: Взаимодействие с игровым экраном - выбор варианта ответа
+      this.report.addStep('Шаг 2: Выбор варианта ответа', 'step');
+      
+      // Пытаемся найти и нажать на один из вариантов ответа
+      const clickedOption = await this.page.evaluate(() => {
+        // Все возможные селекторы для вариантов ответа
+        const optionSelectors = [
+          '.option', '.answer-option', '.variant', '.choice',
+          '.option-button', '.answer-button', '.game-option',
+          '[data-option]', '[role="option"]', '.clickable-option'
+        ];
+        
+        for (const selector of optionSelectors) {
+          const options = document.querySelectorAll(selector);
+          if (options.length > 0) {
+            const visibleOptions = Array.from(options).filter(el => el.offsetParent !== null);
+            if (visibleOptions.length > 0) {
+              try {
+                // Кликаем по первому видимому варианту
+                visibleOptions[0].click();
+                return {
+                  clicked: true,
+                  text: visibleOptions[0].innerText.trim(),
+                  selector
+                };
+              } catch (e) {
+                console.error('Ошибка при клике по варианту ответа:', e);
+              }
+            }
+          }
+        }
+        
+        // Если не нашли по селекторам, ищем кнопки с текстом
+        const buttons = Array.from(document.querySelectorAll('button, [role="button"]'))
+          .filter(el => el.offsetParent !== null);
+        
+        if (buttons.length > 0) {
+          try {
+            buttons[0].click();
+            return {
+              clicked: true,
+              text: buttons[0].innerText.trim(),
+              selector: 'button'
+            };
+          } catch (e) {
+            console.error('Ошибка при клике по кнопке:', e);
+          }
+        }
+        
+        return { clicked: false };
+      });
+      
+      if (clickedOption.clicked) {
+        this.report.addStep(`Выбран вариант ответа: "${clickedOption.text}"`, 'success');
+      } else {
+        this.report.addWarning('Не удалось выбрать вариант ответа');
+        
+        // Пробуем нажать любой интерактивный элемент
+        const anyClicked = await this.mainPage.findAndClickAnyInteractiveElement();
+        if (anyClicked) {
+          this.report.addStep('Выполнен клик по найденному интерактивному элементу', 'info');
+        }
+      }
+      
+      await this.mainPage.takeScreenshot('after-answer-selection');
+      await TestUtils.delay(CONFIG.app.timeouts.rendering);
+      
+      // Шаг 3: Поиск кнопки для перехода к следующей истории или результатам
+      this.report.addStep('Шаг 3: Переход к следующей истории', 'step');
+      
+      const nextButtons = [
+        'Следующая история', 'Далее', 'Продолжить', 'Следующий', 
+        'Дальше', 'ДАЛЕЕ', 'СЛЕДУЮЩАЯ', 'ПРОДОЛЖИТЬ', 'ДАЛЬШЕ',
+        'Играть снова', 'Новая игра'
       ];
       
-      let secondInteraction = false;
-      for (const buttonText of caseButtons) {
-        this.report.addStep(`Пробуем найти кнопку "${buttonText}"`, 'info');
-        secondInteraction = await this.mainPage.clickButtonByText(buttonText);
-        
-        if (secondInteraction) {
-          this.report.addStep(`Кнопка "${buttonText}" найдена и нажата`, 'success');
-          // Ожидаем загрузки после взаимодействия
+      let nextClicked = false;
+      for (const buttonText of nextButtons) {
+        this.report.addStep(`Ищем кнопку "${buttonText}"`, 'info');
+        nextClicked = await this.mainPage.clickButtonByText(buttonText);
+        if (nextClicked) {
+          this.report.addStep(`Нажата кнопка "${buttonText}"`, 'success');
           await TestUtils.delay(CONFIG.app.timeouts.rendering);
           break;
         }
       }
       
-      // Если не найдены кнопки по тексту, попробуем найти по типичным классам
-      if (!secondInteraction) {
-        this.report.addStep('Проверка наличия кнопок по классам и селекторам', 'info');
-        const elementsFound = await this.page.evaluate(() => {
-          // Список типичных селекторов для действий с расследованием
-          const actionSelectors = [
-            '.case-button', '.action-button', '.evidence-button', '.suspect-button',
-            '.next-button', '.submit-button', '.continue-button', '.story-action', 
-            '.button-primary', '.investigation-control', '.clue-button'
+      if (!nextClicked) {
+        this.report.addWarning('Не найдена кнопка для перехода к следующей истории');
+        
+        // Проверяем наличие результатов или итоговой страницы
+        const hasResults = await this.page.evaluate(() => {
+          // Возможные селекторы для результатов
+          const resultSelectors = [
+            '.result', '.results-screen', '.game-result', '.score-display',
+            '.final-score', '.achievement', '.congratulations', '.game-over',
+            '[data-result]', '.result-container'
           ];
           
-          for (const selector of actionSelectors) {
-            const elements = document.querySelectorAll(selector);
-            if (elements.length > 0) {
-              // Находим видимые элементы
-              const visibleElements = Array.from(elements).filter(el => el.offsetParent !== null);
-              if (visibleElements.length > 0) {
-                return {
-                  found: true,
-                  selector,
-                  count: visibleElements.length,
-                  text: visibleElements[0].textContent.trim()
-                };
-              }
+          for (const selector of resultSelectors) {
+            const element = document.querySelector(selector);
+            if (element && element.offsetParent !== null) {
+              return {
+                found: true,
+                text: element.innerText.trim().substring(0, 50),
+                selector
+              };
             }
           }
           
           return { found: false };
         });
         
-        if (elementsFound.found) {
-          this.report.addStep(`Найдены элементы по селектору ${elementsFound.selector} (${elementsFound.count} шт.)`, 'info');
-          // Пытаемся кликнуть по первому найденному элементу
-          secondInteraction = await this.page.evaluate((selector) => {
-            const elements = document.querySelectorAll(selector);
-            const visibleElements = Array.from(elements).filter(el => el.offsetParent !== null);
-            if (visibleElements.length > 0) {
-              try {
-                visibleElements[0].click();
-                return true;
-              } catch (e) {
-                console.error('Ошибка при клике', e);
-                return false;
-              }
-            }
-            return false;
-          }, elementsFound.selector);
-          
-          if (secondInteraction) {
-            this.report.addStep(`Успешно выполнен клик по элементу с селектором ${elementsFound.selector}`, 'success');
-            await TestUtils.delay(CONFIG.app.timeouts.rendering);
+        if (hasResults.found) {
+          this.report.addStep(`Обнаружены результаты игры: "${hasResults.text}..."`, 'success');
+        } else {
+          // Если результаты не найдены, пробуем найти любую интерактивную кнопку
+          const finalClicked = await this.mainPage.findAndClickAnyInteractiveElement();
+          if (finalClicked) {
+            this.report.addStep('Выполнен финальный клик по найденному элементу', 'info');
           }
         }
       }
       
-      if (!secondInteraction) {
-        this.report.addStep('Не найдено известных кнопок, пробуем любой интерактивный элемент', 'retry');
-        secondInteraction = await this.mainPage.findAndClickAnyInteractiveElement();
-      }
-      
-      await this.mainPage.takeScreenshot('after-second-interaction');
-      await TestUtils.delay(CONFIG.app.timeouts.rendering);
-      
-      // Делаем финальный скриншот
       await this.mainPage.takeScreenshot('final-state');
       
       return true;
