@@ -30,10 +30,11 @@ const CONFIG = {
       rendering: 3000,
     },
     uiVersion: 'new', // Теперь всегда используется новый интерфейс
-    forceMobile: true  // Принудительно использовать мобильный user-agent
+    forceMobile: true,  // Принудительно использовать мобильный user-agent
+    useMockTelegram: false // Отключаем эмуляцию Telegram API для тестирования реального production
   },
   browser: {
-    headless: false, // Изменить на true для запуска без UI
+    headless: false,
     viewport: {
       width: 390,
       height: 844,
@@ -44,7 +45,14 @@ const CONFIG = {
       '--no-sandbox',
       '--disable-setuid-sandbox',
       '--disable-web-security',
-      '--disable-features=IsolateOrigins,site-per-process'
+      '--disable-features=IsolateOrigins,site-per-process',
+      // Отключаем ненужные сервисы для устранения ошибок в консоли
+      '--disable-background-networking',
+      '--disable-background-timer-throttling',
+      '--disable-client-side-phishing-detection',
+      '--disable-default-apps',
+      '--disable-extensions',
+      '--disable-component-extensions-with-background-pages'
     ]
   },
   test: {
@@ -661,9 +669,11 @@ class TelegramAppTest {
     this.report.addStep('Запуск браузера', 'setup');
     try {
       this.browser = await puppeteer.launch({
-        headless: CONFIG.browser.headless,
+        headless: false,
         args: CONFIG.browser.args,
-        defaultViewport: CONFIG.browser.viewport
+        defaultViewport: CONFIG.browser.viewport,
+        ignoreDefaultArgs: ['--enable-automation'],
+        dumpio: true // Выводит stdout и stderr браузера в консоль для диагностики
       });
       
       this.page = await this.browser.newPage();
@@ -676,14 +686,29 @@ class TelegramAppTest {
         this.report.addStep('Установлен мобильный User-Agent', 'info');
       }
       
-      // Настройка обработчиков событий консоли и ошибок
+      // Улучшенная обработка ошибок консоли и сетевых запросов
       this.page.on('console', message => {
+        const text = message.text();
         this.report.addConsoleMessage({
           type: message.type(),
-          text: message.text()
+          text: text
         });
+        
+        // Отфильтровываем сообщения об ошибках, которые не критичны
         if (message.type() === 'error') {
-          this.report.addWarning(`Console error: ${message.text()}`);
+          // Игнорируем ошибки загрузки ресурсов 404, чтобы не засорять отчет
+          if (text.includes('Failed to load resource: the server responded with a status of 404')) {
+            return;
+          }
+          
+          // Игнорируем известные ошибки Chrome
+          if (text.includes('Registration response error') ||
+              text.includes('mcs_client.cc') ||
+              text.includes('fm_registration_token_uploader.cc')) {
+            return;
+          }
+          
+          this.report.addWarning(`Console error: ${text}`);
         }
       });
       
@@ -850,6 +875,8 @@ class TelegramAppTest {
         clicked = await this.mainPage.clickButtonByText(buttonText);
         if (clicked) {
           this.report.addStep(`Успешно нажата кнопка "${buttonText}"`, 'success');
+          // Добавляем увеличенную паузу после первого взаимодействия для загрузки ресурсов
+          await TestUtils.delay(CONFIG.app.timeouts.rendering * 2);
           break;
         }
       }
@@ -901,10 +928,13 @@ class TelegramAppTest {
       // Шаг 2: Взаимодействие со страницей дела/расследования
       this.report.addStep('Шаг 2: Взаимодействие со страницей расследования', 'step');
       
-      // Обновленный список возможных кнопок в интерфейсе расследования
+      // Обновленный расширенный список возможных кнопок в интерфейсе расследования
       const caseButtons = [
         'РЕШИТЬ ДЕЛО', 'ПОДТВЕРДИТЬ', 'ДАЛЕЕ', 'УЛИКИ', 'ПОДОЗРЕВАЕМЫЕ', 
-        'ИНФОРМАЦИЯ', 'ВЕРНУТЬСЯ К ДЕЛУ', 'СЛЕДУЮЩЕЕ ДЕЛО'
+        'ИНФОРМАЦИЯ', 'ВЕРНУТЬСЯ К ДЕЛУ', 'СЛЕДУЮЩЕЕ ДЕЛО',
+        // Расширяем список русскоязычных кнопок для игрового интерфейса
+        'ПРОДОЛЖИТЬ', 'СЛЕДУЮЩАЯ УЛИКА', 'ПОСМОТРЕТЬ УЛИКИ', 'ОБВИНИТЬ',
+        'ЗАВЕРШИТЬ ДЕЛО', 'НАЧАТЬ', 'ВПЕРЕД', 'ПОКАЗАТЬ ДЕЛО', 'РЕШИТЬ'
       ];
       
       let secondInteraction = false;
@@ -914,7 +944,64 @@ class TelegramAppTest {
         
         if (secondInteraction) {
           this.report.addStep(`Кнопка "${buttonText}" найдена и нажата`, 'success');
+          // Ожидаем загрузки после взаимодействия
+          await TestUtils.delay(CONFIG.app.timeouts.rendering);
           break;
+        }
+      }
+      
+      // Если не найдены кнопки по тексту, попробуем найти по типичным классам
+      if (!secondInteraction) {
+        this.report.addStep('Проверка наличия кнопок по классам и селекторам', 'info');
+        const elementsFound = await this.page.evaluate(() => {
+          // Список типичных селекторов для действий с расследованием
+          const actionSelectors = [
+            '.case-button', '.action-button', '.evidence-button', '.suspect-button',
+            '.next-button', '.submit-button', '.continue-button', '.story-action', 
+            '.button-primary', '.investigation-control', '.clue-button'
+          ];
+          
+          for (const selector of actionSelectors) {
+            const elements = document.querySelectorAll(selector);
+            if (elements.length > 0) {
+              // Находим видимые элементы
+              const visibleElements = Array.from(elements).filter(el => el.offsetParent !== null);
+              if (visibleElements.length > 0) {
+                return {
+                  found: true,
+                  selector,
+                  count: visibleElements.length,
+                  text: visibleElements[0].textContent.trim()
+                };
+              }
+            }
+          }
+          
+          return { found: false };
+        });
+        
+        if (elementsFound.found) {
+          this.report.addStep(`Найдены элементы по селектору ${elementsFound.selector} (${elementsFound.count} шт.)`, 'info');
+          // Пытаемся кликнуть по первому найденному элементу
+          secondInteraction = await this.page.evaluate((selector) => {
+            const elements = document.querySelectorAll(selector);
+            const visibleElements = Array.from(elements).filter(el => el.offsetParent !== null);
+            if (visibleElements.length > 0) {
+              try {
+                visibleElements[0].click();
+                return true;
+              } catch (e) {
+                console.error('Ошибка при клике', e);
+                return false;
+              }
+            }
+            return false;
+          }, elementsFound.selector);
+          
+          if (secondInteraction) {
+            this.report.addStep(`Успешно выполнен клик по элементу с селектором ${elementsFound.selector}`, 'success');
+            await TestUtils.delay(CONFIG.app.timeouts.rendering);
+          }
         }
       }
       
@@ -1039,7 +1126,14 @@ class TelegramAppTest {
     try {
       await this.setup();
       await this.navigateToApp();
-      await this.injectTelegramMock();
+      
+      // Инжектируем мок Telegram только если это явно включено в конфигурации
+      if (CONFIG.app.useMockTelegram) {
+        await this.injectTelegramMock();
+      } else {
+        this.report.addStep('Эмуляция Telegram WebApp API отключена, используем реальное окружение', 'info');
+      }
+      
       await this.analyzeInitialState();
       await this.interactWithApp();
       await this.debugAppState();

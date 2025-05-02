@@ -1,94 +1,71 @@
 import winston from 'winston';
-import fs from 'fs';
+const { format } = winston;
 import path from 'path';
+import fs from 'fs';
 import { fileURLToPath } from 'url';
-import { dirname } from 'path';
 
-// Настройка путей для ES модулей
+// Get current directory with ES modules
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const __dirname = path.dirname(__filename);
 
 // Создаем директорию для логов если её нет
-const logDir = path.join(dirname(dirname(__dirname)), 'logs');
+const logDir = 'logs';
 if (!fs.existsSync(logDir)) {
   fs.mkdirSync(logDir);
 }
 
-// Настройка формата логов
-const logFormat = winston.format.combine(
-  winston.format.timestamp(),
-  winston.format.json()
+const logFormat = format.combine(
+  format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
+  format.errors({ stack: true }),
+  format.splat(),
+  format.json()
 );
 
-// Функция создания логгера
-const createLogger = (service) => {
-  return winston.createLogger({
-    level: process.env.LOG_LEVEL || 'info',
-    format: logFormat,
-    defaultMeta: { service },
-    transports: [
-      new winston.transports.Console({
-        format: winston.format.combine(
-          winston.format.colorize(),
-          winston.format.simple()
-        )
-      }),
-      new winston.transports.File({
-        filename: path.join(logDir, 'error.log'),
-        level: 'error'
-      }),
-      new winston.transports.File({
-        filename: path.join(logDir, 'combined.log')
-      })
-    ]
-  });
-};
+// Единственный экземпляр логгера для всего приложения
+const logger = winston.createLogger({
+  level: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
+  format: logFormat,
+  defaultMeta: { service: 'criminal-bluff-api' },
+  transports: [
+    new winston.transports.File({ 
+      filename: path.join(__dirname, '../../logs/error.log'), 
+      level: 'error',
+      maxsize: 5242880, // 5MB
+      maxFiles: 5,
+      tailable: true
+    }),
+    new winston.transports.File({ 
+      filename: path.join(__dirname, '../../logs/combined.log'),
+      maxsize: 5242880, // 5MB
+      maxFiles: 5,
+      tailable: true
+    })
+  ]
+});
 
-// Очистка старых логов
-const cleanupOldLogs = () => {
-  const maxAge = 7 * 24 * 60 * 60 * 1000; // 7 дней
-  const now = Date.now();
-
-  fs.readdir(logDir, (err, files) => {
-    if (err) {
-      console.error('Error reading logs directory:', err);
-      return;
-    }
-
-    files.forEach(file => {
-      const filePath = path.join(logDir, file);
-      fs.stat(filePath, (err, stats) => {
-        if (err) {
-          console.error('Error getting file stats:', err);
-          return;
-        }
-
-        if (now - stats.mtime.getTime() > maxAge) {
-          fs.unlink(filePath, err => {
-            if (err) {
-              console.error('Error deleting old log file:', err);
-            }
-          });
-        }
-      });
-    });
-  });
-};
-
-// Запускаем очистку старых логов каждые 24 часа
-let cleanupInterval;
-if (process.env.NODE_ENV !== 'test') {
-  cleanupInterval = setInterval(cleanupOldLogs, 24 * 60 * 60 * 1000);
+if (process.env.NODE_ENV !== 'production') {
+  logger.add(new winston.transports.Console({
+    format: format.combine(
+      format.colorize(),
+      format.simple()
+    )
+  }));
 }
 
-// Функция для остановки интервала очистки
-const stopCleanup = () => {
-  if (cleanupInterval) {
-    clearInterval(cleanupInterval);
-  }
+// Обработка необработанных исключений
+process.on('uncaughtException', (error) => {
+  logger.error('Uncaught Exception:', error);
+  process.exit(1);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  logger.error('Unhandled Rejection at:', promise, 'reason:', reason);
+});
+
+// Создание дочернего логгера с указанным именем
+const createLogger = (name) => {
+  return logger.child({ module: name });
 };
 
-export {
-  createLogger,
-  stopCleanup
-}; 
+// Экспортируем только ОДИН раз - все модули должны импортировать отсюда
+export { logger, createLogger }; 

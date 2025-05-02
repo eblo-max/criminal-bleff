@@ -3,47 +3,107 @@
  * Настраивает приложение при загрузке и обеспечивает совместимость
  */
 
-// Импортируем необходимые модули
-import { initTelegramWebApp } from './telegram.js';
-import { navigateTo, initAllScreens, setupEventListeners } from './ui.js';
-import { logger } from './utils.js';
+// Сначала создаем временный логгер, если основной не загрузится
+const tempLogger = {
+  info: (msg) => console.log(`[INFO] ${msg}`),
+  warn: (msg) => console.warn(`[WARN] ${msg}`),
+  error: (msg) => console.error(`[ERROR] ${msg}`),
+  debug: (msg) => console.debug(`[DEBUG] ${msg}`)
+};
 
-// Глобальная настройка интерфейса
-window.UI_VERSION = 'new'; // всегда используем новый интерфейс
+// Глобальная переменная для логгера
+window.appLogger = tempLogger;
 
-// Экспортируемая функция инициализации
-export function initApp() {
-  console.log('Инициализация приложения...');
-  
-  // Скрываем загрузочный оверлей
-  hideLoadingOverlay();
-
-  // Инициализируем Telegram WebApp
-  const telegramInitialized = initTelegramWebApp();
-  logger.info(`Инициализация Telegram WebApp: ${telegramInitialized ? 'успешно' : 'автономный режим'}`);
-
-  // Установка класса для нового интерфейса
-  document.body.classList.add('new-ui');
-  
-  // Инициализируем UI
-  initAllScreens();
-  
-  // Настройка обработчиков событий
-  setupEventListeners();
-  
-  // Инициализируем обработчики глобальных ошибок
-  setupErrorHandlers();
-  
-  // Показываем стартовый экран
-  setTimeout(() => {
-    navigateTo('start-screen');
-  }, 300);
+// Безопасный импорт модулей
+function safeImport(modulePath, moduleName) {
+  return import(modulePath).catch(error => {
+    console.error(`Ошибка загрузки ${moduleName || modulePath}: `, error);
+    return { default: {}, exported: false };
+  });
 }
 
-// Автоматически вызываем инициализацию при загрузке DOM
+// Настройка версии UI
+window.UI_VERSION = 'new';
+document.body.classList.add('new-ui');
+
+// Экспортируемая функция инициализации
+export async function initApp() {
+  try {
+    // Загружаем сначала утилиты, так как они необходимы для всего остального
+    const utils = await safeImport('./utils.js', 'Utils модуля');
+    
+    // Если логгер доступен, используем его
+    if (utils && utils.logger) {
+      window.appLogger = utils.logger;
+    }
+    
+    // Устанавливаем логгер в глобальный объект для отладки
+    window.logger = window.appLogger;
+    
+    // Загружаем остальные модули параллельно
+    const [ui, telegram, effects, gameCore] = await Promise.all([
+      safeImport('./ui.js', 'UI модуля'),
+      safeImport('./telegram.js', 'Telegram модуля'),
+      safeImport('./effects.js', 'Effects модуля'),
+      safeImport('./gameState.js', 'GameState модуля')
+    ]);
+    
+    // Инициализируем модули
+    window.appLogger.info('Инициализация приложения...');
+    
+    if (ui && ui.initUI) {
+      window.appLogger.info('Инициализация UI...');
+      ui.initUI();
+    }
+    
+    if (telegram && telegram.initTelegram) {
+      window.appLogger.info('Инициализация Telegram интеграции...');
+      telegram.initTelegram();
+    }
+    
+    if (effects && effects.initEffects) {
+      window.appLogger.info('Инициализация визуальных эффектов...');
+      effects.initEffects();
+    }
+    
+    if (gameCore && gameCore.initGame) {
+      window.appLogger.info('Инициализация игровой логики...');
+      gameCore.initGame();
+    }
+    
+    // Устанавливаем статус загрузки
+    document.body.classList.add('app-loaded');
+    window.appLogger.info('Приложение успешно инициализировано.');
+    
+  } catch (error) {
+    console.error('Критическая ошибка при инициализации приложения:', error);
+    
+    // Показываем пользователю информацию об ошибке
+    const errorContainer = document.getElementById('error-container') || document.createElement('div');
+    errorContainer.id = 'error-container';
+    errorContainer.className = 'error-message';
+    errorContainer.innerHTML = `
+      <h3>Произошла ошибка</h3>
+      <p>Пожалуйста, обновите страницу или попробуйте позже.</p>
+    `;
+    
+    if (!document.getElementById('error-container')) {
+      document.body.appendChild(errorContainer);
+    }
+  }
+}
+
+// Запускаем инициализацию после загрузки DOM
 document.addEventListener('DOMContentLoaded', () => {
-  initApp();
+  initApp().catch(err => console.error('Ошибка при инициализации приложения:', err));
 });
+
+// Если документ уже загружен, запускаем сразу
+if (document.readyState === 'complete' || document.readyState === 'interactive') {
+  setTimeout(() => {
+    initApp().catch(err => console.error('Ошибка при инициализации приложения:', err));
+  }, 0);
+}
 
 // Скрытие оверлея загрузки
 function hideLoadingOverlay() {
