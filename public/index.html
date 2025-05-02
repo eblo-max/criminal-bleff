@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#000000">
     <meta name="description" content="Криминальный Блеф - игра-расследование">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://telegram.org https://*.telegram.org 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; font-src 'self' data: https://cdnjs.cloudflare.com; connect-src 'self' https://*.telegram.org wss://*.telegram.org; img-src 'self' data: blob: https://*.telegram.org; frame-src 'self' https://telegram.org https://*.telegram.org; worker-src 'self' blob:;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://telegram.org https://*.telegram.org 'unsafe-inline' 'unsafe-eval'; script-src-attr 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; font-src 'self' data: https://cdnjs.cloudflare.com; connect-src 'self' https://*.telegram.org wss://*.telegram.org https://web-production-43380.up.railway.app; img-src 'self' data: blob: https://*.telegram.org; frame-src 'self' https://telegram.org https://*.telegram.org; worker-src 'self' blob:;">
     <title>Криминальный Блеф</title>
     <link rel="icon" href="favicon.ico">
     <link rel="stylesheet" href="css/normalize.css">
@@ -49,16 +49,60 @@
     <!-- Загрузчик для браузеров без поддержки ES-модулей -->
     <script nomodule src="js/nomodule-fallback.js"></script>
     
-    <!-- Импорт модулей в правильном порядке -->
-    <script type="module" defer src="js/utils.js"></script>
-    <script type="module" defer src="js/telegram.js"></script>
-    <script type="module" defer src="js/app-init.js"></script>
-    <script type="module" defer src="js/ui.js"></script>
-    <script type="module" defer src="js/gameState.js"></script>
-    <script type="module" defer src="js/gameCore.js"></script>
-    <script type="module" defer src="js/game.js"></script>
-    <script type="module" defer src="js/tutorial.js"></script>
-    <script type="module" defer src="js/app.js"></script>
+    <!-- Вспомогательный скрипт загрузки -->
+    <script>
+        // Функция для асинхронной загрузки модулей в правильном порядке
+        async function loadModulesInOrder() {
+            try {
+                // Прекращаем загрузку, если уже загружен fallback
+                if (document.getElementById('fallback-script')) {
+                    console.log('Используется fallback скрипт вместо ES модулей');
+                    return;
+                }
+                
+                // Загружаем модули по порядку с использованием import()
+                // Сначала загружаем utils.js
+                await import('./js/utils.js');
+                console.log('Модуль utils.js загружен');
+                
+                // Затем загружаем остальные модули
+                await Promise.all([
+                    import('./js/telegram.js').then(() => console.log('Модуль telegram.js загружен')),
+                    import('./js/effects.js').then(() => console.log('Модуль effects.js загружен')),
+                    import('./js/gameState.js').then(() => console.log('Модуль gameState.js загружен'))
+                ]);
+                
+                // Загружаем основной инициализатор
+                await import('./js/app-init.js').then(() => console.log('Модуль app-init.js загружен'));
+                
+                // Загружаем UI и остальные модули
+                await Promise.all([
+                    import('./js/ui.js').then(() => console.log('Модуль ui.js загружен')),
+                    import('./js/gameCore.js').then(() => console.log('Модуль gameCore.js загружен')),
+                    import('./js/game.js').then(() => console.log('Модуль game.js загружен')),
+                    import('./js/tutorial.js').then(() => console.log('Модуль tutorial.js загружен'))
+                ]);
+                
+                // Наконец загружаем основное приложение
+                await import('./js/app.js').then(() => console.log('Модуль app.js загружен'));
+                
+                console.log('Все модули успешно загружены');
+            } catch (error) {
+                console.error('Ошибка при загрузке модулей:', error);
+                
+                // Если произошла ошибка, загружаем fallback
+                if (!document.getElementById('fallback-script')) {
+                    const fallbackScript = document.createElement('script');
+                    fallbackScript.id = 'fallback-script';
+                    fallbackScript.src = 'js/nomodule-fallback.js';
+                    document.head.appendChild(fallbackScript);
+                }
+            }
+        }
+        
+        // Запускаем загрузку модулей после загрузки DOM
+        document.addEventListener('DOMContentLoaded', loadModulesInOrder);
+    </script>
 
     <!-- Блокируем перетаскивание для лучшего UX на мобильных устройствах -->
     <style>

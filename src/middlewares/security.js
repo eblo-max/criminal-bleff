@@ -102,14 +102,18 @@ const securityHeaders = (req, res, next) => {
   // Защита от clickjacking
   res.setHeader('X-Frame-Options', 'DENY');
   
-  // CSP - согласованная с главной конфигурацией в app.js
+  // CSP - согласованная с главной конфигурацией в index.html
   res.setHeader(
     'Content-Security-Policy',
-    'default-src \'self\'; script-src \'self\' \'unsafe-inline\' \'unsafe-eval\' https://telegram.org; ' +
-    'style-src \'self\' \'unsafe-inline\'; img-src \'self\' data: https: blob:; ' +
-    'connect-src \'self\' https://web-production-43380.up.railway.app https://t.me https://web.telegram.org; ' +
-    'font-src \'self\' https: data:; object-src \'none\'; media-src \'self\'; ' +
-    'frame-src https://telegram.org https://t.me https://web.telegram.org'
+    'default-src \'self\'; script-src \'self\' \'unsafe-inline\' \'unsafe-eval\' https://telegram.org https://*.telegram.org; ' +
+    'script-src-attr \'unsafe-inline\'; ' +
+    'style-src \'self\' \'unsafe-inline\' https://cdnjs.cloudflare.com; ' +
+    'img-src \'self\' data: blob: https://*.telegram.org; ' +
+    'connect-src \'self\' https://web-production-43380.up.railway.app https://t.me https://web.telegram.org https://*.telegram.org wss://*.telegram.org; ' +
+    'font-src \'self\' data: https://cdnjs.cloudflare.com; ' +
+    'object-src \'none\'; media-src \'self\'; ' +
+    'frame-src \'self\' https://telegram.org https://*.telegram.org https://t.me; ' +
+    'worker-src \'self\' blob:;'
   );
   
   // HSTS
