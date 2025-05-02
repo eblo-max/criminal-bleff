@@ -6,110 +6,41 @@ const logger = createLogger('Redis');
 let redisClient;
 let redisEnabled = true;
 
-// Функция для получения URL Redis из переменных окружения
-const getRedisConnectionDetails = () => {
-  // Если доступен REDIS_URL, используем его
-  if (process.env.REDIS_URL) {
-    logger.info('Using REDIS_URL from environment variables');
-    // Проверяем, содержит ли URL уже параметр family
-    const url = process.env.REDIS_URL;
-    if (!url.includes('?family=')) {
-      logger.info('Adding family=0 parameter to REDIS_URL for dual-stack IPv4/IPv6 support');
-      return { url: url + '?family=0' };
-    }
-    return { url };
-  }
-  
-  // Если доступны переменные Railways для Redis
-  if (process.env.RAILWAY_REDIS_HOST && process.env.RAILWAY_REDIS_PORT) {
-    const host = process.env.RAILWAY_REDIS_HOST;
-    const port = process.env.RAILWAY_REDIS_PORT;
-    const password = process.env.RAILWAY_REDIS_PASSWORD || '';
-    
-    logger.info(`Using Railway Redis variables: ${host}:${port} with dual-stack IPv4/IPv6 support`);
-    
-    return { 
-      host, 
-      port,
-      password: password.length > 0 ? password : undefined,
-      family: 0 // Для поддержки IPv4 и IPv6
-    };
-  }
-  
-  // Если Railways предоставляет Redis через переменную сервиса
-  if (process.env.REDISHOST || process.env.REDIS_HOST) {
-    const host = process.env.REDISHOST || process.env.REDIS_HOST;
-    const port = process.env.REDISPORT || process.env.REDIS_PORT || 6379;
-    const password = process.env.REDISPASSWORD || process.env.REDIS_PASSWORD || '';
-    
-    logger.info(`Using standard Redis variables: ${host}:${port} with dual-stack IPv4/IPv6 support`);
-    
-    return { 
-      host, 
-      port,
-      password: password.length > 0 ? password : undefined,
-      family: 0 // Для поддержки IPv4 и IPv6
-    };
-  }
-  
-  // Попытка использовать стандартные переменные Railway для сервисов
-  if (process.env.REDIS_SERVICE_HOST) {
-    const host = process.env.REDIS_SERVICE_HOST;
-    const port = process.env.REDIS_SERVICE_PORT || 6379;
-    
-    logger.info(`Using Kubernetes-style Redis service: ${host}:${port} with dual-stack IPv4/IPv6 support`);
-    
-    return { 
-      host, 
-      port,
-      family: 0 // Для поддержки IPv4 и IPv6
-    };
-  }
-  
-  // По умолчанию для локальной разработки
-  logger.warn('No Redis configuration found, using default localhost:6379');
-  return { 
-    host: 'localhost', 
-    port: 6379,
-    family: 0 // Для поддержки IPv4 и IPv6 по умолчанию
-  };
-};
-
 const connectRedis = async () => {
   try {
-    const redisConfig = getRedisConnectionDetails();
+    // Проверяем наличие REDIS_URL
+    if (!process.env.REDIS_URL) {
+      logger.warn('REDIS_URL not found in environment variables');
+      redisEnabled = false;
+      return null;
+    }
+
+    // Логируем (безопасно) что будем использовать REDIS_URL
+    logger.info('Connecting to Redis using REDIS_URL from environment variables');
     
-    // Логируем параметры подключения (без пароля для безопасности)
-    logger.info(`Connecting to Redis with parameters: ${
-      redisConfig.url 
-        ? `URL format with dual-stack support` 
-        : `host=${redisConfig.host}, port=${redisConfig.port}, family=0`
-    }`);
-    
-    // Connect using the configuration
-    redisClient = new Redis({
-      ...redisConfig,
-      // Убедимся, что family установлен на 0, если не указан в redisConfig
-      ...(redisConfig.family === undefined && !redisConfig.url ? { family: 0 } : {}),
+    // Создаем клиент Redis с минимальными настройками
+    redisClient = new Redis(process.env.REDIS_URL, {
+      // Включаем поддержку IPv6 согласно документации Railway
+      family: 0,
+      // Более короткие таймауты для быстрого понимания проблем
+      connectTimeout: 5000,
+      // Показывать подробный стек ошибок
+      showFriendlyErrorStack: true,
+      // Меньше попыток переподключения, чтобы быстрее падать в fallback режим
+      maxRetriesPerRequest: 2,
       retryStrategy: (times) => {
-        const delay = Math.min(times * 50, 2000);
-        // После 10 попыток прекращаем пытаться переподключиться
-        if (times > 10) {
+        const delay = Math.min(times * 100, 2000);
+        // После 5 попыток прекращаем пытаться переподключиться
+        if (times > 5) {
           redisEnabled = false;
           logger.warn('Redis connection failed after multiple retries. Running in fallback mode without Redis.');
           return null; // Прекращаем попытки переподключения
         }
         return delay;
       },
-      maxRetriesPerRequest: 3,
-      enableReadyCheck: true,
-      maxLoadingRetryTime: 10000,
-      connectTimeout: 10000,
-      // Важно: используем dual-stack IPv4/IPv6 lookups для решения ошибки ENOTFOUND
-      // Устанавливаем family: 0 если еще не установлено
-      showFriendlyErrorStack: true
     });
 
+    // Настраиваем обработчики событий
     redisClient.on('connect', () => {
       redisEnabled = true;
       logger.info('Redis connected successfully');
@@ -127,16 +58,21 @@ const connectRedis = async () => {
       logger.warn('Redis connection closed');
     });
 
-    // Тестирование соединения Redis
+    // Тестирование соединения с коротким таймаутом
     try {
-      await redisClient.ping();
+      await Promise.race([
+        redisClient.ping(),
+        new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Redis ping timeout')), 3000)
+        )
+      ]);
       logger.info('Redis connection test successful: PING command OK');
       redisEnabled = true;
     } catch (pingError) {
       logger.error(`Redis connection test failed: ${pingError.message}`);
     }
 
-    // Graceful shutdown
+    // Обработка завершения процесса
     process.on('SIGINT', async () => {
       await closeRedis();
       process.exit(0);
